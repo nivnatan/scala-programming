@@ -20,7 +20,6 @@ object Exercises extends App {
           case true  => false
           case false => {
             set += c
-
             true
           }
         }
