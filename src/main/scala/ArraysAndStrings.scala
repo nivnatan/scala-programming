@@ -1,18 +1,17 @@
-import scala.annotation.tailrec
 import scala.collection.mutable.ListBuffer
 
 /**
-  * Created by niv on 16/11/2017.
+  * Created by nivnatan on 11/19/2017.
   */
-object Exercises extends App {
+object ArraysAndStrings {
 
   /**
     * @param str
     * @return true if string has all unique characters, otherwise false
-    * examples:
-      isUnique("ascvfghj") = true
-      isUnique("") = true
-      isUnique("asdgdea") = false
+    *         examples:
+    *         isUnique("ascvfghj") = true
+    *         isUnique("") = true
+    *         isUnique("asdgdea") = false
     */
   def isUnique(str: String): Boolean = {
     val set = scala.collection.mutable.Set.empty[Char]
@@ -31,13 +30,74 @@ object Exercises extends App {
   }
 
   /**
+    * Implement a method to perform basic string compression using the counts
+    * of repeated characters. For example, the string aabcccccaaa would become a2b1c5a3. If the
+    * "compressed" string would not become smaller than the original string, your method should return
+    * the original string. You can assume the string has only uppercase and lowercase letters (a - z).
+    * @param str
+    * @return string compressed
+    */
+  def stringCompression(str: String): String = {
+    def stringCompression(str: String, char: Char, count: Int, res: String): String = {
+      if(str == "") res + char + count
+      else {
+        if(str.charAt(0) == char) {
+          stringCompression(str.substring(1), char, count + 1, res)
+        } else {
+          stringCompression(str.substring(1), str.charAt(0), 1, res + char + count)
+        }
+      }
+    }
+    stringCompression(str.substring(1), str.charAt(0), 1, "")
+  }
+
+  /**
+    * One Away: There are three types of edits that can be performed on strings: insert a character,
+    * remove a character, or replace a character. Given two strings, write a function to check if they are
+    * one edit (or zero edits) away.
+    * EXAMPLE
+    * pale, ple -> true
+    * pales. pale -> true
+    * pale. bale -> true
+    * pale. bake -> false*
+    * @param str1
+    * @param str2
+    * @return true/false
+    */
+  def oneWay(str1: String, str2: String): Boolean = {
+
+    def removeEdit(strToRemove: String, strToCompare: String): Boolean = {
+      var i = 0
+      while(i < strToCompare.length && strToRemove.charAt(i) == strToCompare.charAt(i)) { i += 1 }
+      if(i == strToCompare.length) true
+      else (strToRemove.substring(0,i) + strToRemove.substring(i+1, strToRemove.length)) == strToCompare
+    }
+
+    def replaceEdit(strToReplace: String, strToCompare: String): Boolean = {
+      var i = 0
+      while(i < strToCompare.length && strToReplace.charAt(i) == strToCompare.charAt(i)) { i += 1 }
+      if(i == strToCompare.length) true
+      else {
+        strToCompare.drop(i+1) == strToReplace.drop(i+1)
+      }
+    }
+
+    (str1.length, str2.length) match {
+      case (x,y) if(Math.abs(x - y) >= 2) => false
+      case (x,y) if(x == y)               => replaceEdit(str1, str2)
+      case (x,y) if(x > y)                => removeEdit(str1, str2)
+      case (x,y) if(x < y)                => removeEdit(str2, str1)
+    }
+  }
+
+  /**
     * @param str1
     * @param str2
     * @return true if two strings are permutations of each other, otherwise false
-    * examples:
-      isPerm("abb", "aab") = false
-      isPerm("abbc", "aabc") = false
-      isPerm("abba", "aabb") = true
+    *         examples:
+    *         isPerm("abb", "aab") = false
+    *         isPerm("abbc", "aabc") = false
+    *         isPerm("abba", "aabb") = true
     */
   def isPerm(str1: String, str2: String): Boolean = {
     // possible also to sort both strings and compare
@@ -47,6 +107,25 @@ object Exercises extends App {
       map1.forall { case (c, count) => map2.get(c).map(_ == count).getOrElse(false) }
     } else {
       false
+    }
+  }
+
+  /**
+    * Given an array of positive numbers, find the highest sum of non-consecutive numbers. Example : [1, 2, 3, 4, 5] ! ! ! 1 + 3 + 5 = 9. Therefore, 9 is the answer.
+    * 4 1 1 4 2 1 -> 4 + 4 + 1 = 9
+    * https://www.youtube.com/watch?v=UtGtF6nc35g
+    * @param arr
+    * @return highest sum of non-consecutive numbers
+    */
+  def dynamicProgramming(arr: Array[Int]) = {
+    var inclusive: Int = arr(0)
+    var exclusive: Int = 0
+    var temp: Int = 0
+
+    for(i <- 1 until arr.length) {
+      temp = inclusive
+      inclusive = Math.max(inclusive, exclusive + arr(i))
+      exclusive = temp
     }
   }
 
@@ -127,62 +206,6 @@ object Exercises extends App {
       }
     }
     rec(str.toList, 0)
-  }
-
-  /**
-    * Factorial of n
-    *
-    * examples:
-    * 5 -> 120
-    *
-    * @param number
-    * @return factorial result
-    */
-  def factorialRec(number: Int): Int = {
-    if(number == 1) 1
-    else number * factorialRec(number - 1)
-  }
-
-  def factorialTailRec(number: Int): Int = {
-    @tailrec
-    def go(number: Int, sum: Int): Int = {
-      if(number == 1) sum
-      else go(number - 1, sum * number)
-    }
-    go(number, 1)
-  }
-
-  def factorialIter1(number: Int): Int = {
-    if(number == 1) 1
-    (for(i <- number until 0 by -1) yield i).reduceLeft(_ * _)
-  }
-
-  def factorialIter2(number: Int): Int = {
-    var sum = 1
-    var numberTemp = number
-    while(numberTemp > 1) {
-      sum = sum * numberTemp
-      numberTemp += -1
-    }
-    sum
-  }
-
-  /**
-    * GCD
-    *
-    * algorithm - if y is zero then return x, else x = x % y
-    *
-    * examples:
-    * 25,54 -> 6
-    *
-    * @param number1
-    * @param number2
-    * @return gcd of number1 and number2
-    */
-
-  def gcd(number1: Int, number2: Int): Int = {
-    if(number2 == 0) number1
-    else gcd(number2, number1 % number2)
   }
 
   /**
