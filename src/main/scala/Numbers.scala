@@ -3,7 +3,7 @@ import scala.annotation.tailrec
 /**
   * Created by nivnatan on 11/19/2017.
   */
-class Numbers {
+object Numbers {
 
   /**
     * Factorial of n
