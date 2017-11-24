@@ -324,4 +324,21 @@ object ArraysAndStrings {
       print('\n')
     }
   }
+
+  /**
+    * Assume you have a method isSubst ring which checks if one word is a substring
+    * of another. Given two strings, 51 and 52, write code to check if s2 is a rotation of s1 using only one
+    * call to isSubstring (e.g., "waterbottle" is a rotation of"erbottlewat")
+    *
+    * @param str1
+    * @param str2
+    * @return true if s2 is a rotation of s1 using only one call to isSubstring
+    */
+  def stringRotation(str1: String, str2: String) = {
+
+    def isSubstring(str1: String, str2: String) = str1.contains(str2)
+    // the idea is the copy str1 and concat to itself as a new string. so "waterbottle" will become "waterbottlewaterbottle" and then check substring in one call
+    if(str1.length != str2.length) false
+    else isSubstring(str1 + str1, str2)
+  }
 }
