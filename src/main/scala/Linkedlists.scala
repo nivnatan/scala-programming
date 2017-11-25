@@ -150,24 +150,24 @@ object Linkedlists extends App {
   def partition(head: Node, x: Int) = {
 
     def appendToListOption(head: Option[Node], data: Int): Option[Node] = {
-      def appendToList(head: Node): Unit = {
-        head.next.map(appendToList).getOrElse(head.next = Some(Node(data)))
-      }
+      def appendToList(head: Node): Unit = head.next.map(appendToList).getOrElse(head.next = Some(Node(data)))
       head.map(appendToList)
       head orElse Some(Node(data))
     }
 
-    def go(lessThenNodes: Option[Node], greaterThenNodes: Option[Node], currentNode: Option[Node]): Option[Node] = {
-      currentNode match {
-        case Some(node) => {
-          if(node.data >= x) go(lessThenNodes, appendToListOption(greaterThenNodes, node.data), node.next)
-          else go(appendToListOption(lessThenNodes, node.data), greaterThenNodes, node.next)
-        }
-        case None => {
-          None // need to concat lists
-        }
-      }
+    def concatListsOption(list1: Option[Node], list2: Option[Node]): Option[Node] = {
+      def appendToList(head: Node): Unit = head.next.map(appendToList).getOrElse(head.next = list2)
+      list1.map(appendToList)
+      list1 orElse list2
     }
+
+    def go(lessThenNodes: Option[Node], greaterThenNodes: Option[Node], currentNode: Option[Node]): Option[Node] = {
+      currentNode.map { node =>
+        if(node.data >= x) go(lessThenNodes, appendToListOption(greaterThenNodes, node.data), node.next)
+        else go(appendToListOption(lessThenNodes, node.data), greaterThenNodes, node.next)
+      }.getOrElse(concatListsOption(lessThenNodes, greaterThenNodes))
+    }
+    
     go(None, None, Some(head))
   }
 
