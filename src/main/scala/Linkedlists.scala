@@ -112,7 +112,27 @@ object Linkedlists extends App {
     }
     slowPointer.map(_.data)
   }
-
+ 
+   /**
+    * Delete Middle Node: Implement an algorithm to delete a node in the middle (i.e., any node but
+    * the first and last node, not necessarily the exact middle) of a singly linked list, given only access to
+    * that node.
+    * EXAMPLE
+    * Input: the node c from the linked list a - >b- >c - >d - >e- >f
+    * Result: nothing is returned, but the new linked list looks like a - >b- >d - >e- >f
+    *
+    * @param head
+    * @return linked list head
+    */
+  def deleteMiddleNode(head: Node) = {
+    def go(head: Node, runner: Node, isMove: Int): Unit = {
+      runner.next match {
+        case Some(next) => head.next.map(h => go(if(isMove % 2 == 0) h else head, next, isMove + 1))
+        case None       => head.next = head.next.flatMap(_.next)
+      }
+    }
+    head.next.flatMap(_.next).map(go(head, _, 1)) // advance runner pointer by two before starting because we want to point to the first element before the middle element
+  }
 
   val node1 = Node(1)
   val node2 = Node(1)
