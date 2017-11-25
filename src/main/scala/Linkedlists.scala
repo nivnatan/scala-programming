@@ -134,14 +134,51 @@ object Linkedlists extends App {
     head.next.flatMap(_.next).map(go(head, _, 1)) // advance runner pointer by two before starting because we want to point to the first element before the middle element
   }
 
-  val node1 = Node(1)
-  val node2 = Node(1)
-  val node3 = Node(3)
-  val node4 = Node(2)
-  val node5 = Node(5)
-  val node6 = Node(6)
-  val node7 = Node(7)
-  val node8 = Node(8)
+  /**
+    * Partition: Write code to partition a linked list around a value x, such that all nodes less than x come
+    * before all nodes greater than or equal to x. lf x is contained within the list, the values of x only need
+    * to be after the elements less than x (see below). The partition element x can appear anywhere in the
+    * "right partition"; it does not need to appear between the left and right partitions.
+    * EXAMPLE
+    * Input: 3 -> 5 -> 8 -> 5 -> 10 -> 2 -> 1 [partition = 5)
+    * Output: 3 -> 1 -> 2 -> 10 -> 5 -> 5 -> 8
+    *
+    * @param head
+    * @param x
+    * @return linked list head
+    */
+  def partition(head: Node, x: Int) = {
+
+    def appendToListOption(head: Option[Node], data: Int): Option[Node] = {
+      def appendToList(head: Node): Unit = {
+        head.next.map(appendToList).getOrElse(head.next = Some(Node(data)))
+      }
+      head.map(appendToList)
+      head orElse Some(Node(data))
+    }
+
+    def go(lessThenNodes: Option[Node], greaterThenNodes: Option[Node], currentNode: Option[Node]): Option[Node] = {
+      currentNode match {
+        case Some(node) => {
+          if(node.data >= x) go(lessThenNodes, appendToListOption(greaterThenNodes, node.data), node.next)
+          else go(appendToListOption(lessThenNodes, node.data), greaterThenNodes, node.next)
+        }
+        case None => {
+          None // need to concat lists
+        }
+      }
+    }
+    go(None, None, Some(head))
+  }
+
+  val node1 = Node(3)
+  val node2 = Node(5)
+  val node3 = Node(8)
+  val node4 = Node(5)
+  val node5 = Node(10)
+  val node6 = Node(2)
+  val node7 = Node(1)
+  val node8 = Node(9)
 
   node1.next = Some(node2)
   node2.next = Some(node3)
@@ -149,10 +186,10 @@ object Linkedlists extends App {
   node4.next = Some(node5)
   node5.next = Some(node6)
   node6.next = Some(node7)
-  node7.next = Some(node8)
+  //node7.next = Some(node8)
 
 
-  val asdas = distinct2Pointers(node1)
+  val asdas = partition(node1, 5)
 
 
   val ttttt = ""
