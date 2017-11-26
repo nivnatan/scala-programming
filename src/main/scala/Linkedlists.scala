@@ -171,25 +171,94 @@ object Linkedlists extends App {
     go(None, None, Some(head))
   }
 
-  val node1 = Node(3)
-  val node2 = Node(5)
-  val node3 = Node(8)
-  val node4 = Node(5)
-  val node5 = Node(10)
-  val node6 = Node(2)
-  val node7 = Node(1)
+  /**
+    * You have two numbers represented by a linked list, where each node contains a single
+    * digit. The digits are stored in reverse order, such that the 1’s digit is at the head of
+    * the list. Write a function that adds the two numbers and returns the sum as a linked
+    * list.
+    * EXAMPLE
+    * Input: (3 -> 1 -> 5), (5 -> 9 -> 2)
+    * Output: 9 -> 0 -> 7
+    *
+    * @param list1
+    * @param list2
+    * @return linked list that represents the sum of the tow lists
+    */
+  def sumLists(list1: Node, list2: Node) = {
+    def getListNumber(head: Node, number: Int = 0): Int = {
+      head.next match {
+        case Some(next) => getListNumber(next, (number * 10) + head.data)
+        case None       => (number * 10) + head.data
+      }
+    }
+
+    def createListFromNumber(num: Int) = {
+      num
+        .toString
+        .map { case digit => Node(digit -'0') }
+        .foldLeft((None: Option[Node], None: Option[Node])) { case ((head,runner), node) =>
+          runner.map { r =>
+            r.next = Some(node)
+            (head, r.next)
+          }.getOrElse((Some(node), Some(node)))
+        }._1
+    }
+
+    val list1Number = getListNumber(list1)
+    val list2Number = getListNumber(list2)
+    createListFromNumber(list1Number + list2Number)
+  }
+
+  /**
+    * You have two numbers represented by a linked list, where each node contains a single
+    * digit. The digits are stored in reverse order, such that the 1’s digit is at the head of
+    * the list. Write a function that adds the two numbers and returns the sum as a linked
+    * list.
+    * EXAMPLE
+    * First List: 7->5->9->4->6  // represents number 64957
+    * Second List: 8->4 //  represents number 48
+    * Resultant list: 5->0->0->5->6  // represents number 65005
+    *
+    * @param list1
+    * @param list2
+    * @return linked list that represents the sum of the tow lists
+    */
+  def sumListsRec(list1: Node, list2: Node) = {
+    def go(list1O: Option[Node], list2O: Option[Node], headResult: Option[Node], carry: Int): Option[Node] = {
+      (list1O, list2O) match {
+        case (None, None)   => if(carry > 0) Some(Node(1, headResult)) else headResult
+        case (list1, list2) => {
+          val sumWithCarry = list1.map(_.data).getOrElse(0) + list2.map(_.data).getOrElse(0) + carry
+          val sumWithoutCarry = sumWithCarry % 10
+          val isCarry = sumWithCarry > 9
+          val newNode = Node(sumWithoutCarry, headResult)
+          go(list1.flatMap(_.next), list2.flatMap(_.next), Some(newNode), if(isCarry) 1 else 0)
+        }
+      }
+    }
+    go(Some(list1), Some(list2), None, 0)
+  }
+
+  val node1 = Node(9)
+  val node2 = Node(9)
+  val node3 = Node(9)
+  val node4 = Node(9)
+  val node5 = Node(9)
+  val node6 = Node(9)
+  val node7 = Node(9)
   val node8 = Node(9)
 
   node1.next = Some(node2)
   node2.next = Some(node3)
-  node3.next = Some(node4)
+
+  //node3.next = Some(node4)
   node4.next = Some(node5)
   node5.next = Some(node6)
-  node6.next = Some(node7)
+  //node6.next = Some(node7)
   //node7.next = Some(node8)
 
 
-  val asdas = partition(node1, 5)
+  val asdas = sumListsRec(node1, node4)
 
 
   val ttttt = ""
