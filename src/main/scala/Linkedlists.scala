@@ -239,26 +239,70 @@ object Linkedlists extends App {
     go(Some(list1), Some(list2), None, 0)
   }
 
-  val node1 = Node(9)
-  val node2 = Node(9)
-  val node3 = Node(9)
-  val node4 = Node(9)
-  val node5 = Node(9)
-  val node6 = Node(9)
+  /**
+    * Implement a function to check if a linked list is a palindrome
+    *
+    * @param head
+    * @return true / false if the linked list is a palindrome
+    */
+  def isListPalindromeStr(head: Node): Boolean = {
+    def getPalindromeStr(head: Node, result: StringBuilder): String = {
+      head.next match {
+        case Some(next) => getPalindromeStr(next, result.append(next.data.toString))
+        case None => result.toString
+      }
+    }
+    val listStr = getPalindromeStr(head, (new StringBuilder).append(head.data))
+    listStr == listStr.reverse
+  }
+
+  /**
+    * Implement a function to check if a linked list is a palindrome using reverse list
+    *
+    * @param head
+    * @return true / false if the linked list is a palindrome
+    */
+  def isListPalindromeReverseList(head: Node): Boolean = {
+    def reverseList(head: Node, result: Node): Node = {
+      head.next match {
+        case Some(next) => reverseList(next, Node(next.data, Some(result)))
+        case None       => result
+      }
+    }
+
+    def checkListsPalindrome(list1: Node, list1Reverse: Node): Boolean = {
+      if(list1.data != list1Reverse.data) false
+      else {
+        (list1.next, list1Reverse.next) match {
+          case (Some(l1Next), Some(l1ReverseNext)) => checkListsPalindrome(l1Next, l1ReverseNext)
+          case (None, None)                        => true
+          case _                                   => false
+        }
+      }
+    }
+
+    checkListsPalindrome(head, reverseList(head, Node(head.data)))
+  }
+
+  val node1 = Node(1)
+  val node2 = Node(2)
+  val node3 = Node(2)
+  val node4 = Node(2)
+  val node5 = Node(2)
+  val node6 = Node(1)
   val node7 = Node(9)
   val node8 = Node(9)
 
   node1.next = Some(node2)
   node2.next = Some(node3)
-
-  //node3.next = Some(node4)
+  node3.next = Some(node4)
   node4.next = Some(node5)
   node5.next = Some(node6)
   //node6.next = Some(node7)
   //node7.next = Some(node8)
 
 
-  val asdas = sumListsRec(node1, node4)
+  val asdas = isListPalindromeReverseList(node1)
 
 
   val ttttt = ""
