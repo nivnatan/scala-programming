@@ -284,25 +284,111 @@ object Linkedlists extends App {
     checkListsPalindrome(head, reverseList(head, Node(head.data)))
   }
 
+  /**
+    * Intersection: Given two (singly) linked lists, determine if the two lists intersect. Return the intersecting
+    * node. Note that the intersection is defined based on reference, not value. That is, if the kth
+    * node of the first linked list is the exact same node (by reference) as the jth node of the second
+    * linked list, then they are intersecting.
+    * http://www.knowsh.com/Notes/160273/Determine-If-The-Two-Linked-Lists-Intersect
+    * https://github.com/zhou-dong/algorithm/blob/master/algorithm/src/org/dzhou/research/cci/linkedlist/Intersection.java
+    *
+    * @param list1
+    * @param list2
+    * @return node reference of where the intersection begins, or none in case no intersection occurs
+    */
+  def intersectionByRef(list1: Node, list2: Node): Option[Node] = {
+
+    // return the size and tail node for a given list
+    def getSizeAndTail(head: Node, counter: Int = 1): (Node,Int) = {
+      head.next match {
+        case Some(next) => getSizeAndTail(next, counter + 1)
+        case None       => head -> counter
+      }
+    }
+
+    // advancing the list by k and return the k node (relays that it exists for sure)
+    def getKthNodeOfLongerList(head: Node, k: Int): Node = {
+      if(k == 0) head else getKthNodeOfLongerList(head.next.get, k - 1)
+    }
+
+    val list1SizeAndTail    = getSizeAndTail(list1)
+    val list2SizeAndTail    = getSizeAndTail(list2)
+
+    if(list1SizeAndTail._1 != list2SizeAndTail._1) {
+      None
+    } else {
+      val longerList          = if(list1SizeAndTail._2 > list2SizeAndTail._2) list1 else list2
+      val shorterList         = if(list1SizeAndTail._2 > list2SizeAndTail._2) list2 else list1
+      val longerListAdvanced  = getKthNodeOfLongerList(longerList, Math.abs(list1SizeAndTail._2 - list2SizeAndTail._2)) // at this point the pointer of longer list points on an equal number of elements list as the shorter one.
+
+      def findListsIntersections(list1: Option[Node], list2: Option[Node]): Option[Node] = {
+        (list1,list2) match {
+          case (None,None) => None
+          case (list1,list2) if(list1 == list2) => list1
+          case (list1,list2)  => findListsIntersections(list1.flatMap(_.next), list2.flatMap(_.next))
+        }
+      }
+
+      findListsIntersections(Some(longerListAdvanced), Some(shorterList))
+    }
+  }
+
+  /**
+    * Loop Detection: Given a circular linked list, implement an algorithm that returns the node at the
+    * beginning of the loop.
+    * DEFINITION
+    * Circular linked list: A (corrupt) linked list in which a node's next pointer points to an earlier node, so
+    * as to make a loop in the linked list.
+    * EXAMPLE
+    * Input: // 1 -> 2 -> 3 -> 4 -> 5 -> 3
+    * Output: 3
+    *
+    * @param head
+    * @return the node that caused the loop, or None if no looping occurs
+    */
+  def loopDetection(head: Node): Option[Node] = {
+    // we can solve this by maintaining set of already visited nodes,
+    // or use floyd algorithm to detect a loop - i.e. - Traverse linked list using two pointers.
+    // move one pointer by one and other pointer by two.  If these pointers meet at some node then there is a loop.
+    // if pointers do not meet then linked list does not have loop - let's implement this
+    // when the two pointers met, they met at some point within the circle, now we need to find the beginning of the cycle.
+    // we take back the slow pointer to the beginning, and advance fast and slow pointer by one. when they meet - that is the beginning of the cycle.
+    // explanation - https://stackoverflow.com/questions/2936213/explain-how-finding-cycle-start-node-in-cycle-linked-list-work
+    def findFirstEncounterNodeOfSlowAndFastPointers(slow: Option[Node], fast: Option[Node], moveByOne: Boolean): Option[Node] = {
+      (slow, fast) match {
+        case (Some(s),Some(f)) if(s==f) => Some(s)
+        case (Some(s),Some(f))          => findFirstEncounterNodeOfSlowAndFastPointers(s.next, if(moveByOne) f.next else f.next.flatMap(_.next), moveByOne)
+        case _                          => None
+      }
+    }
+
+    val firstEncounter = findFirstEncounterNodeOfSlowAndFastPointers(head.next, head.next.flatMap(_.next), false)
+    findFirstEncounterNodeOfSlowAndFastPointers(Some(head), firstEncounter, true)
+  }
+
+
+
   val node1 = Node(1)
   val node2 = Node(2)
-  val node3 = Node(2)
-  val node4 = Node(2)
-  val node5 = Node(2)
-  val node6 = Node(1)
-  val node7 = Node(9)
-  val node8 = Node(9)
+  val node3 = Node(3)
+  val node4 = Node(4)
+  val node5 = Node(5)
+  val node6 = Node(6)
+  val node7 = Node(7)
+  val node8 = Node(8)
 
-  node1.next = Some(node2)
+  node1.next = Some(node2)    // 1 -> 2 -> 3 -> 4 -> 5 -> 3
   node2.next = Some(node3)
   node3.next = Some(node4)
   node4.next = Some(node5)
-  node5.next = Some(node6)
-  //node6.next = Some(node7)
-  //node7.next = Some(node8)
+  node5.next = Some(node3)
+
+  node6.next = Some(node7)
+  node7.next = Some(node8)
+  node8.next = Some(node4)
 
 
-  val asdas = isListPalindromeReverseList(node1)
+  val asdas = loopDetection(node1)
 
 
   val ttttt = ""
