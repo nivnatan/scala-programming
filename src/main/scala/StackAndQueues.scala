@@ -1,3 +1,5 @@
+import java.time.Instant
+
 import scala.reflect.ClassTag
 
 /**
@@ -192,6 +194,43 @@ object StackAndQueues extends App {
     def peek = sortedStack.peek
 
     def isEmpty = sortedStack.isEmpty
+  }
+
+  /**
+    * Animal Shelter: An animal shelter, which holds only dogs and cats, operates on a strictly"first in, first
+    * out" basis. People must adopt either the "oldest" (based on arrival time) of all animals at the shelter,
+    * or they can select whether they would prefer a dog or a cat (and will receive the oldest animal of
+    * that type). They cannot select which specific animal they would like. Create the data structures to
+    * maintain this system and implement operations such as enqueue, dequeueAny, dequeueDog,
+    * and dequeueCat. You may use the built-in Linked List data structure.
+    */
+  sealed abstract class Animal(val name: String, val tsCreated: Long = Instant.now().getEpochSecond)
+  class Perro(name: String) extends Animal(name)
+  class Gato(name: String) extends Animal(name)
+
+  class AnimalShelter {
+    private val perrosQueue = new MyQueue[Perro] // Dogs (practicing my spanish :)
+    private val gatosQueue  = new MyQueue[Gato] // Cats (practicing my spanish :)
+
+    def enqueue(animal: Animal): Unit = {
+      animal match {
+        case p:Perro => perrosQueue.add(p)
+        case g:Gato  => gatosQueue.add(g)
+      }
+    }
+
+    def dequeueAny: Animal = {
+      require(!perrosQueue.isEmpty || !gatosQueue.isEmpty)
+      if(perrosQueue.isEmpty) gatosQueue.remove
+      else if(gatosQueue.isEmpty) perrosQueue.remove
+      else {
+        if(perrosQueue.peek.tsCreated <= gatosQueue.peek.tsCreated) perrosQueue.remove else gatosQueue.remove
+      }
+    }
+
+    def dequeueDog(data: Int): Perro = perrosQueue.remove
+
+    def dequeueCat(data: Int): Gato = gatosQueue.remove
   }
 
 
