@@ -5,10 +5,11 @@ import scala.reflect.ClassTag
   */
 object StackAndQueues extends App {
 
+  /**
+    * Implementation of an immutable stack
+    */
   class MyStack[T] {
-
     case class StackNode[T](data: T, next: Option[StackNode[T]])
-
     private var top: Option[StackNode[T]] = None
 
     def push(data: T): Unit = {
@@ -31,10 +32,11 @@ object StackAndQueues extends App {
     def isEmpty = top.isEmpty
   }
 
+  /**
+    * Implementation of an immutable queue
+    */
   class MyQueue[T] {
-
     case class QueueNode[T](data: T, var next: Option[QueueNode[T]] = None)
-
     private var top: Option[QueueNode[T]] = None
     private var last: Option[QueueNode[T]] = None
 
