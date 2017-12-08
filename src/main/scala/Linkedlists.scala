@@ -4,7 +4,7 @@ import scala.collection.immutable.List
 /**
   * Created by niv on 23/11/2017.
   */
-object Linkedlists extends App {
+object Linkedlists {
 
   case class Node(data: Int, var next: Option[Node] = None) {
     def appendToTail(data: Int) = {
@@ -365,33 +365,4 @@ object Linkedlists extends App {
     val firstEncounter = findFirstEncounterNodeOfSlowAndFastPointers(head.next, head.next.flatMap(_.next), false)
     findFirstEncounterNodeOfSlowAndFastPointers(Some(head), firstEncounter, true)
   }
-
-
-
-  val node1 = Node(1)
-  val node2 = Node(2)
-  val node3 = Node(3)
-  val node4 = Node(4)
-  val node5 = Node(5)
-  val node6 = Node(6)
-  val node7 = Node(7)
-  val node8 = Node(8)
-
-  node1.next = Some(node2)    // 1 -> 2 -> 3 -> 4 -> 5 -> 3
-  node2.next = Some(node3)
-  node3.next = Some(node4)
-  node4.next = Some(node5)
-  node5.next = Some(node3)
-
-  node6.next = Some(node7)
-  node7.next = Some(node8)
-  node8.next = Some(node4)
-
-
-  val asdas = loopDetection(node1)
-
-
-  val ttttt = ""
-
-
 }

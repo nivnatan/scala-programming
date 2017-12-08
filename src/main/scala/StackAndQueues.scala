@@ -5,7 +5,7 @@ import scala.reflect.ClassTag
 /**
   * Created by nivnatan on 12/4/2017.
   */
-object StackAndQueues extends App {
+object StackAndQueues {
 
   /**
     * Implementation of an immutable stack
@@ -232,37 +232,4 @@ object StackAndQueues extends App {
 
     def dequeueCat(data: Int): Gato = gatosQueue.remove
   }
-
-
-  val stack = new SortStack
-  stack.push(3)
-  stack.push(2)
-  stack.push(40)
-  stack.push(1)
-  stack.push(5)
-
-  println(stack.pop)
-  println(stack.pop)
-  println(stack.pop)
-  println(stack.pop)
-  println(stack.pop)
-
-
-//  val queue = new MyQueueViaTwoStacks[Int]
-//  queue.add(3)
-//  queue.add(2)
-//  queue.add(4)
-//  queue.add(1)
-//  queue.add(5)
-//
-//  println(s"peak=${queue.peek}")
-//  println(queue.remove)
-//  println(s"peak=${queue.peek}")
-//  println(queue.remove)
-//  println(s"peak=${queue.peek}")
-//  println(queue.remove)
-//  println(s"peak=${queue.peek}")
-//  println(queue.remove)
-//  println(s"peak=${queue.peek}")
-//  println(queue.remove)
 }
