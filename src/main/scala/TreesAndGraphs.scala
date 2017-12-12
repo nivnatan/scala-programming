@@ -127,4 +127,14 @@ object TreesAndGraphs extends App {
       headOfList
     }
   }
+
+  /**
+    * Given a value, search for a node that matches the value and return it
+    * @param root
+    * @return node that matches the searched value
+    */
+  def findNode[T](root: TreeNode[T], value: T): Option[TreeNode[T]] = {
+    if(root.data == value) Some(root)
+    else (root.left.flatMap(findNode(_, value)) orElse root.right.flatMap(findNode(_, value)))
+  }
 }
