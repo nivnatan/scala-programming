@@ -341,4 +341,17 @@ object ArraysAndStrings {
     if(str1.length != str2.length) false
     else isSubstring(str1 + str1, str2)
   }
+
+  /**
+    * Find the number which is not repeated in Array of integers, others are present for two times.
+    * e.g. Input : 23, 34,56,21,21,56,78,23, 34
+    * Output: 23
+    *
+    * @param arr
+    * @return number which is not repeated in the array of integers
+    */
+  def stringRotation(arr: Array[Int]) = {
+    // XOR
+    arr.reduceLeft(_ ^ _)
+  }
 }

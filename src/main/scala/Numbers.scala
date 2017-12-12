@@ -60,5 +60,4 @@ object Numbers {
     if(number2 == 0) number1
     else gcd(number2, number1 % number2)
   }
-
 }
