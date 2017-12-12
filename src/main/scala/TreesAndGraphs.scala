@@ -111,8 +111,8 @@ object TreesAndGraphs extends App {
       override def toString = s"currentNode=${data.toString}, listNext=${next}"
     }
 
-    def tree2List[_](root: TreeNodeLinkedList[_]): TreeNodeLinkedList[_] = {
-      def tree2ListRec(root: TreeNodeLinkedList[_], headOfList: TreeNodeLinkedList[_]): Unit = {
+    def tree2List[T](root: TreeNodeLinkedList[T]): TreeNodeLinkedList[T] = {
+      def tree2ListRec(root: TreeNodeLinkedList[T], headOfList: TreeNodeLinkedList[T]): Unit = {
         root.left.map(tree2ListRec(_,headOfList))
         if(root != headOfList) {
           var tailList = headOfList
@@ -121,7 +121,7 @@ object TreesAndGraphs extends App {
         }
         root.right.map(tree2ListRec(_,headOfList))
       }
-      def initHeadOfListWhichIsTheLeftMostLeaf(root: TreeNodeLinkedList[_]): TreeNodeLinkedList[_] = root.left.map(initHeadOfListWhichIsTheLeftMostLeaf).getOrElse(root)
+      def initHeadOfListWhichIsTheLeftMostLeaf(root: TreeNodeLinkedList[T]): TreeNodeLinkedList[T] = root.left.map(initHeadOfListWhichIsTheLeftMostLeaf).getOrElse(root)
       val headOfList = initHeadOfListWhichIsTheLeftMostLeaf(root)
       tree2ListRec(root, headOfList)
       headOfList
