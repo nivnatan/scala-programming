@@ -137,4 +137,15 @@ object TreesAndGraphs extends App {
     if(root.data == value) Some(root)
     else (root.left.flatMap(findNode(_, value)) orElse root.right.flatMap(findNode(_, value)))
   }
+
+  /**
+    * Given a value, search for a node in a binary search tree that matches the value and return it
+    * @param root
+    * @return node that matches the searched value
+    */
+  def binTreeSearch(root: TreeNode[Int], value: Int): Option[TreeNode[Int]] = {
+    if(root.data == value)     Some(root)
+    else if(value < root.data) root.left.flatMap(findNode(_, value))
+    else                       root.right.flatMap(findNode(_, value))
+  }
 }

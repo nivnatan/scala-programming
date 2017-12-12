@@ -1,10 +1,9 @@
 import scala.annotation.tailrec
-import scala.collection.immutable.List
 
 /**
   * Created by niv on 23/11/2017.
   */
-object Linkedlists {
+object Linkedlists extends App {
 
   case class Node(data: Int, var next: Option[Node] = None) {
     def appendToTail(data: Int) = {
@@ -364,5 +363,39 @@ object Linkedlists {
 
     val firstEncounter = findFirstEncounterNodeOfSlowAndFastPointers(head.next, head.next.flatMap(_.next), false)
     findFirstEncounterNodeOfSlowAndFastPointers(Some(head), firstEncounter, true)
+  }
+
+  /**
+    * Reverse a linkedList (iteratively and recursively)
+    *
+    * @param head
+    * @return head of reversed linkedList
+    */
+  def reverseListIterative(head: Node): Node = {
+    @tailrec
+    def reverseListIterativeTailRec(head: Node, prev: Option[Node]): Node = {
+      val headNext = head.next
+      head.next = prev
+      headNext match {
+        case Some(next) => reverseListIterativeTailRec(next, Some(head))
+        case None       => head
+      }
+    }
+
+    def reverseListIterativeRec(head: Node): Node = {
+      head.next match {
+        case None => head // Return C
+        case Some(next) => {
+          // find the last element to be the nea head
+          val newHead = reverseListIterativeRec(next)
+          // now in reverse order, starting from the second element from the end (which is B) do: {A -> B -> C -> None}
+          next.next = Some(head) // B <- C
+          head.next = None // B -> None
+          newHead // Return C
+        }
+      }
+    }
+
+    reverseListIterativeRec(head)
   }
 }
