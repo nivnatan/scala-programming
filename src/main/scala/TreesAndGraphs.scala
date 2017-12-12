@@ -5,14 +5,13 @@ object TreesAndGraphs extends App {
 
   case class TreeNode[T](data: T, var left: Option[TreeNode[T]] = None, var right: Option[TreeNode[T]] = None)
 
-  val node1 = TreeNode("A")
-  val node2 = TreeNode("B")
-  val node3 = TreeNode("C")
-  val node4 = TreeNode("G")
-  val node5 = TreeNode("F")
-  val node6 = TreeNode("D")
-  val node7 = TreeNode("E")
-  val node8 = TreeNode("H")
+  val node1 = TreeNode(10)
+  val node2 = TreeNode(5)
+  val node3 = TreeNode(20)
+  val node4 = TreeNode(25)
+  val node5 = TreeNode(15)
+  val node6 = TreeNode(2)
+  val node7 = TreeNode(6)
 
   node1.left  = Some(node2) // B
   node1.right = Some(node3) // C
@@ -20,7 +19,6 @@ object TreesAndGraphs extends App {
   node2.right = Some(node7) // E
   node3.left  = Some(node5) // F
   node3.right = Some(node4) // G
-  node4.right = Some(node8) // G
 
   /**
     *              A
@@ -77,5 +75,23 @@ object TreesAndGraphs extends App {
 
   def treeHeightMoreElegant(root: TreeNode[_]): Int = {
     1 + Math.max(root.left.map(treeHeightMoreElegant).getOrElse(0), root.right.map(treeHeightMoreElegant).getOrElse(0))
+  }
+
+  case class TreeNodeRouteSum(data: Int, var left: Option[TreeNodeRouteSum] = None, var right: Option[TreeNodeRouteSum] = None, var sumRoute: Int = 0)
+  /**
+    * Find tree height (number of nodes from the root until the farthest leaf)
+    * e.g. Input : 23, 34,56,21,21,56,78,23, 34
+    * Output: 23
+    *
+    * @param root
+    * @return number which is not repeated in the array of integers
+    */
+  def routeSum(root: TreeNodeRouteSum) = {
+    def routeSumRec(root: TreeNodeRouteSum, routeSum: Int): Unit = {
+      root.sumRoute = root.data + routeSum
+      root.left.map(routeSumRec(_, root.sumRoute))
+      root.right.map(routeSumRec(_, root.sumRoute))
+    }
+    routeSumRec(root, 0)
   }
 }
