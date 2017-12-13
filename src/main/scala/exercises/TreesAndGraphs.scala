@@ -16,7 +16,6 @@ object TreesAndGraphs extends App {
   val node5 = TreeNode(15)
   val node6 = TreeNode(2)
   val node7 = TreeNode(6)
-  val node8 = TreeNode(8)
 
   node1.left  = Some(node2) // B
   node1.right = Some(node3) // C
@@ -24,7 +23,6 @@ object TreesAndGraphs extends App {
   node2.right = Some(node7) // E
   node3.left  = Some(node5) // F
   node3.right = Some(node4) // G
-  node7.right = Some(node8)
 
   /**
     *              A
@@ -244,6 +242,32 @@ object TreesAndGraphs extends App {
         head.right.map(queue.add)
       }
       print("\n")
+    }
+  }
+
+  /**
+    * Given two binary trees, check if the first tree is subtree of the second one. A subtree of a tree T is a tree S consisting of a node in T and all of its descendants in T.
+    *
+    * @param root1
+    * @param root2
+    * @return true if root2 is a subtree of root1
+    */
+  def isSubTree(root1: TreeNode[Int], root2: TreeNode[Int]): Boolean = {
+
+    def areTreesIdentical(root1: TreeNode[Int], root2: TreeNode[Int]): Boolean = {
+      if(root1.data != root2.data) false
+      else {
+        (root1.left, root2.left, root1.right, root2.right) match {
+          case (None, None, None, None)                                   => true
+          case (Some(r1Left), Some(r2Left), Some(r1Right), Some(r2Right)) => areTreesIdentical(r1Left, r2Left) && areTreesIdentical(r1Right, r2Right)
+          case _                                                          => false
+        }
+      }
+    }
+
+    if(root1.data == root2.data && areTreesIdentical(root1, root2)) true
+    else {
+      root1.left.map(isSubTree(_, root2)).getOrElse(false) ||  root1.right.map(isSubTree(_, root2)).getOrElse(false)
     }
   }
 }
