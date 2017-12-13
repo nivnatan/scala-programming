@@ -254,6 +254,7 @@ object TreesAndGraphs extends App {
     */
   def isSubTree(root1: TreeNode[Int], root2: TreeNode[Int]): Boolean = {
 
+    // Check for a given two roots, if the trees are identical
     def areTreesIdentical(root1: TreeNode[Int], root2: TreeNode[Int]): Boolean = {
       if(root1.data != root2.data) false
       else {
