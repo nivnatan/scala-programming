@@ -148,4 +148,39 @@ object TreesAndGraphs extends App {
     else if(value < root.data) root.left.flatMap(findNode(_, value))
     else                       root.right.flatMap(findNode(_, value))
   }
+
+  /**
+    * Implement a function to check if a tree is balanced. For the purposes of this question,
+    * a balanced tree is defined to be a tree such that no two leaf nodes differ in distance
+    * from the root by more than one.
+    *
+    * @param root
+    * @return true if the tree is balanced, false otherwise
+    */
+  def isTreeBalanced(root: TreeNode[Int]): Boolean = {
+    val leftHeight  = root.left.map(treeHeightMoreElegant).getOrElse(0)
+    val rightHeight = root.right.map(treeHeightMoreElegant).getOrElse(0)
+    Math.abs(leftHeight - rightHeight) <= 1 && root.left.map(isTreeBalanced).getOrElse(true) && root.right.map(isTreeBalanced).getOrElse(true)
+  }
+
+  /**
+    * Given a sorted (increasing order) array, write an algorithm to create a binary tree with
+    * minimal height.
+ *
+    * @param arr
+    * @return binary tree
+    */
+  def binaryTreeFromArray(arr: Array[Int]): Option[TreeNode[Int]] = {
+    def binaryTreeFromArrayRec(min: Int, max:Int): Option[TreeNode[Int]] = {
+      if(min > max) None
+      else {
+        val mid = (max + min) / 2
+        val newNode = TreeNode(arr(mid))
+        newNode.left = binaryTreeFromArrayRec(min, mid - 1)
+        newNode.right = binaryTreeFromArrayRec(mid + 1, max)
+        Some(newNode)
+      }
+    }
+    binaryTreeFromArrayRec(0, arr.length-1)
+  }
 }
