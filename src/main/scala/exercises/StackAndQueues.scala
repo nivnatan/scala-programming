@@ -1,3 +1,5 @@
+package exercises
+
 import java.time.Instant
 
 import scala.reflect.ClassTag
@@ -38,6 +40,9 @@ object StackAndQueues {
     * Implementation of an immutable queue
     */
   class MyQueue[T] {
+
+    var length = 0
+
     case class QueueNode[T](data: T, var next: Option[QueueNode[T]] = None)
     private var top: Option[QueueNode[T]] = None
     private var last: Option[QueueNode[T]] = None
@@ -47,11 +52,13 @@ object StackAndQueues {
       last.map(_.next = Some(newQueueNode))
       last = Some(newQueueNode)
       if (top.isEmpty) top = last
+      length += 1
     }
 
     def remove: T = {
       top.map { case topElem =>
         top = topElem.next
+        length -= 1
         topElem.data
       }.getOrElse(throw new IllegalArgumentException("queue is empty"))
     }
@@ -59,6 +66,8 @@ object StackAndQueues {
     def peek = top.map(_.data).getOrElse(throw new IllegalArgumentException("stack is empty"))
 
     def isEmpty = top.isEmpty
+
+    def size: Int = length
   }
 
   /**

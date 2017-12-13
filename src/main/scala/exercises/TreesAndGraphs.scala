@@ -1,3 +1,7 @@
+package exercises
+
+import exercises.StackAndQueues.MyQueue
+
 /**
   * Created by nivnatan on 12/8/2017.
   */
@@ -12,6 +16,7 @@ object TreesAndGraphs extends App {
   val node5 = TreeNode(15)
   val node6 = TreeNode(2)
   val node7 = TreeNode(6)
+  val node8 = TreeNode(8)
 
   node1.left  = Some(node2) // B
   node1.right = Some(node3) // C
@@ -19,6 +24,7 @@ object TreesAndGraphs extends App {
   node2.right = Some(node7) // E
   node3.left  = Some(node5) // F
   node3.right = Some(node4) // G
+  node7.right = Some(node8)
 
   /**
     *              A
@@ -130,6 +136,7 @@ object TreesAndGraphs extends App {
 
   /**
     * Given a value, search for a node that matches the value and return it
+    *
     * @param root
     * @return node that matches the searched value
     */
@@ -140,6 +147,7 @@ object TreesAndGraphs extends App {
 
   /**
     * Given a value, search for a node in a binary search tree that matches the value and return it
+    *
     * @param root
     * @return node that matches the searched value
     */
@@ -166,7 +174,7 @@ object TreesAndGraphs extends App {
   /**
     * Given a sorted (increasing order) array, write an algorithm to create a binary tree with
     * minimal height.
- *
+    *
     * @param arr
     * @return binary tree
     */
@@ -182,5 +190,60 @@ object TreesAndGraphs extends App {
       }
     }
     binaryTreeFromArrayRec(0, arr.length-1)
+  }
+
+  def levelOrderTraversalUsingQueue(root: TreeNode[Int]): Unit = {
+    val queue = new MyQueue[TreeNode[Int]]
+    queue.add(root)
+    while(!queue.isEmpty) {
+      val element = queue.remove
+      element.left.map(queue.add)
+      element.right.map(queue.add)
+    }
+  }
+
+  /**
+    * Print all nodes at the same level in each new line
+    * For example:
+    * 10
+    * 5 20
+    * 2 6 15 25
+    * Complexity - O(n^2)
+    *
+    * @param root
+    * @return
+    */
+  def levelOrderPrint(root: TreeNode[Int]): Unit = {
+    def printLevel(root: TreeNode[Int], levelToPrint: Int, currentLevel: Int): Unit = {
+      if(currentLevel == levelToPrint) print(root.data + " ")
+      root.left.map(printLevel(_,levelToPrint, currentLevel + 1))
+      root.right.map(printLevel(_,levelToPrint, currentLevel + 1))
+    }
+
+    val height = treeHeight(root) // calculate the height first
+    for(i <- 0 until height) {    // for every level in the tree, scan preOrder the tree and print only the nodes at the desired level
+      printLevel(root, i, 0)
+      print("\n")
+    }
+  }
+
+  /**
+    * Same as levelOrderPrint, but using a better complexity of O(n)
+    *
+    * @param root
+    * @return
+    */
+  def levelOrderPrintUsingQueue(root: TreeNode[Int]): Unit = {
+    val queue = new MyQueue[TreeNode[Int]]
+    queue.add(root)
+    while(!queue.isEmpty) {
+      for(_ <- 0 until queue.size) {
+        val head = queue.remove
+        print(head.data + " ")
+        head.left.map(queue.add)
+        head.right.map(queue.add)
+      }
+      print("\n")
+    }
   }
 }

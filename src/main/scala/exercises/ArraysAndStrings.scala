@@ -1,3 +1,5 @@
+package exercises
+
 import scala.collection.mutable.ListBuffer
 
 /**
