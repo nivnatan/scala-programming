@@ -15,7 +15,7 @@ object TreesAndGraphs extends App {
   val node4 = TreeNode(25)
   val node5 = TreeNode(15)
   val node6 = TreeNode(2)
-  val node7 = TreeNode(6)
+  val node7 = TreeNode(68)
 
   node1.left  = Some(node2) // B
   node1.right = Some(node3) // C
@@ -59,6 +59,26 @@ object TreesAndGraphs extends App {
     root.left.map(postOrder)
     root.right.map(postOrder)
     println(root.data)
+  }
+
+  /**
+    * Validate if a tree is a binary search tree
+    * Solution - perform inorder traversal which should traverse a BST in an acceding manner - if one of the nodes is smaller then the previous one - resturn false
+    *
+    * @param root
+    * @return true if the tree is BST, false otherwise
+    */
+  def validateBST(root: TreeNode[Int]): Boolean = {
+    var prev: Option[TreeNode[Int]] = None
+    def validateBSTRec(root: TreeNode[Int]): Boolean = {
+      root.left.map(validateBSTRec(_)).getOrElse(true)
+      if(prev.map(_.data > root.data).getOrElse(false)) false
+      else {
+        prev = Some(root)
+        root.right.map(validateBSTRec(_)).getOrElse(true)
+      }
+    }
+    validateBSTRec(root)
   }
 
   /**
