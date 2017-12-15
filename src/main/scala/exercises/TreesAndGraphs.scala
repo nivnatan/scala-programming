@@ -15,7 +15,7 @@ object TreesAndGraphs extends App {
   val node4 = TreeNode(25)
   val node5 = TreeNode(15)
   val node6 = TreeNode(2)
-  val node7 = TreeNode(68)
+  val node7 = TreeNode(6)
 
   node1.left  = Some(node2) // B
   node1.right = Some(node3) // C
@@ -290,5 +290,49 @@ object TreesAndGraphs extends App {
     else {
       root1.left.map(isSubTree(_, root2)).getOrElse(false) ||  root1.right.map(isSubTree(_, root2)).getOrElse(false)
     }
+  }
+
+  /**
+    * Print the path from the root to a given node
+    * Algorithm:
+    * 1. Start from the root and com­pare it with x, if matched then we have found the node.
+    * 2. Else go left and right.
+    * 3. Recursively do step 2 and 3 till you find the node x.
+    * 4. Now when you have found the node, stop the recursion.
+    * 5. Now while going back to the root while back track­ing, store the node val­ues in the ArrayList.
+    * 6. Reverse the ArrayList and print it.
+    *
+    * @param root
+    * @param node1
+    * @return
+    */
+  def printPathToAGivenNode(root: TreeNode[Int], node1: Int): Unit = {
+    val arrayResult = scala.collection.mutable.ArrayBuffer.empty[TreeNode[Int]]
+    def printPathToAGivenNodeRec(root: TreeNode[Int], node1: Int): Boolean = {
+      if(root.data == node1 ||
+        root.left.map(printPathToAGivenNodeRec(_,node1)).getOrElse(false) ||
+        root.right.map(printPathToAGivenNodeRec(_,node1)).getOrElse(false)) {
+        arrayResult += root
+        true
+      } else {
+        false
+      }
+    }
+    printPathToAGivenNodeRec(root, node1)
+    arrayResult.reverse.foreach(d => print(d.data + " "))
+  }
+
+  /**
+    * Find the lowest common ancestor in a binary search tree for two given nodes (assuming they are known to be part of the tree and node1 < node2)
+    *
+    * @param root
+    * @param node1
+    * @param node2
+    * @return the lowest common ancestor in a binary search tree
+    */
+  def findLCAInBST(root: TreeNode[Int], node1: Int, node2: Int): Option[TreeNode[Int]] = {
+    if(node1 <= root.data && node2 >= root.data) Some(root)
+    else if(node1 <= root.data && node2 <= root.data) root.left.map(findLCAInBST(_, node1, node2)).getOrElse(None)
+    else root.right.map(findLCAInBST(_, node1, node2)).getOrElse(None)
   }
 }
