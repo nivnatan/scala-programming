@@ -62,6 +62,18 @@ object TreesAndGraphs extends App {
   }
 
   /**
+    * Find the max element in the tree
+    *
+    * @param root
+    * @return true if the tree is BST, false otherwise
+    */
+  def maxElementInTree(root: TreeNode[Int]): Int = {
+    val leftMax = Math.max(root.left.map(maxElementInTree).getOrElse(root.data), root.data)
+    val rightMax = Math.max(root.right.map(maxElementInTree).getOrElse(root.data), root.data)
+    Math.max(leftMax, rightMax)
+  }
+
+  /**
     * Validate if a tree is a binary search tree
     * Solution - perform inorder traversal which should traverse a BST in an acceding manner - if one of the nodes is smaller then the previous one - resturn false
     *
