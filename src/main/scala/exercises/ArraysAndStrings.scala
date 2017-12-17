@@ -39,6 +39,18 @@ object ArraysAndStrings extends App {
   }
 
   /**
+    * Reverse an array without using an additional space
+    * @param arr
+    */
+  def reverseArrayNoSpace(arr: Array[Int]) = {
+    for(i <- 0 until arr.length / 2) {
+      val temp = arr(i)
+      arr(i) = arr(arr.length - 1 - i)
+      arr(arr.length - 1 - i) = temp
+    }
+  }
+
+  /**
     * @param str
     * @return true if string has all unique characters, otherwise false
     *         examples:
