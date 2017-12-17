@@ -5,7 +5,38 @@ import scala.collection.mutable.ListBuffer
 /**
   * Created by nivnatan on 11/19/2017.
   */
-object ArraysAndStrings {
+object ArraysAndStrings extends App {
+
+  /**
+    * Find Pair Of Integers in Array whose Sum is Given Number
+    * Example:
+    * {1, 2, 3,  4, 5} -> {2, 4} and {1, 5}
+    * @param arr
+    * @param sum
+    */
+  def arraySumPairs(arr: Array[Int], sum: Int): Unit = {
+    // O(n^2)
+    def arraySumPairsNaive = {
+      for(i <- 0 until arr.length)
+        for(j <- i until arr.length)
+          if((arr(i) + arr(j)) == sum) print(s"{${arr(i)},${arr(j)}} ")
+    }
+
+    // O(n)
+    def arraySumPairsEfficient = {
+      val set = scala.collection.mutable.Set.empty[Int]
+      arr.foreach { case elem =>
+        val target = sum - elem
+        if(set.contains(target)){
+          print(s"{${elem},${target}} ")
+        } else {
+          set += elem
+        }
+      }
+    }
+
+    arraySumPairsEfficient
+  }
 
   /**
     * @param str
