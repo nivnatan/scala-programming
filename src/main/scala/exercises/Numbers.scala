@@ -5,7 +5,7 @@ import scala.annotation.tailrec
 /**
   * Created by nivnatan on 11/19/2017.
   */
-object Numbers {
+object Numbers extends App {
 
   /**
     * Factorial of n
@@ -61,5 +61,20 @@ object Numbers {
   def gcd(number1: Int, number2: Int): Int = {
     if(number2 == 0) number1
     else gcd(number2, number1 % number2)
+  }
+
+  /**
+    * Print 1 to 100 without using loops or conditions
+    */
+  def printNoCondition: Unit = {
+    def printNoConditionRec(num: Int): Unit = {
+      try {
+        1 / (101 - num) // will break when division by zero occurs
+        print(num + " ")
+        printNoConditionRec(num + 1)
+
+      } catch { case e: ArithmeticException => }
+    }
+    printNoConditionRec(1)
   }
 }
