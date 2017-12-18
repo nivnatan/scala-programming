@@ -5,7 +5,7 @@ import scala.annotation.tailrec
 /**
   * Created by niv on 23/11/2017.
   */
-object Linkedlists extends App {
+object Linkedlists {
 
   case class Node(data: Int, var next: Option[Node] = None) {
     def appendToTail(data: Int) = {
@@ -399,5 +399,72 @@ object Linkedlists extends App {
     }
 
     reverseListIterativeRec(head)
+  }
+
+  /**
+    * Given two sorted linked lists, how can you combine them into one big sorted list? do not create additional nodes
+    * L1: 1 -> 20 -> 34 -> 42 -> 54
+    * L2: 4 -> 16 -> 35
+    * Result: 1 -> 4 -> 16 -> 20 -> 34 -> 35 -> 42 -> 54
+    *
+    * @param head1
+    * @param head2
+    * @return head of new sorted list
+    */
+  def sortTwoLinkedlistsUsingArray(head1: Node, head2: Node): Node = {
+    val arrayResult = collection.mutable.ArrayBuffer.empty[Node]
+
+    def fillRestOfList(head: Node): Unit = {
+      arrayResult += head
+      head.next.map(fillRestOfList)
+    }
+
+    def sortTwoLinkedlistsRec(head1: Node, head2: Node): Unit = {
+      if(head1.data <= head2.data) {
+        arrayResult += head1
+        head1.next.map(sortTwoLinkedlistsRec(_, head2)).getOrElse { fillRestOfList(head2) }
+      } else {
+        arrayResult += head2
+        head2.next.map(sortTwoLinkedlistsRec(head1, _)).getOrElse { fillRestOfList(head1) }
+      }
+    }
+
+    sortTwoLinkedlistsRec(head1: Node, head2: Node)
+    arrayResult.reduceLeft { (a: Node,b: Node) => a.next = Some(b); b }
+    arrayResult.head
+  }
+
+  /**
+    * Given two sorted linked lists, how can you combine them into one big sorted list? do not create additional nodes
+    * L1: 1 -> 20 -> 34 -> 42 -> 54
+    * L2: 4 -> 16 -> 35
+    * Result: 1 -> 4 -> 16 -> 20 -> 34 -> 35 -> 42 -> 54
+    *
+    * @param head1
+    * @param head2
+    * @return head of new sorted list
+    */
+  def sortTwoLinkedlists(head1: Node, head2: Node): Node = {
+
+    def sortTwoLinkedlistsRec(headNew: Node, head1New: Option[Node], head2New: Option[Node]): Unit = {
+      (head1New, head2New) match {
+        case (None, None)              =>
+        case (Some(head1), None)       => headNew.next = Some(head1); sortTwoLinkedlistsRec(head1, head1.next, None)
+        case (None, Some(head2))       => headNew.next = Some(head2); sortTwoLinkedlistsRec(head2, None, head2.next)
+        case (Some(head1),Some(head2)) => {
+          if(head1.data < head2.data) {
+            headNew.next = Some(head1)
+            sortTwoLinkedlistsRec(head1, head1.next, Some(head2))
+          } else {
+            headNew.next = Some(head2)
+            sortTwoLinkedlistsRec(head2, Some(head1), head2.next)
+          }
+        }
+      }
+    }
+
+    val (headNew, head1New, head2New) = if(head1.data < head2.data) (head1, head1.next, Some(head2)) else (head2, Some(head1), head2.next) // initialize first head first
+    sortTwoLinkedlistsRec(headNew, head1New, head2New)
+    headNew
   }
 }
