@@ -438,4 +438,42 @@ object ArraysAndStrings extends App {
     }
     go(phoneNumber)
   }
+
+  /**
+    * Move the Spaces to Front of the String
+    * “move these spaces to beginning” => output =”    movethesepacestobeginning”
+    *
+    * @param string
+    */
+  def moveSpacesToFront(string: String): String = {
+    val res = string.split(" ")
+    ((for(_ <- 1 until res.length) yield " ").toArray ++ res).reduceLeft(_ + _)
+  }
+
+  /**
+    * Move the Spaces to Front of the String
+    * “move these spaces to beginning” => output =”    movethesepacestobeginning”
+    *
+    * @param string
+    */
+  def moveSpacesToFrontInPlaceArray(string: Array[Char]): Unit = {
+
+    def roateSubStringOnce(indexOfSpace: Int) = {
+      for(i <- indexOfSpace to 1 by -1) {
+        string(i) = string(i - 1)
+      }
+      string(0) = ' '
+    }
+
+    def go(index: Int): Unit = {
+      string.indexOf(' ', index) match {
+        case -1  =>
+        case num => {
+          roateSubStringOnce(num)
+          go(num)
+        }
+      }
+    }
+    go(0)
+  }
 }
