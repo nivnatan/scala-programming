@@ -399,4 +399,43 @@ object ArraysAndStrings extends App {
     // XOR
     arr.reduceLeft(_ ^ _)
   }
+
+  /**
+    * Print all possible words from phone number digits.
+    *
+    * @param phoneNumber
+    */
+  def phoneNumbersToAllPossibleWords(phoneNumber: String): Unit = {
+    def getCharsFromDigit(digit: Char): List[Char] = {
+      digit match {
+        case '0' => List('0')
+        case '1' => List('1')
+        case '2' => List('a','b','c')
+        case '3' => List('d','e','f')
+        case '4' => List('g','h','i')
+        case '5' => List('j','k','l')
+        case '6' => List('m','n','o')
+        case '7' => List('p','q','r','s')
+        case '8' => List('t','u','v')
+        case '9' => List('w','x','y','z')
+        case _   => Nil
+      }
+    }
+
+    def go(phoneNumber: String, prefix: String = ""): Unit = {
+      val digit                       = phoneNumber.charAt(0)
+      val listWordChars               = getCharsFromDigit(digit)
+      val phoneNumberExcludeFirstChar = phoneNumber.tail
+
+      listWordChars.foreach { case char =>
+        val currentCombination = prefix + char
+        if(phoneNumber.length == 1) { // only if we are the deepest in the recursion
+          print(currentCombination + " ")
+        } else {
+          go(phoneNumberExcludeFirstChar, prefix + char.toString)
+        }
+      }
+    }
+    go(phoneNumber)
+  }
 }
