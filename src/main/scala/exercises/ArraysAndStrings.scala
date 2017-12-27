@@ -496,4 +496,35 @@ object ArraysAndStrings extends App {
 
     print(results.map(_.mkString("{",",","}")).mkString("{"," ","}"))
   }
+
+  /**
+    * Determine if characters of a string follows a specified order or not
+    * For example -
+    * string = "Techie Delight", pattern = "el" => true {e,e,e,l} in order
+    * string = "Techie Delight", pattern = "ei" => false {e,i,e,e,i} not in order
+    *
+    * @param string
+    * @param pattern
+    */
+  def areAllCharactersFollowSpecifiedOrder(string: String, pattern: String): Boolean = {
+    def areAllCharactersFollowSpecifiedOrderRec(index: Int): Boolean = {
+      index match {
+        case num if num == pattern.length => true
+        case num                         => {
+          val lastPrevCharOfPatternPosition     = string.lastIndexOf(pattern.charAt(index - 1))
+          val firstCurrentCharOfPatternPosition = string.indexOf(pattern.charAt(index))
+          if(lastPrevCharOfPatternPosition == -1 || firstCurrentCharOfPatternPosition == -1 || lastPrevCharOfPatternPosition > firstCurrentCharOfPatternPosition) false
+          else {
+            areAllCharactersFollowSpecifiedOrderRec(index + 1)
+          }
+        }
+      }
+    }
+    // The idea is to loop via all pattern chars and check if the last position of previous char against first position of current char is smaller, otherwise false ({e,i,e,e,i} => last 'e' position is bigger then first 'i')
+    pattern.length match {
+      case 0 => true
+      case 1 => string.indexOf(pattern.charAt(0)) > -1
+      case _ => areAllCharactersFollowSpecifiedOrderRec(1)
+    }
+  }
 }
