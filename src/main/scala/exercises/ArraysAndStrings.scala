@@ -541,4 +541,24 @@ object ArraysAndStrings extends App {
     val (l1, l2) = arr.sortWith(_ > _).zipWithIndex.partition{ case (e,i) => (i % 2 == 0) } // {4,6,2,7,9,8} => {9,8,7,6,4,2} => {{9,7,4},{8,6,2}}
     (arrWithIndexToNumber(l1), arrWithIndexToNumber(l2)) // (974,862)
   }
+
+  /**
+    * Find ways to calculate target from elements of specified array
+    * For example -
+    * {5,3,-6,2} => -(-6), +5+3-2, +5-3-(-6)-2, -5+3-(-6)+2 => 4 ways
+    *
+    * @param arr
+    * @return (Int,Int)
+    */
+  def numberOfWaysToCount(arr: Array[Int], target: Int): Int = {
+    def numberOfWaysToCountRec(index: Int, sum: Int): Int = {
+      if(sum == target) 1
+      else if(index == arr.length) 0
+      else {
+        val exclude = numberOfWaysToCountRec(index + 1, sum) // without the first element
+        exclude + numberOfWaysToCountRec(index + 1, sum - arr(index)) + numberOfWaysToCountRec(index + 1, sum + arr(index)) // check '-' and '+'
+      }
+    }
+    numberOfWaysToCountRec(0, 0)
+  }
 }
