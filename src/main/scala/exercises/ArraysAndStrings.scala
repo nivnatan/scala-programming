@@ -482,7 +482,7 @@ object ArraysAndStrings extends App {
     *
     * @param set
     */
-  def moveSpacesToFront(set: Array[Char]): Unit = {
+  def allSubsetsOfSets(set: Array[Char]): Unit = {
     // the idea is- the number of subsets equal to the 2^(number of elements in set)
     // {1,2,3} => 000, 001, 010, 011, 100, 101, 110, 111
     // we need to for loop 2^elements and then inner loop (number of elements) and check which "bit" is turned on, and print it (that way we cover all options)
