@@ -527,4 +527,18 @@ object ArraysAndStrings extends App {
       case _ => areAllCharactersFollowSpecifiedOrderRec(1)
     }
   }
+
+  /**
+    * Find two numbers with maximum sum formed by array digits (integers between 0 and 9). use all array digits, the difference in number of digits of the two numbers should be +=1
+    * For example -
+    * {4,6,2,7,9,8} => 974 + 862
+    *
+    * @param arr
+    * @return (Int,Int)
+    */
+  def areAllCharactersFollowSpecifiedOrder(arr: Array[Int]): (Int,Int) = {
+    def arrWithIndexToNumber(arr: Array[(Int, Int)]) = arr.foldLeft(0) { case (sum,(e,_)) => (sum * 10) + e }
+    val (l1, l2) = arr.sortWith(_ > _).zipWithIndex.partition{ case (e,i) => (i % 2 == 0) } // {4,6,2,7,9,8} => {9,8,7,6,4,2} => {{9,7,4},{8,6,2}}
+    (arrWithIndexToNumber(l1), arrWithIndexToNumber(l2)) // (974,862)
+  }
 }
