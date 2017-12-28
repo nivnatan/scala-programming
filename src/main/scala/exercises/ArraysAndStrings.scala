@@ -1,5 +1,6 @@
 package exercises
 
+import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
 /**
@@ -8,9 +9,20 @@ import scala.collection.mutable.ListBuffer
 object ArraysAndStrings extends App {
 
   /**
+    * Return array without the first and last element
+    *
+    * @param arr
+    * @return new array without the first and second elements
+    */
+  def arrayWithoutFirstAndSecondElements(arr: Array[Int]): Int = {
+    arr.init.head
+  }
+
+  /**
     * Find Pair Of Integers in Array whose Sum is Given Number
     * Example:
     * {1, 2, 3,  4, 5} -> {2, 4} and {1, 5}
+    *
     * @param arr
     * @param sum
     */
@@ -40,6 +52,7 @@ object ArraysAndStrings extends App {
 
   /**
     * Reverse an array without using an additional space
+    *
     * @param arr
     */
   def reverseArrayNoSpace(arr: Array[Int]) = {
@@ -79,6 +92,7 @@ object ArraysAndStrings extends App {
     * of repeated characters. For example, the string aabcccccaaa would become a2b1c5a3. If the
     * "compressed" string would not become smaller than the original string, your method should return
     * the original string. You can assume the string has only uppercase and lowercase letters (a - z).
+    *
     * @param str
     * @return string compressed
     */
@@ -105,6 +119,7 @@ object ArraysAndStrings extends App {
     * pales. pale -> true
     * pale. bale -> true
     * pale. bake -> false*
+    *
     * @param str1
     * @param str2
     * @return true/false
@@ -159,6 +174,7 @@ object ArraysAndStrings extends App {
     * Given an array of positive numbers, find the highest sum of non-consecutive numbers. Example : [1, 2, 3, 4, 5] ! ! ! 1 + 3 + 5 = 9. Therefore, 9 is the answer.
     * 4 1 1 4 2 1 -> 4 + 4 + 1 = 9
     * https://www.youtube.com/watch?v=UtGtF6nc35g
+    *
     * @param arr
     * @return highest sum of non-consecutive numbers
     */
@@ -560,5 +576,22 @@ object ArraysAndStrings extends App {
       }
     }
     numberOfWaysToCountRec(0, 0)
+  }
+
+  /**
+    * How to find kth smallest element in unsorted array (better then sorting)?
+    * Example - {1, 2, 3, 9, 4} and k=2 => return 2
+    *
+    * @param arr
+    * @param k
+    * @return k'th element
+    */
+  def findKthSmallestNumberInArray(arr: Array[Int], k: Int): Int = {
+    object MinOrder extends Ordering[Int] {
+      def compare(x: Int, y: Int) = y compare x
+    }
+    val minHeap = mutable.PriorityQueue.empty[Int](MinOrder)
+    arr.foreach(minHeap += _)
+    minHeap.take(k).last
   }
 }
