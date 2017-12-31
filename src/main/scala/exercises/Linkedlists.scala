@@ -5,7 +5,7 @@ import scala.annotation.tailrec
 /**
   * Created by niv on 23/11/2017.
   */
-object Linkedlists {
+object Linkedlists extends App {
 
   case class Node(data: Int, var next: Option[Node] = None) {
     def appendToTail(data: Int) = {
@@ -466,5 +466,80 @@ object Linkedlists {
     val (headNew, head1New, head2New) = if(head1.data < head2.data) (head1, head1.next, Some(head2)) else (head2, Some(head1), head2.next) // initialize first head first
     sortTwoLinkedlistsRec(headNew, head1New, head2New)
     headNew
+  }
+
+  /**
+    * Sort linkedlist containing 0's, 1's and 2's in single traversal
+    * L1: 1 -> 0 -> 0 -> 2 -> 1
+    * Result: 0 -> 0 -> 1 -> 1 -> 2
+    *
+    * @param head
+    * @return head of new sorted list
+    */
+  def sortZerosOnesAndTwosLinkedlist(head: Node): Option[Node] = {
+    // maintain 3 pointers and 3 heads. iterate through the list and for each node: change next to None and append to the correct list.
+    // at the end of the iteration, append pointers and return head of new list
+    var zeroNodes, oneNodes, twoNodes: Option[Node] = None
+    var zeroHead, oneHead, twoHead   : Option[Node] = None
+
+    def onZero(node: Node) = {
+      zeroNodes match {
+        case Some(nodes) => {
+          nodes.next = Some(node)
+          zeroNodes =  nodes.next
+        }
+        case None => {
+          zeroHead = Some(node)
+          zeroNodes = Some(node)
+        }
+      }
+    }
+
+    def onOne(node: Node) = {
+      oneNodes match {
+        case Some(nodes) => {
+          nodes.next = Some(node)
+          oneNodes =  nodes.next
+        }
+        case None => {
+          oneHead = Some(node)
+          oneNodes = Some(node)
+        }
+      }
+    }
+
+    def onTwo(node: Node) = {
+      twoNodes match {
+        case Some(nodes) => {
+          nodes.next = Some(node)
+          twoNodes =  nodes.next
+        }
+        case None => {
+          twoHead = Some(node)
+          twoNodes = Some(node)
+        }
+      }
+    }
+
+    def sortZerosOnesAndTwosLinkedlistRec(headO: Option[Node]): Option[Node] = {
+      headO match {
+        case Some(h) => {
+          val next = h.next // remember the next
+          h.next = None     // set next to None
+          h.data match {
+            case 0 => onZero(h)
+            case 1 => onOne(h)
+            case 2 => onTwo(h)
+          }
+          sortZerosOnesAndTwosLinkedlistRec(next)
+        }
+        case None => {
+          oneNodes.map(_.next = twoHead)
+          zeroNodes.map(_.next = oneHead)
+          zeroHead orElse oneHead orElse twoHead
+        }
+      }
+    }
+    sortZerosOnesAndTwosLinkedlistRec(Some(head))
   }
 }
