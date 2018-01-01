@@ -594,4 +594,25 @@ object ArraysAndStrings extends App {
     arr.foreach(minHeap += _)
     minHeap.take(k).last
   }
+
+  /**
+    * Find minimum index of a repeating element in an integer's array
+    * Example - {5, 6, 3, 4, 3, 6, 4} => return 1 (6 is repeating)
+    * Example - {5, 6, 3, 4}          => return -1
+    *
+    * @param arr
+    * @return index of repeating element if exists, -1 otherwise
+    */
+  def findMinimumIndexOfRepeatingElement(arr: Array[Int]): Int = {
+    def findMinimumIndexOfRepeatingElementRec(index: Int, indexMinimumRepeatable: Int, hash: Set[Int]): Int = {
+      if(index < 0) indexMinimumRepeatable
+      else {
+        val element = arr(index)
+        if(hash.contains(element)) findMinimumIndexOfRepeatingElementRec(index - 1, index, hash)
+        else findMinimumIndexOfRepeatingElementRec(index - 1, indexMinimumRepeatable, hash + element)
+      }
+    }
+    // the idea is to traverse the array from right to left
+    findMinimumIndexOfRepeatingElementRec(arr.length -1, -1, Set.empty)
+  }
 }
