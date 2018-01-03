@@ -615,4 +615,23 @@ object ArraysAndStrings extends App {
     // the idea is to traverse the array from right to left
     findMinimumIndexOfRepeatingElementRec(arr.length -1, -1, Set.empty)
   }
+
+  /**
+    * Find count of distinct elements in every sub array of size k
+    * Example - {1,2,3,3}, k=2 => {1,2}(2) + {2,3}(2) + {3,3}(1) => 5
+    *
+    * @param arr
+    * @return index of repeating element if exists, -1 otherwise
+    */
+  def countDistinctElementsInEverySubArrayOfSizeK(arr: Array[Int], k: Int) = {
+    def countDistinctElementsInEverySubArrayOfSizeKRec(index: Int, sum: Int): Int = {
+      if(index + k > arr.size) sum
+      else {
+        val sumSubArray = (for { i <- index until index + k } yield arr(i)).toSet.size
+        countDistinctElementsInEverySubArrayOfSizeKRec(index + 1, sum + sumSubArray)
+      }
+    }
+
+    countDistinctElementsInEverySubArrayOfSizeKRec(0,0)
+  }
 }
