@@ -624,6 +624,7 @@ object ArraysAndStrings extends App {
     * @return index of repeating element if exists, -1 otherwise
     */
   def countDistinctElementsInEverySubArrayOfSizeK(arr: Array[Int], k: Int) = {
+    // SUB ARRAYS MEANING THE ORDER COUNTS !!!!!
     def countDistinctElementsInEverySubArrayOfSizeKRec(index: Int, sum: Int): Int = {
       if(index + k > arr.size) sum
       else {
@@ -633,5 +634,28 @@ object ArraysAndStrings extends App {
     }
 
     countDistinctElementsInEverySubArrayOfSizeKRec(0,0)
+  }
+
+  /**
+    * Partition an array into two sub arrays with the same sum
+    *
+    * @param arr
+    * @return Some(two sub arrays with the same sum) or None if not exists
+    */
+  def partitionArrayIntoTwoSubArraysWithTheSameSum(arr: Array[Int]) = {
+    // SUB ARRAYS MEANING THE ORDER COUNTS !!!!!
+    def partitionArrayIntoTwoSubArraysWithTheSameSumRec(index:Int, sumLeft: Int, sumOfAllArray: Int): Option[(Array[Int],Array[Int])] = {
+      if(index >= arr.length -1) None
+      else {
+        // we can iterate and for each element to caculate the left and right sides, but for performance, we can save the already calculated left side and by pre-calculating the sum of array, we can know the sum of right side
+        val sumLeftSide = arr(index) + sumLeft
+        val sumRightSide = sumOfAllArray - sumLeftSide
+        if(sumLeftSide == sumRightSide) Some(arr.splitAt(index + 1))
+        else partitionArrayIntoTwoSubArraysWithTheSameSumRec(index + 1, sumLeftSide, sumOfAllArray)
+      }
+    }
+
+    val sumOfAllArray = arr.reduce(_ + _)
+    partitionArrayIntoTwoSubArraysWithTheSameSumRec(0, 0, sumOfAllArray)
   }
 }
