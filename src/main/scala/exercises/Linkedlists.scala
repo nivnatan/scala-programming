@@ -542,4 +542,45 @@ object Linkedlists extends App {
     }
     sortZerosOnesAndTwosLinkedlistRec(Some(head))
   }
+
+  /**
+    * Print all combinations of phrases than can be formed by picking words from each of the given lists
+    * L1: "john" -> "jo"
+    * L2: "runs" -> "walks"
+    * Result: "john runs", "john walks", "jo runs", "jo walks",
+    *
+    * @param heads
+    */
+  def printAllCombinationsOfLists(heads: List[List[String]]): Unit = {
+    def printAllCombinationsOfListsRec(prefix: String, heads:List[List[String]]): Unit = {
+      heads match {
+        case Nil                  =>
+        case headList :: Nil      => headList.foreach(w => println(prefix + " " + w))
+        case headList :: restList => headList.foreach(w => printAllCombinationsOfListsRec(prefix + " " + w, restList))
+      }
+    }
+    printAllCombinationsOfListsRec("", heads)
+  }
+
+  val node1 = Node(1)
+  val node2 = Node(0)
+  val node3 = Node(0)
+  val node4 = Node(2)
+  val node5 = Node(1)
+
+  val node6 = Node(4)
+  val node7 = Node(16)
+  val node8 = Node(35)
+
+  node1.next = Some(node2)    // 1 -> 20 -> 34 -> 42 -> 54
+  node2.next = Some(node3)
+  node3.next = Some(node4)
+  node4.next = Some(node5)
+
+  node6.next = Some(node7)
+  node7.next = Some(node8)   // 4 -> 16 -> 35
+
+  val asdas = "dsa"
+  val res = printAllCombinationsOfLists(List(List("john", "emma", "chloe"), List("playes", "hates", "watches"), List("cricket", "soccer", "chess")))
+  val asdafas = "das "
 }
