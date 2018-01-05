@@ -77,4 +77,47 @@ object Numbers extends App {
     }
     printNoConditionRec(1)
   }
+
+  def isPrime(number: Int) = {
+    number >= 2 && (2 to math.sqrt(number).toInt).forall(number %_ != 0)
+  }
+
+  /**
+    * Print all prime numbers until a given N
+    */
+  def printAllPrimeNumbersUntilN(n: Int): Unit = {
+    Range(2, n).foreach(x => if(isPrime(x)) print(x))
+  }
+
+  /**
+    * Print all prime numbers until a given N
+    */
+  def getAListOfPrimesUntilN(n: Int): List[Int] = {
+    Range(2, n+1).filter(isPrime).toList
+  }
+
+  /**
+    * Print all prime numbers until a given N
+    */
+  def getAListOfPrimesUntilNUsingStreams(n: Int): List[Int] = {
+    // Construct a stream consisting of a given first element = 2 followed by elements
+    // from a lazily evaluated Stream. this jumps by 2 as no need to check even numbers against prime function
+    val primes = 2 #:: Stream.from(3,2).filter(isPrime)
+    val result = primes.takeWhile(_ <= n).toList
+    result
+  }
+
+  def printNPrimeNumbers(n: Int): Unit = {
+    def printNPrimeNumbersRec(counter: Int, number: Int): Unit = {
+      if(counter < n) {
+        if(isPrime(number)) {
+          println(number)
+          printNPrimeNumbersRec(counter + 1, number + 1)
+        } else {
+          printNPrimeNumbersRec(counter, number + 1)
+        }
+      }
+    }
+    if(n > 0) printNPrimeNumbersRec(0, 2)
+  }
 }
