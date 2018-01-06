@@ -396,4 +396,22 @@ object TreesAndGraphs extends App {
       }
     }
   }
+
+  /**
+    * Insert new node to a BST tree
+    *
+    * @param root
+    * @return root
+    */
+  def insertNewNodeToBinaryTree(root: TreeNode[Int], value: Int): TreeNode[Int] = {
+    def insertNewNodeToBinaryTreeRec(root: TreeNode[Int]): Unit = {
+      if(value > root.data) {
+        root.right.map(insertNewNodeToBinaryTreeRec).getOrElse(root.right = Some(TreeNode(value)))
+      } else {
+        root.left.map(insertNewNodeToBinaryTreeRec).getOrElse(root.left = Some(TreeNode(value)))
+      }
+    }
+    insertNewNodeToBinaryTreeRec(root)
+    root
+  }
 }
