@@ -74,4 +74,20 @@ object BitManipulations extends App {
   def getNumberOfBitsRequiredToConvertAToB(a: Int, b: Int): Int = {
     getNumberOfBitsOn(a ^ b)
   }
+
+  /**
+    * Swap adjacent bits of a given number
+    * For example - 0000 0000 0000 0000 0000 0000 0000 1110 => 0000 0000 0000 0000 0000 0000 0000 1101
+    * @param num
+    * @return number which it's adjacent bits were swapped
+    */
+  def swapAdjacentBitsOfANumber(num: Int): Int = {
+    val maskForEvenBits    = 0xAAAAAAAA
+    val maskForOddBits     = 0x55555555
+    val evenBitsTurnedOn   = num & maskForEvenBits // 1010
+    val oddBitsTurnedOn    = num & maskForOddBits  // 0100
+    val shiftEvenBitsRight = evenBitsTurnedOn >> 1 // 0101
+    val shiftEvenBitsLeft  = oddBitsTurnedOn  << 1 // 1000
+    shiftEvenBitsRight | shiftEvenBitsLeft // OR between results
+  }
 }
