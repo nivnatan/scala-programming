@@ -378,4 +378,22 @@ object TreesAndGraphs extends App {
     }
     printRightSideOfBSTTree(root, 1)
   }
+
+  /**
+    * Print right side of a BST tree using queue
+    *
+    * @param root
+    */
+  def printRightSideOfBSTTreeUsingQueue(root: TreeNode[Int]): Unit = {
+    val queue = new MyQueue[TreeNode[Int]]
+    queue.add(root)
+    while(!queue.isEmpty) {
+      for(i <- 0 until queue.size) {
+        val head = queue.remove
+        if(i == 0) println(head.data)
+        head.right.map(queue.add)
+        head.left.map(queue.add)
+      }
+    }
+  }
 }
