@@ -25,6 +25,16 @@ object TreesAndGraphs extends App {
   node3.right = Some(node4) // G
 
   /**
+    *             10
+    *           /    \
+    *         /       \
+    *        5         20
+    *      /  \       / \
+    *    /     \    /    \
+    *   2       6  15    25
+    */
+
+  /**
     *              A
     *           /    \
     *         /       \
@@ -346,5 +356,26 @@ object TreesAndGraphs extends App {
     if(node1 <= root.data && node2 >= root.data) Some(root)
     else if(node1 <= root.data && node2 <= root.data) root.left.map(findLCAInBST(_, node1, node2)).getOrElse(None)
     else root.right.map(findLCAInBST(_, node1, node2)).getOrElse(None)
+  }
+
+  /**
+    * Print right side of a BST tree
+    *
+    * @param root
+    */
+  def printRightSideOfBSTTree(root: TreeNode[Int]): Unit = {
+    var maximumLevelVisited = 0
+    // The idea is to traverse the tree level order starting from right, and update a global variable maximumLevelVisited to know that it's the first element in every level
+    def printRightSideOfBSTTree(root: TreeNode[Int], currentLevel: Int): Unit = {
+
+      if(maximumLevelVisited < currentLevel) {
+        println(s"data=${root.data}")
+        maximumLevelVisited = currentLevel
+      }
+
+      root.right.map (printRightSideOfBSTTree(_, currentLevel + 1))
+      root.left.map(printRightSideOfBSTTree(_, currentLevel + 1))
+    }
+    printRightSideOfBSTTree(root, 1)
   }
 }
