@@ -63,7 +63,7 @@ object TreesAndGraphs extends App {
   }
 
   /**
-    * D -> E -> B -> F -> G -> C -> A
+    * D -> E -> B -> F -> G -> C -> A (Bottom up)
     */
   def postOrder[T](root: TreeNode[T]): Unit = {
     root.left.map(postOrder)
@@ -413,5 +413,51 @@ object TreesAndGraphs extends App {
     }
     insertNewNodeToBinaryTreeRec(root)
     root
+  }
+
+
+  /**
+    * Remove nodes from BST that have keys outside the valid range
+    * Example -
+    *
+    *             10
+    *           /    \
+    *         /       \
+    *        5         20
+    *      /  \       / \
+    *    /     \    /    \
+    *   2       6  15    25
+    *
+    * truncate [4,8]
+    *
+    * 5
+    *  \
+    *   \
+    *    6
+    *
+    * @param root
+    * @return updated root according to the requirements
+    */
+  def truncateNodesFromBSTAccordingToRange(root: TreeNode[Int], min: Int, max: Int): Option[TreeNode[Int]] = {
+    def truncateNodesFromBSTAccordingToRangeRec(root: TreeNode[Int]): Option[TreeNode[Int]] = {
+      // traverse bottom up (post order)
+      // first fix the left and right subtrees of root
+      root.left  = root.left.flatMap(truncateNodesFromBSTAccordingToRangeRec)
+      root.right = root.right.flatMap(truncateNodesFromBSTAccordingToRangeRec)
+      // now fix the root.  There are 2 possible cases for toot
+      // 1.a) Root's key is smaller than min value (root is not in range)
+      if(root.data < min) {
+        root.right
+      }
+      // 1.b) Root's key is greater than max value (root is not in range)
+      else if(root.data > max) {
+        root.left
+      }
+      // 2. Root is in range
+      else {
+        Some(root)
+      }
+    }
+    truncateNodesFromBSTAccordingToRangeRec(root)
   }
 }
