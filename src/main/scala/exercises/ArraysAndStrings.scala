@@ -2,6 +2,7 @@ package exercises
 
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
+import scala.util.Random
 
 /**
   * Created by nivnatan on 11/19/2017.
@@ -647,7 +648,7 @@ object ArraysAndStrings extends App {
     def partitionArrayIntoTwoSubArraysWithTheSameSumRec(index:Int, sumLeft: Int, sumOfAllArray: Int): Option[(Array[Int],Array[Int])] = {
       if(index >= arr.length -1) None
       else {
-        // we can iterate and for each element to caculate the left and right sides, but for performance, we can save the already calculated left side and by pre-calculating the sum of array, we can know the sum of right side
+        // we can iterate and for each element to calculate the left and right sides, but for performance, we can save the already calculated left side and by pre-calculating the sum of array, we can know the sum of right side
         val sumLeftSide = arr(index) + sumLeft
         val sumRightSide = sumOfAllArray - sumLeftSide
         if(sumLeftSide == sumRightSide) Some(arr.splitAt(index + 1))
@@ -657,5 +658,29 @@ object ArraysAndStrings extends App {
 
     val sumOfAllArray = arr.reduce(_ + _)
     partitionArrayIntoTwoSubArraysWithTheSameSumRec(0, 0, sumOfAllArray)
+  }
+
+  /**
+    * Generate random input from an array according to given probabilities
+    * Example -
+    * input:         {1,2,3,4,5}
+    * probabilities: {30,10,20,15,25} // total probabilities should sum to 100%
+    * the solution should return 1 with probability of 30%, 2 with 10%, ...
+    *
+    * @param arr
+    * @return random input according to the the probabilities given
+    */
+  def generateRandomInputFromArrayAccordingToProbabilities(arr: Array[Int], prob: Array[Int]) = {
+    require(arr.size == prob.size)
+    require(prob.reduceLeft(_ + _) == 100)
+
+    def findIndexInProbabilitiesArray(probabilitiesArray: Array[Int], index: Int, p: Int): Int = {
+      if(probabilitiesArray(index) <= p && p <= probabilitiesArray(index + 1)) index
+      else findIndexInProbabilitiesArray(probabilitiesArray, index + 1, p)
+    }
+
+    val probabilitiesArray = prob.scanLeft(0)((sum,p) => sum + p) // {0,30,40,60,75,100}
+    val randomNumber = Random.nextInt(101)
+    arr(findIndexInProbabilitiesArray(probabilitiesArray, 0, randomNumber))
   }
 }
