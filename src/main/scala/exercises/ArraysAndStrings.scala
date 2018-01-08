@@ -683,4 +683,34 @@ object ArraysAndStrings extends App {
     val randomNumber = Random.nextInt(101)
     arr(findIndexInProbabilitiesArray(probabilitiesArray, 0, randomNumber))
   }
+
+  /**
+    * Given a sequence of numbers such that the difference between the consecutive terms is constant, find missing term in it in log(n) time.
+    * Example -
+    * {5,7,9,11,13,15,19} missing term is 17
+    * {1,4,7,13,16} missing term is 10
+    * @param arr
+    * @return missing term in sequence
+    */
+  def findMissingTermInSequenceInLogNTime(arr: Array[Int]) = {
+    // perform binary search
+    def findMissingTermInSequenceInLogNTimeRec(low: Int, high: Int, term: Int): Int = {
+      val mid = high - (high - low) / 2
+      // check left side
+      if(mid-1 > 0 && arr(mid) - arr(mid-1) != term) {
+        arr(mid) - term
+      }
+      // check right side
+      else if(mid+1 < arr.size && arr(mid + 1) - arr(mid) != term) {
+        arr(mid) + term
+      } else {
+        // check if the missing term is somewhere on the left side. for example, for {5,7,9,11,13,15,19} with mid = 3, the missing term is not on the left side
+        if(arr(mid) - arr(0) != mid * term) findMissingTermInSequenceInLogNTimeRec(low, mid-1, term)
+        else findMissingTermInSequenceInLogNTimeRec(mid+1, high, term)
+      }
+    }
+    // calculate term = (last element - first element) / n (number of elements in the array considering on element is missing in the sequence, otherwise it's n-1)
+    val term = (arr(arr.size - 1) - arr(0)) / arr.size
+    findMissingTermInSequenceInLogNTimeRec(0, arr.size-1, term)
+  }
 }
