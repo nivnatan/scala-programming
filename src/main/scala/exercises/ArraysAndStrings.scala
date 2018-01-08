@@ -713,4 +713,34 @@ object ArraysAndStrings extends App {
     val term = (arr(arr.size - 1) - arr(0)) / arr.size
     findMissingTermInSequenceInLogNTimeRec(0, arr.size-1, term)
   }
+
+  /**
+    * Division of two decimal numbers using binary search
+    * @param d1
+    * @param d2
+    * @return division result
+    */
+  def divideUsingBinarySearch(d1: Double, d2: Double) = {
+    val d1Abs = Math.abs(d1)
+    val d2Abs = Math.abs(d2)
+    val precision = 0.001
+
+    // perform binary search
+    def divideUsingBinarySearchRec(low: Double, high: Double): Double = {
+      val mid = high - (high - low) / 2
+
+      if(Math.abs((d2Abs * mid) - d1Abs) <= precision) {
+        mid
+      }
+      else if(d2Abs * mid > d1Abs) {
+        divideUsingBinarySearchRec(low, mid)
+      }
+      else {
+        divideUsingBinarySearchRec(mid, high)
+      }
+    }
+
+    val sign = if(d1*d2 < 0) -1 else 1
+    divideUsingBinarySearchRec(0, Double.MaxValue) * sign
+  }
 }
