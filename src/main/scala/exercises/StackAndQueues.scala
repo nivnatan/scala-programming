@@ -1,5 +1,6 @@
 package exercises
 
+import java.io.File
 import java.time.Instant
 
 import scala.reflect.ClassTag
@@ -7,7 +8,7 @@ import scala.reflect.ClassTag
 /**
   * Created by nivnatan on 12/4/2017.
   */
-object StackAndQueues {
+object StackAndQueues extends App {
 
   /**
     * Implementation of an immutable stack
@@ -240,5 +241,43 @@ object StackAndQueues {
     def dequeueDog(data: Int): Perro = perrosQueue.remove
 
     def dequeueCat(data: Int): Gato = gatosQueue.remove
+  }
+
+
+  /**
+    *
+    * scan a given directory BFS & DFS and print all file's names
+    */
+  class ScanDirectoryBFSAndDFS(directory: String) {
+
+    def bfs = {
+      val queue = new MyQueue[File]
+      queue.add(new File(directory))
+      while(!queue.isEmpty) {
+        val fileOrDir = queue.remove
+        val listOfFiles = Option(fileOrDir.listFiles)
+        listOfFiles.map(_.foreach { case f =>
+          if(f.isDirectory) {
+            queue.add(f)
+          } else {
+            println(f)
+          }
+        })
+      }
+    }
+
+    def dfs = {
+      def dfsRec(root: File): Unit = {
+        val listOfFiles = Option(root.listFiles)
+        listOfFiles.map(_.foreach { case f =>
+          if(f.isDirectory) {
+            dfsRec(f)
+          } else {
+            println(f)
+          }
+        })
+      }
+      dfsRec(new File(directory))
+    }
   }
 }
