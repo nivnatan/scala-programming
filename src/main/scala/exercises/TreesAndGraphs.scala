@@ -460,4 +460,38 @@ object TreesAndGraphs extends App {
     }
     truncateNodesFromBSTAccordingToRangeRec(root)
   }
+
+  /**
+    * Maximum width of a binary tree
+    * Example -
+    *
+    *             10
+    *           /    \
+    *         /       \
+    *        5         20
+    *      /  \       / \
+    *    /     \    /    \
+    *   2       6  15    25
+    *
+    * maximum width = 4
+    *
+    * @param root
+    * @return maximum width
+    */
+  def binaryTreeMaximumWidth(root: TreeNode[Int]): Int = {
+    val queue = new MyQueue[TreeNode[Int]]
+    queue.add(root)
+    var maximumWidth = 0
+    while(!queue.isEmpty) {
+      if(queue.size > maximumWidth) {
+        maximumWidth = queue.size
+      }
+      for(_ <- 0 until queue.size) {
+        val node = queue.remove
+        node.left.map(queue.add)
+        node.right.map(queue.add)
+      }
+    }
+    maximumWidth
+  }
 }
