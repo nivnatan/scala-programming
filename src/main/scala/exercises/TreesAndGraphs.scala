@@ -7,7 +7,9 @@ import exercises.StackAndQueues.MyQueue
   */
 object TreesAndGraphs extends App {
 
-  case class TreeNode[T](data: T, var left: Option[TreeNode[T]] = None, var right: Option[TreeNode[T]] = None)
+  case class TreeNode[T](data: T, var left: Option[TreeNode[T]] = None, var right: Option[TreeNode[T]] = None) {
+    def isLeaf: Boolean = left.isEmpty && right.isEmpty
+  }
 
   val node1 = TreeNode(10)
   val node2 = TreeNode(5)
@@ -493,5 +495,24 @@ object TreesAndGraphs extends App {
       }
     }
     maximumWidth
+  }
+
+  /**
+    * Print leaf to root path for a given leaf
+    *
+    * @param root
+    * @return root
+    */
+  def printPathFromLeafToRoot(root: TreeNode[Int], leafData: Int) = {
+    def printPathFromLeafToRootRec(root: TreeNode[Int]): Boolean = {
+      if(root.left.map(printPathFromLeafToRootRec).getOrElse(false) || root.right.map(printPathFromLeafToRootRec).getOrElse(false)) {
+        println(root.data)
+        true
+      } else if(root.data == leafData){
+        println(root.data)
+        true
+      } else false
+    }
+    printPathFromLeafToRootRec(root)
   }
 }
