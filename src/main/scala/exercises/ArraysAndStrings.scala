@@ -1,7 +1,7 @@
 package exercises
 
 import scala.collection.mutable
-import scala.collection.mutable.ListBuffer
+import scala.collection.mutable.{ArrayBuffer, ListBuffer}
 import scala.util.Random
 
 /**
@@ -689,6 +689,7 @@ object ArraysAndStrings extends App {
     * Example -
     * {5,7,9,11,13,15,19} missing term is 17
     * {1,4,7,13,16} missing term is 10
+    *
     * @param arr
     * @return missing term in sequence
     */
@@ -716,6 +717,7 @@ object ArraysAndStrings extends App {
 
   /**
     * Division of two decimal numbers using binary search
+    *
     * @param d1
     * @param d2
     * @return division result
@@ -749,6 +751,7 @@ object ArraysAndStrings extends App {
     * if we have an array of words, then we want to group the words of one anagram together.
     * For example -
     * For input array {"ram", "pot", "mar", "top", "arm"}, the output array should be {"ram", "mar", "arm", "pot", "top"}
+    *
     * @param arr
     * @return array output
     */
@@ -760,6 +763,7 @@ object ArraysAndStrings extends App {
     * Given an array having even number of integers.
     * Find if the array has N / 2 pairs of integers such that each pair is divisible by a given number k.
     * For example - {9,7,5,3}, k=6 => {{9,3},{7,5}}
+    *
     * @param arr
     * @return true / false
     */
@@ -776,5 +780,52 @@ object ArraysAndStrings extends App {
     val arrModk = scala.collection.mutable.ArrayBuffer.fill[Int](k)(0)
     arr.foreach { e => arrModk(e % k) += 1 }
     (0 until (k / 2) + 1).forall(i => arrModk(i) == arrModk((k-i)%k))
+  }
+
+  /**
+    * Given a 2D matrix of booleans where true indicates white and false indicates black.
+    * Considering group of adjacent black cells to be one blob, find the number of blobs in the matrix.
+    * Example: consider the below 6x5 matrix:
+    *     0	1	2	3	4
+    *   0 T F T F T
+    *   1 T F T F T
+    *   2 T F F F T
+    *   3 T T T T T
+    *   4 F T T T F
+    *   5	T T F F F
+    * http://prismoskills.appspot.com/lessons/Arrays/Count_blobs_in_matrix.jsp
+    * the solution function should output a count of 3 in the above case.
+    *
+    * @param matrix
+    * @return number of blobs
+    */
+  def countBlobsIn2DMatrix(matrix: Array[Array[Boolean]], rows: Int, cols: Int): Int = {
+    val visited = ArrayBuffer.tabulate(rows, cols)((x, y) => false)
+    var blobsCount = 0
+
+    def scanAdjacents(row: Int, col: Int): Unit = {
+      // scan up, down, left, right
+      if (row > 0 && row < rows && col > 0 && col < cols && !visited(row)(col)) {
+        visited(row)(col) = true
+        if(!matrix(row)(col)) {
+          scanAdjacents(row + 1, col)
+          scanAdjacents(row - 1, col)
+          scanAdjacents(row, col + 1)
+          scanAdjacents(row, col - 1)
+        }
+      }
+    }
+
+    for (i <- 0 until rows)
+      for (j <- 0 until cols) {
+        if (!visited(i)(j)) {
+          if (!matrix(i)(j)) {
+            // new blob{
+            blobsCount += 1
+            scanAdjacents(i, j)
+          }
+        }
+      }
+    blobsCount
   }
 }
