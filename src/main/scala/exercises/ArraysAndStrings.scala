@@ -743,4 +743,38 @@ object ArraysAndStrings extends App {
     val sign = if(d1*d2 < 0) -1 else 1
     divideUsingBinarySearchRec(0, Double.MaxValue) * sign
   }
+
+  /**
+    * Two words are said to be anagrams of each other if they are made up of same characters
+    * if we have an array of words, then we want to group the words of one anagram together.
+    * For example -
+    * For input array {"ram", "pot", "mar", "top", "arm"}, the output array should be {"ram", "mar", "arm", "pot", "top"}
+    * @param arr
+    * @return array output
+    */
+  def anagrams(arr: Array[String]): Array[String] = {
+    arr.map(str => (str,str.toSet)).groupBy { case (word,set) => set }.values.map { case arr => arr.map { case (word,set) => word }}.flatten.toArray
+  }
+
+  /**
+    * Given an array having even number of integers.
+    * Find if the array has N / 2 pairs of integers such that each pair is divisible by a given number k.
+    * For example - {9,7,5,3}, k=6 => {{9,3},{7,5}}
+    * @param arr
+    * @return true / false
+    */
+  def isArrayPairsDivisible(arr: Array[Int], k: Int): Boolean = {
+    // Naive solution would be for every element in the array, look for a potential element that could partner to produce sum divisible by k
+    // other solution - use hashing and count for every element depending on their mod k.
+    // so in our example, we will use a count array (size k=6) that will look like {0,1,0,2,0,1}
+    // now the idea is that for every element in the mod k array (iterate until arrModK.size /2), it can only partner up with (k-index)%k
+    // in our example,
+    // index 0 could partner up with index 0 to produce pair divided by k (0 with 0)
+    // index 1 could partner up with index 5 to produce pair divided by k (1 with 1)
+    // index 2 could partner up with index 4 to produce pair divided by k (0 with 0)
+    // index 3 could partner up with index 3 to produce pair divided by k (2 with 2)
+    val arrModk = scala.collection.mutable.ArrayBuffer.fill[Int](k)(0)
+    arr.foreach { e => arrModk(e % k) += 1 }
+    (0 until (k / 2) + 1).forall(i => arrModk(i) == arrModk((k-i)%k))
+  }
 }
