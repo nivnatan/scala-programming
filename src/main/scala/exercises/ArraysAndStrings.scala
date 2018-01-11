@@ -828,4 +828,76 @@ object ArraysAndStrings extends App {
       }
     blobsCount
   }
+
+  /**
+    * Given an array of unsorted integers, divide it into two sets, each having (arr.length/2) elements such that the sum of each set is as close to each other as possible.
+    * Example -
+    * Input : Arr[] = {4,5,3,1,5,2}
+    * Output :  {5,4,1}, {5,3,2}
+    *
+    * @param arr
+    * @return arrays divided according to requirements
+    */
+  def divideArraysToCloseSum(arr: Array[Int]): (Array[Int], Array[Int]) = {
+    // this can be done by first sorting the array (O nlogn) and then applying the following algorithm:
+    // maintain running sums for each set.
+    // add current largest element into the set with smaller sum and update running sums.
+    // if any set reaches capacity n/2, then simply put remaining elements into the other set.
+    def divideArraysToCloseSumRec(arr1: Array[Int], arr2: Array[Int], sumArr1: Int, sumArr2: Int, arrSorted: Array[Int], index: Int): (Array[Int], Array[Int]) = {
+      if (index < 0) arr1 -> arr2
+      else {
+        if (sumArr1 <= sumArr2) divideArraysToCloseSumRec(arr1 :+ arrSorted(index), arr2, sumArr1 + arrSorted(index), sumArr2, arrSorted, index + 1)
+        else divideArraysToCloseSumRec(arr1, arr2 :+ arrSorted(index), sumArr1, sumArr2 + arrSorted(index), arrSorted, index + 1)
+      }
+    }
+    divideArraysToCloseSumRec(Array.empty[Int], Array.empty[Int], 0, 0, arr.sortWith(_ > _), 0)
+  }
+
+  /**
+    * A peak element is defined as an element which is NOT smaller than its immediate neighbors.
+    * Two exceptions to a peak element are:
+    * First element is a peak element if its not smaller than second element.
+    * Last element is a peak element if its not smaller than second-last element.
+    * For an array with all elements equal, all elements are peak elements.
+    * Find a one pick element efficiently as possible in a given array
+    * Example -
+    * Peak elements in [5, 7, 3, 9, 10, 12] are 7 and 12
+    *
+    * @param arr
+    * @return array includes all the peck elements from the original array
+    */
+  def findOnePeakEfficiently(arr: Array[Int]): Option[Int] = {
+    // Simple solution would be to iterate via the array in O(n) time
+    // however, this can be solved in log(n) time using binary search without sorting:
+    // if an element is not the peak, then that element must be smaller than one of its neighbors.
+    // if left neighbor is greater, then left half of the array must have a peak.
+    // similarly, if right neighbor is greater, then right half of the array must have a peak.
+    def findOnePeakEfficientlyRec(low: Int, high: Int): Option[Int] = {
+      if(low > high) None
+      else {
+        val mid = low + (high - low)/2;  // same as (low + high)/2 but prevents overflow
+        // first element check
+        if(mid == 0 && arr(mid+1) <= arr(mid)) {
+          Some(arr(mid))
+        }
+        // last element checked
+        else if(mid == arr.size-1 && arr(mid-1) <= arr(mid)) {
+          Some(arr(mid))
+        }
+        // else
+        else {
+          val leftSmaller  = arr(mid-1) <= arr(mid)
+          val rightSmaller = arr(mid+1) <= arr(mid)
+          if(leftSmaller && rightSmaller) Some(arr(mid))
+          else {
+            // If left neighbor is greater than current mid,
+            // then peak must be present in the left half
+           if(!leftSmaller) findOnePeakEfficientlyRec(low, mid-1)
+           else findOnePeakEfficientlyRec(mid+1, high)
+          }
+        }
+      }
+    }
+    findOnePeakEfficientlyRec(0, arr.size - 1)
+  }
 }
