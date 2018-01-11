@@ -946,4 +946,45 @@ object ArraysAndStrings extends App {
     // if it becomes greater than given sum, start subtracting elements from the start of the array till its greater than given sum.
     findAllSubArraysWithAGivenSumRec(0, 0, arr(0))
   }
+
+  /**
+    * Given two arrays, find two elements (one in each array) such that their difference is minimum
+    * Example:
+    * Input : A[] = {l, 3, 15, 11, 2}
+    *         B[] = {23, 127, 235, 19, 8}
+    * Output : 3
+    * That is, the pair (11, 8)
+    * @param arr1
+    * @param arr2
+    */
+  def findAllSubArraysWithAGivenSum(arr1: Array[Int], arr2: Array[Int]): Int = {
+    // O(n^2)
+    def usingBruteForce: Int = {
+      var minDiff = Integer.MAX_VALUE
+      for(i <- 0 until arr1.size)
+        for(j <- 0 until arr2.size) {
+          val diff = Math.abs(arr1(i) - arr2(j))
+          if(diff < minDiff) {
+            minDiff = diff
+          }
+        }
+      minDiff
+    }
+
+    // O(nlogn)
+    def usingSorting(arr1Sorted: Array[Int], arr2Sorted: Array[Int], index1: Int, index2: Int, minDiff: Int): Int = {
+      if(index1 >= arr1Sorted.size || index2 >= arr2Sorted.size) {
+        minDiff
+      }
+      else {
+        val minDiffUpdated = {
+          val diff = Math.abs(arr1Sorted(index1) - arr2Sorted(index2))
+          if(diff < minDiff) diff else minDiff
+        }
+        // move the array index of the smaller value
+        if(arr1(index1) < arr2(index2)) usingSorting(arr1Sorted, arr2Sorted, index1+1, index2, minDiffUpdated)
+        else usingSorting(arr1Sorted, arr2Sorted, index1, index2+1, minDiffUpdated)
+      }
+    }
+  }
 }
