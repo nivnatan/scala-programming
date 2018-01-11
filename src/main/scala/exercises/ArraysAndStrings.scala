@@ -902,7 +902,7 @@ object ArraysAndStrings extends App {
   }
 
   /**
-    * Given an unsorted array, find all pairs whose sum is a given number K without using hashing
+    * Given an unsorted array of non-negative integers, find all the subarrays whose sum is a given number K.
     *
     * @param arr
     */
@@ -922,5 +922,28 @@ object ArraysAndStrings extends App {
     }
     // sort the array and scan the array using two indexes (beginning and end), advance or reduce indexes according to sum
     findPairsSumRec(arr.sorted, 0, arr.size - 1)
+  }
+
+  /**
+    * Given an unsorted array of non-negative integers, find all the subarrays whose sum is a given number K in O(n) time
+    * Example
+    * arr={1,4,3,2,3,5,8}, k=8 => {1,4,3}, {3,2,3}, {3,5}, {8}
+    * @param arr
+    */
+  def findAllSubArraysWithAGivenSum(arr: Array[Int], k: Int): Unit = {
+    def findAllSubArraysWithAGivenSumRec(startIndex: Int, forwardIndex: Int, currentSum: Int): Unit = {
+      if(startIndex < arr.size && forwardIndex < arr.size) {
+        if(currentSum == k) {
+          val res = for(i <- startIndex to forwardIndex) yield arr(i)
+          println(res.mkString(","))
+          findAllSubArraysWithAGivenSumRec(startIndex+1, forwardIndex, currentSum - arr(startIndex))
+        }
+        else if(currentSum > k) findAllSubArraysWithAGivenSumRec(startIndex+1, forwardIndex, currentSum - arr(startIndex))
+        else findAllSubArraysWithAGivenSumRec(startIndex, forwardIndex+1, currentSum + (if (forwardIndex + 1 == arr.size) 0 else arr(forwardIndex+1)))
+      }
+    }
+    // keep on adding elements in current_sum till its less than the given sum.
+    // if it becomes greater than given sum, start subtracting elements from the start of the array till its greater than given sum.
+    findAllSubArraysWithAGivenSumRec(0, 0, arr(0))
   }
 }
