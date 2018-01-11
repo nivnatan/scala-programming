@@ -900,4 +900,27 @@ object ArraysAndStrings extends App {
     }
     findOnePeakEfficientlyRec(0, arr.size - 1)
   }
+
+  /**
+    * Given an unsorted array, find all pairs whose sum is a given number K without using hashing
+    *
+    * @param arr
+    */
+  def findPairsSum(arr: Array[Int], k: Int): Unit = {
+    def findPairsSumRec(arr: Array[Int], leftIndex: Int, rightIndex: Int): Unit = {
+       if(leftIndex <= rightIndex) {
+         val sum = arr(leftIndex) + arr(rightIndex)
+         if(sum == k) {
+           println(s"{${arr(leftIndex)},${arr(rightIndex)}}")
+           findPairsSumRec(arr, leftIndex + 1, rightIndex - 1)
+         } else if(sum > k) {
+           findPairsSumRec(arr, leftIndex, rightIndex - 1)
+         } else {
+           findPairsSumRec(arr, leftIndex + 1, rightIndex)
+         }
+       }
+    }
+    // sort the array and scan the array using two indexes (beginning and end), advance or reduce indexes according to sum
+    findPairsSumRec(arr.sorted, 0, arr.size - 1)
+  }
 }
