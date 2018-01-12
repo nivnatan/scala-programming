@@ -986,5 +986,7 @@ object ArraysAndStrings extends App {
         else usingSorting(arr1Sorted, arr2Sorted, index1, index2+1, minDiffUpdated)
       }
     }
+
+    usingSorting(arr1.sorted, arr2.sorted, 0, 0, Integer.MAX_VALUE)
   }
 }
