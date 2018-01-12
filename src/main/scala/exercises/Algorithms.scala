@@ -58,4 +58,73 @@ object Algorithms extends App {
         }
       }
   }
+
+  /**
+    * Quick sort
+    * Choose any element of the array to be the pivot (like the last one).
+    * Divide all other elements (except the pivot) into two partitions.
+    * All elements less than the pivot must be in the first partition.
+    * All elements greater than the pivot must be in the second partition.
+    * Use recursion to sort both partitions.
+    * Join the first sorted partition, the pivot, and the second sorted partition.
+
+    * @param arr
+    */
+  def quickSort(arr: Array[Int]) = {
+//    def partition(low: Int, high: Int): Unit = {
+//      var i = low
+//      var j = high
+//      val pivotVal = arr(low + (high - low) / 2) // choose pivot as
+//      while(i <= j) {
+//        while(arr(i) < pivotVal) i+=1
+//        while(arr(j) > pivotVal) j+=(-1)
+//        if(i <= j) {
+//          val temp = arr(i)
+//          arr(i) = arr(j)
+//          arr(j) = temp
+//          i+=1
+//          j+=(-1)
+//        }
+//      }
+//
+//      if (low < j)
+//        partition(low, j)
+//      if (i < high)
+//        partition(i, high)
+//    }
+
+    def swap(i: Int, j: Int) = {
+      val temp = arr(i)
+      arr(i) = arr(j)
+      arr(j) = temp
+    }
+
+    def partition(low: Int, high: Int): Int = {
+      val pivotValue = arr(high) // choose the last element to be the pivot
+      var indexOfTheLastSmallerElementThenPivotInTheSubArray = low
+
+      // iterate via the rest of the elements not including the last one as it is the pivot
+      for(i <- low until high -1) {
+        if(arr(i) < pivotValue) {
+          swap(i, indexOfTheLastSmallerElementThenPivotInTheSubArray)
+          indexOfTheLastSmallerElementThenPivotInTheSubArray += 1
+        }
+      }
+
+      // put the pivot value at its correct position
+      swap(indexOfTheLastSmallerElementThenPivotInTheSubArray, high)
+
+      indexOfTheLastSmallerElementThenPivotInTheSubArray
+    }
+
+    def runQuickSort(low: Int, high: Int): Unit = {
+      if(low < high) {
+        val index = partition(low, high)
+        runQuickSort(low, index - 1)  // recursion on the left side, not including the pivot
+        runQuickSort(index + 1, high) // recursion on the right side, not including the pivot
+      }
+    }
+
+    runQuickSort(0, arr.size - 1)
+  }
 }
