@@ -1041,4 +1041,72 @@ object ArraysAndStrings extends App {
     //usingSorting(arr.sorted, 1, None)
     usingXor(arr.reduceLeft(_ ^ _))
   }
+
+  /**
+    * Find kthmaximum in an unsorted array
+    *
+    * @param arr
+    * @param k
+    * @return kthmaximum
+    */
+  def kthMaximum(arr: Array[Int], k: Int): Int = {
+    require(k > 0 && k <= arr.size)
+
+    // complexity - O(nk)
+    def usingVariationOfBubbleSort: Int = {
+      //Find maximum element in the array and swap it with the end of the array.
+      //then find maximum in N-1 array elements. After k iterations, element at N-k position will be the kth largest.
+      for(i <- 0 until k) {
+        val maximumElement = arr.take(arr.size - i).zipWithIndex.maxBy { case (number,index) => number }._2 // find the index of the largest element
+        // put the biggest element in the last of the array (array from 0 to arr.size - k)
+        val temp = arr(arr.size - 1 - i)
+        arr(arr.size - 1 - i) = arr(maximumElement)
+        arr(maximumElement) = temp
+      }
+
+      // return the k element from the end of the array which is the kth biggest element in the array
+      arr(arr.size - k)
+    }
+
+    // 1) Build a Max Heap tree in O(n)
+    // 2) Use Extract Max k times to get k maximum elements from the Max Heap O(klogn)
+    def usingHeapSort = {
+      val pq = collection.mutable.PriorityQueue(arr: _*)
+      def dequeue(counter: Int): Int = {
+        if(counter == 1) pq.dequeue()
+        else {
+          pq.dequeue()
+          dequeue(counter - 1)
+        }
+      }
+      dequeue(k)
+    }
+
+    // 1) Build a Min Heap MH of the first k elements (arr[0] to arr[k-1]) of the given array. O(k)
+    // 2) For each element, after the kth element (arr[k] to arr[n-1]), compare it with root of MH.
+    //  ……a) If the element is greater than the root then make it root and call heapify for MH
+    //  ……b) Else ignore it.
+    // The step 2 is O((n-k)*logk)
+    // 3) Finally, MH has k largest elements and root of the MH is the kth largest element.
+    def usingMinHeapSizeK = {
+      val pq = collection.mutable.PriorityQueue(arr.take(k): _*)(new Ordering[Int] {
+        def compare(x:Int, y:Int) = y compare x
+      }) // put first k elements in the min heap
+
+      val asdsa = pq.head
+      for(i <- k until arr.size) {
+        val root = pq.max
+        if(root < arr(i)) {
+          pq.dequeue
+          pq.enqueue(arr(i))
+        }
+      }
+
+      pq.head
+    }
+
+    //usingVariationOfBubbleSort
+    //usingHeapSort
+    usingMinHeapSizeK
+  }
 }
