@@ -118,7 +118,7 @@ object TreesAndGraphs extends App {
       if(isRight) root.left.map(treeHeightRec(_, numberOfNodesVisited + 1, isRight)).getOrElse(numberOfNodesVisited)
       else root.right.map(treeHeightRec(_, numberOfNodesVisited + 1, isRight)).getOrElse(numberOfNodesVisited)
     }
-    Math.max(treeHeightRec(root, 1, true), treeHeightRec(root, 1, false))
+    1 + Math.max(treeHeightRec(root, 1, true), treeHeightRec(root, 1, false))
   }
 
   def treeHeightMoreElegant(root: TreeNode[_]): Int = {
@@ -538,25 +538,69 @@ object TreesAndGraphs extends App {
     * @param preOrderSeq
     * @return root of the new constructed node
     */
-  def constructTreeFromInOrderAndPostOrderTraversals(inOrderSeq: Seq[String], preOrderSeq: Seq[String]): Option[TreeNode[String]] = {
-    def constructTreeFromInOrderAndPostOrderTraversals(inOrderSeq: Seq[String], preOrderIndex: Int): Option[TreeNode[String]] = {
+  def constructTreeFromInOrderAndPreOrderTraversals(inOrderSeq: Seq[String], preOrderSeq: Seq[String]): Option[TreeNode[String]] = {
+    def constructTreeFromInOrderAndPreOrderTraversalsRec(inOrderSeq: Seq[String], preOrderIndex: Int): Option[TreeNode[String]] = {
       inOrderSeq match {
         case Seq()         => None
         case head +: Seq() => Some(TreeNode(head))
-        case set           => {
+        case seq           => {
           val root               = preOrderSeq(preOrderIndex) // preOrderSeq first element is the root
           val rootNode           = TreeNode(root) // create a new tree node
-          val rootIndexInInorder = inOrderSeq.indexOf(root) // find the root in the inOrderSeq and then everything to the left is the left side sub tree, and to the right is the right side sub tree
-          val inOrderLeftSeq     = inOrderSeq.take(rootIndexInInorder) //take left side of the seq until the root
-          val inOrderRightSeq    = inOrderSeq.drop(rootIndexInInorder + 1) //take right side of the seq from the root
+          val rootIndexInInorder = seq.indexOf(root) // find the root in the inOrderSeq and then everything to the left is the left side sub tree, and to the right is the right side sub tree
+          val inOrderLeftSeq     = seq.take(rootIndexInInorder) //take left side of the seq until the root
+          val inOrderRightSeq    = seq.drop(rootIndexInInorder + 1) //take right side of the seq from the root
           // rec calls
-          rootNode.left          = constructTreeFromInOrderAndPostOrderTraversals(inOrderLeftSeq, preOrderIndex + 1)
-          rootNode.right         = constructTreeFromInOrderAndPostOrderTraversals(inOrderRightSeq, preOrderIndex + 1 + inOrderLeftSeq.size)
+          rootNode.left          = constructTreeFromInOrderAndPreOrderTraversalsRec(inOrderLeftSeq, preOrderIndex + 1)
+          rootNode.right         = constructTreeFromInOrderAndPreOrderTraversalsRec(inOrderRightSeq, preOrderIndex + 1 + inOrderLeftSeq.size)
 
           Some(rootNode)
         }
       }
     }
-    constructTreeFromInOrderAndPostOrderTraversals(inOrderSeq, 0)
+    constructTreeFromInOrderAndPreOrderTraversalsRec(inOrderSeq, 0)
+  }
+
+  /**
+    * Construct BST from given a Preorder traversals
+    * For example -
+    * Preorder sequence: 9, 5, 3, 4, 7, 12, 11, 14
+    *
+    * Explanation -
+    * First number in the preorder has to be the root of the BST always.
+    * So that becomes the root of the solution tree.
+    * Next, preorder traversal prints the left subtree first and then the right subtree.
+    * Right subtree has greater elements than root and left subtree has smaller.
+    * So, if we find the index 'k' of first element greater than the root, then left subtree could be formed from elements 0 to 'k-1' and right subtree can be formed from elements 'k' to end.
+    * Finding the 'k' at every substep needs O(n) time, so total order of the solution is O(n2)
+    *
+    *        9
+    *      /  \
+    *     /    \
+    *    5      12
+    *   / \    /  \
+    *  3   7  11  14
+    *   \
+    *    4
+    *
+    * @param preOrderSeq
+    * @return root of the new constructed node
+    */
+  def constructTreeFromPreOrderTraversal(preOrderSeq: Seq[Int]): Option[TreeNode[Int]] = {
+    def constructTreeFromPreOrderTraversalRec(preOrderSeq: Seq[Int]): Option[TreeNode[Int]] = {
+      preOrderSeq match {
+        case Seq()         => None
+        case head +: Seq() => Some(TreeNode(head))
+        case seq           => {
+          val root               = seq.head // preOrderSeq first element is the root
+          val rootNode           = TreeNode(root) // create a new tree node
+          val (preOrderLeftSeq, preOrderRightSeq) = seq.tail.partition(_ <= root)
+          // rec calls
+          rootNode.left          = constructTreeFromPreOrderTraversalRec(preOrderLeftSeq)
+          rootNode.right         = constructTreeFromPreOrderTraversalRec(preOrderRightSeq)
+          Some(rootNode)
+        }
+      }
+    }
+    constructTreeFromPreOrderTraversalRec(preOrderSeq)
   }
 }
