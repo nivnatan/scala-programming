@@ -928,6 +928,7 @@ object ArraysAndStrings extends App {
     * Given an unsorted array of non-negative integers, find all the subarrays whose sum is a given number K in O(n) time
     * Example
     * arr={1,4,3,2,3,5,8}, k=8 => {1,4,3}, {3,2,3}, {3,5}, {8}
+    *
     * @param arr
     */
   def findAllSubArraysWithAGivenSum(arr: Array[Int], k: Int): Unit = {
@@ -954,6 +955,7 @@ object ArraysAndStrings extends App {
     *         B[] = {23, 127, 235, 19, 8}
     * Output : 3
     * That is, the pair (11, 8)
+    *
     * @param arr1
     * @param arr2
     */
@@ -988,5 +990,55 @@ object ArraysAndStrings extends App {
     }
 
     usingSorting(arr1.sorted, arr2.sorted, 0, 0, Integer.MAX_VALUE)
+  }
+
+  /**
+    * Given an array in which all numbers except two are repeated once. (i.e. we have 2n+2 numbers and n numbers are occurring twice and remaining two have occurred once).
+    * Find those two numbers in the most efficient way.
+    *
+    * @param arr
+    * @return two repeated numbers
+    */
+  def findTwoNonRepeatedNumbers(arr: Array[Int]): (Int,Int) = {
+
+    // hashing (complexity - o(n), space - o(n))
+    def usingHashing: (Int,Int) = {
+      val res = arr
+                .groupBy(identity)
+                .map { case (num,occurrencesArr) => num -> occurrencesArr.size }
+                .collect { case (num, occurrences) if occurrences == 1 => num }
+                .toArray
+      (res(0), res(1))
+    }
+
+    // brute force - sorting (complexity - o(nlogn), space - o(1))
+    def usingSorting(arrSorted: Array[Int], index: Int, nonRepeatedNumber1: Option[Int]): (Int,Int) = {
+      if (index == arrSorted.length - 1) (nonRepeatedNumber1.get, arrSorted(index))
+      else {
+        if (arrSorted(index - 1) != arrSorted(index) && arrSorted(index + 1) != arrSorted(index)) {
+          nonRepeatedNumber1.map((_, arrSorted(index))).getOrElse(usingSorting(arrSorted, index + 1, Some(arrSorted(index))))
+        } else {
+          usingSorting(arrSorted, index + 1, nonRepeatedNumber1)
+        }
+      }
+    }
+
+    // XOR - sorting (complexity - o(n), space - o(1))
+    def usingXor(xorResult: Int): (Int, Int) = {
+      // Explanation - If we have repeated pair of numbers, they would not add anything to xor results, as the xor of them would be zero. Only pair of different number would add non zero bits to xor result.
+      // Now in c xor d, the only set bits are the bits that are different in c and d. Let's say 3rd bit is set in c xor d. This means if bit 3 is 0 in c it would be 1 in d or vice versa.
+      // So if we divide all numbers in 2 group, one which contains all numbers with bit 3 is 0, and other in which bit 3 is 1, c and d would definitely go to different groups.
+      // And all pairs of same numbers would go the same group. (Bit 3 is either 1 on both a or 0 in both a)
+
+      //(n – 1) will have all the bits flipped after the rightmost set bit of n (1100 -> 1011, 1010 -> 1001)
+      val bitTurnedOnInXorResult = xorResult & ~(xorResult-1) // bit formula to get the first bit turned on from the right (not the index but the value!, so for 0100 -> the result will be 4)
+      arr.foldLeft((0, 0)) { case ((num1,num2), element) =>
+        if((element & bitTurnedOnInXorResult) == 0) (num1 ^ element,num2) else (num1,num2 ^ element)
+      }
+    }
+
+    //usingHashing
+    //usingSorting(arr.sorted, 1, None)
+    usingXor(arr.reduceLeft(_ ^ _))
   }
 }
