@@ -77,7 +77,7 @@ object TreesAndGraphs extends App {
     * Find the max element in the tree
     *
     * @param root
-    * @return true if the tree is BST, false otherwise
+    * @return max element in tree
     */
   def maxElementInTree(root: TreeNode[Int]): Int = {
     val leftMax = Math.max(root.left.map(maxElementInTree).getOrElse(root.data), root.data)
@@ -103,6 +103,23 @@ object TreesAndGraphs extends App {
       }
     }
     validateBSTRec(root)
+  }
+
+  /**
+    * Validate if a tree is a binary search tree
+    * Solution - perform inorder traversal which should traverse a BST in an acceding manner - if one of the nodes is smaller then the previous one - resturn false
+    *
+    * @param root
+    * @return true if the tree is BST, false otherwise
+    */
+  def validateBSTSimple(root: TreeNode[Int]): Boolean = {
+    def validateBSTSimpleRec(root: TreeNode[Int]): Boolean = {
+      if (root.left.map(_.data > root.data).getOrElse(false) || root.right.map(_.data < root.data).getOrElse(false)) false
+      else {
+        root.left.map(validateBSTSimpleRec).getOrElse(true) && root.left.map(validateBSTSimpleRec).getOrElse(true)
+      }
+    }
+    validateBSTSimpleRec(root)
   }
 
   /**
