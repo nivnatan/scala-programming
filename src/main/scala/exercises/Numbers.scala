@@ -98,6 +98,7 @@ object Numbers extends App {
 
   /**
     * Print all prime numbers until a given N
+    * Another approach would be to use the following algorithm described in https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes#Example
     */
   def getAListOfPrimesUntilNUsingStreams(n: Int): List[Int] = {
     // Construct a stream consisting of a given first element = 2 followed by elements
