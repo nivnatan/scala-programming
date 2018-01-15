@@ -113,13 +113,11 @@ object TreesAndGraphs extends App {
     * @return true if the tree is BST, false otherwise
     */
   def validateBSTSimple(root: TreeNode[Int]): Boolean = {
-    def validateBSTSimpleRec(root: TreeNode[Int]): Boolean = {
-      if (root.left.map(_.data > root.data).getOrElse(false) || root.right.map(_.data < root.data).getOrElse(false)) false
-      else {
-        root.left.map(validateBSTSimpleRec).getOrElse(true) && root.left.map(validateBSTSimpleRec).getOrElse(true)
-      }
+    def validateBSTSimpleRec(root: TreeNode[Int], min: Int, max: Int): Boolean = {
+      if(root.data < min || root.data > max) false
+      else root.left.map(validateBSTSimpleRec(_, min, root.data-1)).getOrElse(true) && root.right.map(validateBSTSimpleRec(_, root.data+1, max)).getOrElse(true)
     }
-    validateBSTSimpleRec(root)
+    validateBSTSimpleRec(root, Integer.MIN_VALUE, Integer.MAX_VALUE)
   }
 
   /**
@@ -268,6 +266,7 @@ object TreesAndGraphs extends App {
     * 5 20
     * 2 6 15 25
     * Complexity - O(n^2)
+    *
     *
     * @param root
     * @return
