@@ -1109,4 +1109,40 @@ object ArraysAndStrings extends App {
     //usingHeapSort
     usingMinHeapSizeK
   }
+
+  /**
+    * Find largest bitonic (first increasing, then decreasing) sub-array
+    * Example: If given array is {2, 5 10, 8, 12, 15, 7, 3, 0}
+    * The in the above array, there are two bitonics - {2,5,10, 8} and {8, 12, 15, 7, 3, 0}
+    * {20, 4, 1, 2, 3, 4, 2, 10} => {1, 2, 3, 4, 2}
+    * {12, 4, 78, 90, 45, 23} => {4, 78, 90, 45, 23}
+    * {10} => {10}
+    * {10, 20, 30, 40} => {10, 20, 30, 40}
+    * {40, 30, 20, 10} => {40, 30, 20, 10}
+    *
+    * @param arr
+    * @return kthmaximum
+    */
+  def largestBitonic(arr: Array[Int]): Array[Int] = {
+
+    def determineLargestBitonic(bitonicsIndexes: Array[Int]): Array[Int] = {
+      var biggestBitonic: IndexedSeq[Int] = IndexedSeq()
+      bitonicsIndexes.foreach { bitonicIndex => // for every bitonic peak index, create array of the entire bitonic and save it if its the biggest
+        val leftSideBitonic  = (bitonicIndex - 1 to 0 by -1).takeWhile(i => arr(i) < arr(i+1)).reverse.map(arr(_)) // scan left
+        val rightSideBitonic = (bitonicIndex + 1 until arr.size).takeWhile(i => arr(i) < arr(i-1)).map(arr(_))     // scan right
+        val bitonicFinal = (leftSideBitonic :+ arr(bitonicIndex)) ++ rightSideBitonic // concat left side + bitonic peak + right side
+        if(bitonicFinal.size > biggestBitonic.size) {
+          biggestBitonic = bitonicFinal
+        }
+      }
+      biggestBitonic.toArray
+    }
+
+    val bitonicsIndexes = ArrayBuffer.empty[Int]
+    for(i <- 1 until arr.size - 1) {
+      if(arr(i -1) < arr(i) && arr(i) > arr(i + 1))  bitonicsIndexes += i
+    }
+
+    if(bitonicsIndexes.isEmpty) arr else determineLargestBitonic(bitonicsIndexes.toArray)
+  }
 }
