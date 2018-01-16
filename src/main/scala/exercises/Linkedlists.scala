@@ -87,10 +87,8 @@ object Linkedlists extends App {
     }
 
     def iterate(head: Node): Unit = {
-      head.next.map { next =>
-        runner(head.data, head)
-        head.next.map(distinct2Pointers(_))
-      }
+      runner(head.data, head)
+      head.next.map(iterate(_))
     }
 
     iterate(head)
