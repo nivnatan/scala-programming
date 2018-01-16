@@ -330,6 +330,12 @@ object TreesAndGraphs extends App {
     else {
       root1.left.map(isSubTree(_, root2)).getOrElse(false) ||  root1.right.map(isSubTree(_, root2)).getOrElse(false)
     }
+
+    // Another solution could be suggested as follows:
+    //Tree S is a subtree of T if both inorder and preorder traversals of S arew substrings of inorder and preorder traversals of T respectively.
+    //1) Find inorder and preorder traversals of T, store them in two auxiliary arrays inT[] and preT[].
+    // 2) Find inorder and preorder traversals of S, store them in two auxiliary arrays inS[] and preS[].
+    // 3) If inS[] is a subarray of inT[] and preS[] is a subarray preT[], then S is a subtree of T. Else not.
   }
 
   /**
