@@ -625,4 +625,17 @@ object TreesAndGraphs extends App {
     }
     constructTreeFromPreOrderTraversalRec(preOrderSeq)
   }
+
+  /**
+    * Find if sum of two nodes is equal to a given number in BST
+    *
+    * @param root
+    * @param sum
+    * @return true / false
+    */
+  def pairSumInBST(root: TreeNode[Int], sum: Int): Boolean = {
+    // perform inorder and save in array (will create sorted array)
+    // then perform - find pait that equal to a given sum using hashmap or increase decrease two pointers
+    true
+  }
 }

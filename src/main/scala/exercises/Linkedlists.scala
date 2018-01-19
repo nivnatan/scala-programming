@@ -560,11 +560,34 @@ object Linkedlists extends App {
     printAllCombinationsOfListsRec("", heads)
   }
 
+  /**
+    * Reverse a linked list in groups of K
+    * Example: If the list is 5->6->7->8->9->10->11->12->null and k is 3, then output would be:
+    * 7->6->5->10->9->8->12->11->null
+    *
+    * @param head
+    */
+  def reverseLinkedListInGroupsOfK(head: Node): Node = {
+    def reverseLinkedListInGroupsOfKRec(head: Node): Node = {
+      (head.next, head.next.flatMap(_.next)) match {
+        case (Some(next),Some(nextNext)) => {
+          val restOfList = nextNext.next
+          nextNext.next = Some(next)
+          next.next = Some(head)
+          head.next = restOfList.map(reverseLinkedListInGroupsOfKRec)
+          nextNext
+        }
+        case _ => head
+      }
+    }
+    reverseLinkedListInGroupsOfKRec(head)
+  }
+
   val node1 = Node(1)
-  val node2 = Node(0)
-  val node3 = Node(0)
-  val node4 = Node(2)
-  val node5 = Node(1)
+  val node2 = Node(20)
+  val node3 = Node(34)
+  val node4 = Node(42)
+  val node5 = Node(54)
 
   val node6 = Node(4)
   val node7 = Node(16)
@@ -579,6 +602,6 @@ object Linkedlists extends App {
   node7.next = Some(node8)   // 4 -> 16 -> 35
 
   val asdas = "dsa"
-  val res = printAllCombinationsOfLists(List(List("john", "emma", "chloe"), List("playes", "hates", "watches"), List("cricket", "soccer", "chess")))
+  val res = reverseLinkedListInGroupsOfK(node1)
   val asdafas = "das "
 }
