@@ -1145,4 +1145,33 @@ object ArraysAndStrings extends App {
 
     if(bitonicsIndexes.isEmpty) arr else determineLargestBitonic(bitonicsIndexes.toArray)
   }
+
+  /**
+    * Largest rectangle in a histogram
+    * For simplicity, assume that all bars have same width and the width is 1 unit
+    * Example - {6, 2, 5, 4, 5, 1, 6}, The largest possible rectangle possible is 12
+    * https://www.geeksforgeeks.org/largest-rectangular-area-in-a-histogram-set-1/
+    *  _
+    * | |
+    * | |_
+    * |   |
+    * |   |_
+    * |     |
+    *
+    * @param arr
+    * @return largest rectangle in a histogram
+    */
+  def largestRectangleOnAHistogram(arr: Array[Int]): Int = {
+    // Brute force - for every element in the array, calculate its max rectangle (complexity O(n^2))
+    // there are better solutions in terms of complexity that can be found online
+    var min, max = arr(0)
+    for(i <- 0 until arr.size) {
+      min = arr(i)
+      for(j <- i + 1 until arr.size) {
+        min = Math.min(min, arr(j))
+        max = Math.max(max, min * (j - i + 1))
+      }
+    }
+    max
+  }
 }
