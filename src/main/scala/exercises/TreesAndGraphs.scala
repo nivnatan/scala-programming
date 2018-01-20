@@ -638,4 +638,37 @@ object TreesAndGraphs extends App {
     // then perform - find pait that equal to a given sum using hashmap or increase decrease two pointers
     true
   }
+
+  /**
+    * Given a Binary tree and a sum S, print all the paths, starting from root, that sums upto the given sum.
+    * Example -
+    * Input : sum = 38,
+    *          Root
+    *           10
+    *        /     \
+    *      28       13
+    *            /     \
+    *          14       15
+    *         /   \     /  \
+    *        21   22   23   24
+    * Output : Path found: 10 28
+    * Path found: 10 13 15
+    *
+    * @param root
+    * @param sum
+    * @return true / false
+    */
+  def printAllPathsFromRootUptoGivenSum(root: TreeNode[Int], sum: Int): Unit = {
+    // solution - traverse preOrder and save the elements in a list and update sum.
+    def printAllPathsFromRootUptoGivenSumRec(root: TreeNode[Int], sum: Int, visitList: List[TreeNode[Int]]): Unit = {
+      val updatedList = visitList :+ root
+      if(root.data == sum) {
+        println((updatedList.map(_.data)).mkString(" -> "))
+      } else {
+        root.left.map(printAllPathsFromRootUptoGivenSumRec(_, sum - root.data, updatedList))
+        root.right.map(printAllPathsFromRootUptoGivenSumRec(_, sum - root.data, updatedList))
+      }
+    }
+    printAllPathsFromRootUptoGivenSumRec(root, sum, Nil)
+  }
 }
