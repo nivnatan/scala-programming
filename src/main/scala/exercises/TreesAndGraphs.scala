@@ -656,7 +656,6 @@ object TreesAndGraphs extends App {
     *
     * @param root
     * @param sum
-    * @return true / false
     */
   def printAllPathsFromRootUptoGivenSum(root: TreeNode[Int], sum: Int): Unit = {
     // solution - traverse preOrder and save the elements in a list and update sum.
@@ -670,5 +669,35 @@ object TreesAndGraphs extends App {
       }
     }
     printAllPathsFromRootUptoGivenSumRec(root, sum, Nil)
+  }
+
+  def printAllPathsFromAnyNodeUptoGivenSum(root: TreeNode[Int], sum: Int): Unit = {
+    def printAllPathsFromAnyNodeUptoGivenSumRec(root: TreeNode[Int]): Unit = {
+      printAllPathsFromRootUptoGivenSum(root, sum)
+      root.left.map(printAllPathsFromRootUptoGivenSum(_, sum))
+      root.right.map(printAllPathsFromRootUptoGivenSum(_, sum))
+    }
+    printAllPathsFromAnyNodeUptoGivenSumRec(root)
+  }
+
+  /**
+    * Given 2 nodes in a tree, find common ancestor
+    *
+    * @param root
+    * @param node1
+    * @param node2
+    * @return common ancestor if exists
+    */
+  def commonAncestor(root: TreeNode[Int], node1: Int, node2: Int): Option[Int] = {
+    def commonAncestorRec(root: TreeNode[Int], node: Int): Boolean = {
+      if (root.data == node) true
+      else (root.left.map(commonAncestorRec(_, node)).getOrElse(false) || root.right.map(commonAncestorRec(_, node)).getOrElse(false))
+    }
+
+    if(root.left.map(commonAncestorRec(_, node1)).getOrElse(false) && root.right.map(commonAncestorRec(_, node2)).getOrElse(false)) {
+      Some(root.data)
+    } else if(root.left.map(commonAncestorRec(_, node2)).getOrElse(false) && root.right.map(commonAncestorRec(_, node1)).getOrElse(false)) {
+      Some(root.data)
+    } else root.left.flatMap(commonAncestor(_, node1, node2)) orElse root.right.flatMap(commonAncestor(_, node1, node2))
   }
 }
