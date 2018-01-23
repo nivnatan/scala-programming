@@ -1209,4 +1209,46 @@ object ArraysAndStrings extends App {
 
     bruteForce(arr)
   }
+
+  /**
+    * Check for Majority Element in a sorted array (majority element is an element that appears more then n/2 times, so there can be only one, if any)
+    * Examples:
+    * Input: arr[] = {1, 2, 3, 3, 3, 3, 10   , Output: Some(3)
+    * Input: arr[] = {1, 1, 2, 4, 4, 4, 6, 6}, Output: None
+    * Input: arr[] = {1, 1, 1, 2, 2}         , Output: Some(1)
+    * @param arr
+    * @return largest subarray with equal number of 1s and 0s
+    */
+  def majorityElementInASortedArray(arr: Array[Int]): Option[Int] = {
+
+    def helper(firstOccurrence: Int, x: Int) = {
+      val arrSize = arr.size
+      Option(firstOccurrence)
+        .filter(_ != -1) // found index
+        .filter(_ < (if(arrSize % 2 == 0) arrSize / 2 else arrSize / 2 + 1)) // index is smaller then half the size of the array
+        .collect { case firstOccurrenceIndex if(arr(firstOccurrenceIndex + arr.size / 2) == x) => x }
+    }
+
+    def linearSearch(x: Int): Option[Int] = {
+      //Linearly search for the first occurrence of the element, once you find it (let at index i), check element at index i + n/2. If element is present at i+n/2 then return 1 else return 0.
+      helper(arr.indexOf(x), x)
+    }
+
+    def binarySearch(x: Int) = {
+      //Use binary search methodology to find the first occurrence of the given number
+      def findFirstOccurrence(left: Int, right: Int): Int = {
+        if(left > right) -1
+        else {
+          val mid = left + (right - left) / 2
+          if(arr(mid) == x && (mid == 0 || arr(mid-1) < x)) mid // if arr(mid) equals to x AND (the element to my left is smaller then x then I'm the first occurrence OR i'm in position zero index)
+          else if(arr(mid) < x) findFirstOccurrence(mid + 1, right)
+          else findFirstOccurrence(left, mid - 1)
+        }
+      }
+      helper(findFirstOccurrence(0, arr.size - 1), x)
+    }
+
+    val majorityCandidate = arr(arr.size / 2)
+    binarySearch(majorityCandidate)
+  }
 }
