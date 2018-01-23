@@ -1174,4 +1174,39 @@ object ArraysAndStrings extends App {
     }
     max
   }
+
+  /**
+    * Given a boolean array with 1s and 0s, find the largest subarray with equal number of 1s and 0s.
+    * Examples:
+    * Input: arr[] = {1, 0, 1, 1, 1, 0, 0}, Output: 1 to 6 (Starting and Ending indexes of output subarray)
+    * Input: arr[] = {1, 1, 1, 1}, Output: No such subarray
+    * Input: arr[] = {0, 0, 1, 1, 0}, Output: 0 to 3 Or 1 to 4
+    *
+    * @param arr
+    * @return largest subarray with equal number of 1s and 0s
+    */
+  def largestSubArrayWithEqualNumberOfOnesAndZeros(arr: Array[Int]): (Int,Int) = {
+    def bruteForce(arr: Array[Int]) = {
+      var numberOfZeros    = 0
+      var numberOfOnes     = 0
+      var maxSubArrayIndex = 0 -> 0
+      for(i <- 0 until arr.size) {
+        numberOfZeros = 0
+        numberOfOnes = 0
+        for (j <- i until arr.size) {
+          if(arr(j) == 0) numberOfZeros+=1 else numberOfOnes+=1
+          if(numberOfZeros == numberOfOnes) {
+            if(j - i > maxSubArrayIndex._2 - maxSubArrayIndex._1) {
+              maxSubArrayIndex = i -> j
+            }
+          }
+        }
+      }
+      maxSubArrayIndex
+    }
+
+    //this can be done using O(n) complexity - see https://www.geeksforgeeks.org/largest-subarray-with-equal-number-of-0s-and-1s/
+
+    bruteForce(arr)
+  }
 }
