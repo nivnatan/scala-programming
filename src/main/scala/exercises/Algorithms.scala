@@ -184,4 +184,27 @@ object Algorithms extends App {
 
     def contains(value: Any) = map.contains(value)
   }
+
+  // https://www.programcreek.com/2014/05/leetcode-implement-trie-prefix-tree-java/
+  class Trie {
+    case class TrieNode(char: Char, children: mutable.HashMap[Char,TrieNode] = new mutable.HashMap, var isLeaf: Boolean = false)
+    val root = TrieNode(' ')
+
+    def insert(word: String): Unit = {
+      var children = root.children
+      for(i <- 0 until word.length) {
+        val charAt = word.charAt(i)
+        val t = children.get(charAt) match {
+          case Some(r) => r
+          case None    => {
+            val t = TrieNode(charAt)
+            children += charAt -> t
+            t
+          }
+        }
+        children = t.children
+        if(i == word.length - 1) t.isLeaf = true
+      }
+    }
+  }
 }
