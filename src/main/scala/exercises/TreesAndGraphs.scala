@@ -700,4 +700,29 @@ object TreesAndGraphs extends App {
       Some(root.data)
     } else root.left.flatMap(commonAncestor(_, node1, node2)) orElse root.right.flatMap(commonAncestor(_, node1, node2))
   }
+
+  /**
+    * A binary tree is foldable if it's a mirror image of itself
+    * i.e. if its left and right subtrees are identical mirror images
+    *
+    * @param root
+    * @return true if root is foldable, false otherwise
+    */
+  def isFoldableTree(root: TreeNode[Int]): Boolean = {
+    def isFoldableTreeRec(root1: TreeNode[Int], root2: TreeNode[Int]): Boolean = {
+      if(root1.data != root2.data) false
+      else {
+        (root1.left, root1.right, root2.left, root2.right) match {
+          case (None, None, None, None) => true
+          case (Some(r1L), Some(r1R), Some(r2L), Some(r2R)) => isFoldableTreeRec(r1L, r2R) && isFoldableTreeRec(r1R, r2L)
+          case _ => false
+        }
+      }
+    }
+    (root.left, root.right) match {
+      case (Some(r1), Some(r2)) => isFoldableTreeRec(r1,r2)
+      case (None,None)          => true
+      case _                    => false
+    }
+  }
 }
