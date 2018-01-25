@@ -15,8 +15,8 @@ object ArraysAndStrings extends App {
     * @param arr
     * @return new array without the first and second elements
     */
-  def arrayWithoutFirstAndSecondElements(arr: Array[Int]): Int = {
-    arr.init.head
+  def arrayWithoutFirstAndSecondElements(arr: Array[Int]): Array[Int] = {
+    arr.init.tail
   }
 
   /**

@@ -583,6 +583,20 @@ object Linkedlists extends App {
     reverseLinkedListInGroupsOfKRec(head)
   }
 
+  /**
+    * Reverse a linked list
+    *
+    * @param head
+    */
+  def reverseLL(head: Node) = {
+    def reverseRec(previousElem: Option[Node], currentElem: Node): Node = {
+      val nextElem = currentElem.next
+      currentElem.next = previousElem
+      nextElem.map(reverseRec(Some(currentElem), _)).getOrElse(currentElem)
+    }
+    reverseRec(None, head)
+  }
+
   val node1 = Node(1)
   val node2 = Node(20)
   val node3 = Node(34)
@@ -602,6 +616,6 @@ object Linkedlists extends App {
   node7.next = Some(node8)   // 4 -> 16 -> 35
 
   val asdas = "dsa"
-  val res = reverseLinkedListInGroupsOfK(node1)
+  val res = reverseLL(node1)
   val asdafas = "das "
 }

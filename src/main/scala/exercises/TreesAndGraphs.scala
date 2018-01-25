@@ -7,7 +7,7 @@ import exercises.StackAndQueues.MyQueue
   */
 object TreesAndGraphs extends App {
 
-  case class TreeNode[T](data: T, var left: Option[TreeNode[T]] = None, var right: Option[TreeNode[T]] = None) {
+  case class TreeNode[T](data: T, var left: Option[TreeNode[T]] = None, var right: Option[TreeNode[T]] = None, var successor: Option[TreeNode[T]] = None) {
     def isLeaf: Boolean = left.isEmpty && right.isEmpty
   }
 
@@ -724,5 +724,33 @@ object TreesAndGraphs extends App {
       case (None,None)          => true
       case _                    => false
     }
+  }
+
+  /**
+    * Populate In-Order successor in each node
+    * Successor means next element obtained when we traverse.
+    * Example -
+    *             10
+    *           /    \
+    *         /       \
+    *        5         20
+    *      /  \       / \
+    *    /     \    /    \
+    *   2       6  15    25
+    *
+    *  In the above diagram, inorder successor of node 2 is 5 and node 6 is 10.
+    *
+    * @param root
+    */
+  def inOrderSuccessor(root: TreeNode[Int]): Unit = {
+    //if we keep a pointer to previously visited node, then current node is the successor.
+    var globalPrev: Option[TreeNode[Int]] = None
+    def inOrderSuccessorRec(root: TreeNode[Int]): Unit = {
+      root.left.map(inOrderSuccessorRec)
+      globalPrev.map(_.successor = Some(root))
+      globalPrev = Some(root)
+      root.right.map(inOrderSuccessorRec)
+    }
+    inOrderSuccessorRec(root)
   }
 }
