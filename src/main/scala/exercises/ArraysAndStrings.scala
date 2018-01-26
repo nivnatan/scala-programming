@@ -1216,6 +1216,7 @@ object ArraysAndStrings extends App {
     * Input: arr[] = {1, 2, 3, 3, 3, 3, 10   , Output: Some(3)
     * Input: arr[] = {1, 1, 2, 4, 4, 4, 6, 6}, Output: None
     * Input: arr[] = {1, 1, 1, 2, 2}         , Output: Some(1)
+    *
     * @param arr
     * @return largest subarray with equal number of 1s and 0s
     */
@@ -1250,5 +1251,34 @@ object ArraysAndStrings extends App {
 
     val majorityCandidate = arr(arr.size / 2)
     binarySearch(majorityCandidate)
+  }
+
+  /**
+    * Given two sorted arrays, find a path such that it uses elements from either of the arrays at a time and sum of whose elements is maximum.
+    * Only condition to satisfy is that you can change from one array to another only when the elements are matching.
+    * Examples:
+    * arr1 = [1, 2, 8, 9, 10, 15, 20]
+    * arr2 = [7, 8, 10, 11, 20, 25]
+    * Then maximum sum path = 7, 8, 9, 10, 15, 20, 25
+    * Some other paths possible are: 1,2,8,10,11,20 or 7,8,10,15,20
+    * But since the sum of their elements is not maximum, they do not form the answer.
+    *
+    * @param arr1
+    * @param arr2
+    * @return largest subarray with equal number of 1s and 0s
+    */
+  def maximumPathSortedArrays(arr1: Array[Int], arr2: Array[Int]): Int = {
+    def maximumPathSortedArraysRec(index1: Int, index2: Int, sum1: Int, sum2: Int, result: Int): Int = {
+      if(index1 >= arr1.size) {
+        result + arr2.drop(index2).reduce(_ + _) //takes what is left from arr2 and add it to sum
+      }
+      else if(index2 >= arr2.size) {
+        result + arr1.drop(index1).reduce(_ + _) //takes what is left from arr1 and add it to sum
+      }
+      else if(arr1(index1) < arr2(index2)) maximumPathSortedArraysRec(index1 + 1, index2, sum1 + arr1(index1), sum2, result) //advance index1 and add to sum1
+      else if(arr1(index1) > arr2(index2)) maximumPathSortedArraysRec(index1, index2 + 1, sum1, sum2 + arr2(index2), result) //advance index2 and add to sum2
+      else maximumPathSortedArraysRec(index1 + 1, index2 + 1, 0, 0, result + (if(sum1 > sum2) sum1 else sum2) + arr1(index1)) //we encounter same element - compare sum until now from last encounter element and add it to the result along with the encounter element
+    }
+    maximumPathSortedArraysRec(0, 0, 0, 0, 0)
   }
 }
