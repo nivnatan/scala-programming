@@ -1281,4 +1281,54 @@ object ArraysAndStrings extends App {
     }
     maximumPathSortedArraysRec(0, 0, 0, 0, 0)
   }
+
+  /**
+    * There are 2 sorted arrays A and B of size n each. Write an algorithm to find the median of the array obtained after merging the above 2 arrays(i.e. array of length 2n)
+    * Example:
+    * arr1 = [1, 12, 15, 26, 38]
+    * arr2 = [2, 13, 17, 30, 45]
+    * after merging the array [1,2,12,13,15,17,26,30,38,45] middle two elements are 15 and 17. avarage of middle elements is (15+17)/2 = 16
+    *
+    * @param arr1
+    * @param arr2
+    * @return median of two sorted arrays
+    */
+  def medianOfTwoSortedArray(arr1: Array[Int], arr2: Array[Int]): Int = {
+    var m1, m2 = 0
+    var i,j    = 0
+    val size = arr1.size
+
+    for(count <- 0 to size) {
+      /* Below is to handle case where all
+         elements of ar1[] are smaller than
+         smallest(or first) element of ar2[] */
+      if (i == size) {
+        m1 = m2
+        m2 = arr2(0)
+      }
+
+      /* Below is to handle case where all
+         elements of ar2[] are smaller than
+         smallest(or first) element of ar1[] */
+      else if (j == size) {
+        m1 = m2
+        m2 = arr2(0)
+      }
+
+      else {
+        if (arr1(i) < arr2(j)) {
+          m1 = m2
+          m2 = arr1(i)
+          i += 1
+        }
+
+        else {
+          m1 = m2
+          m2 = arr2(j)
+          j += 1
+        }
+      }
+    }
+    (m1 + m2) / 2
+  }
 }
