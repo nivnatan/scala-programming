@@ -753,4 +753,60 @@ object TreesAndGraphs extends App {
     }
     inOrderSuccessorRec(root)
   }
+
+  /**
+    * Given a binary tree, write a function to get the maximum width of the given tree. Width of a tree is maximum of widths of all levels.
+    * Example -
+    *          1
+    *         /  \
+    *        2    3
+    *      /  \     \
+    *     4    5     8
+    *         /  \
+    *        6    7
+    * The maximum width of the tree is 3
+    *
+    * @param root
+    * @return maximum width of the tree
+    */
+  def maximumWidthOfABinaryTree(root: TreeNode[Int]): Int = {
+
+    // this solution is not optimal, solution using level order traversal using queue is better and can be found far above in this code sheet
+
+    def height(root: TreeNode[Int]): Int = {
+      val leftH  = root.left.map(height).getOrElse(0)
+      val rightH = root.left.map(height).getOrElse(0)
+      1 + Math.max(leftH, rightH)
+    }
+
+    def countWidthPerLevelImmutuble(root: TreeNode[Int], levelToCount: Int): Int = {
+      if(levelToCount == 1) 1
+      else root.left.map(countWidthPerLevelImmutuble(_, levelToCount - 1)).getOrElse(0) + root.right.map(countWidthPerLevelImmutuble(_, levelToCount - 1)).getOrElse(0)
+    }
+
+    def countWidthPerLevel(root: TreeNode[Int], levelToCount: Int) = {
+      var sum = 0
+      def countWidthPerLevelRec(root: TreeNode[Int], currentLevel: Int, levelToCount: Int): Unit = {
+        if(currentLevel == levelToCount) sum+=1
+        root.left.map(countWidthPerLevelRec(_, currentLevel + 1, levelToCount))
+        root.right.map(countWidthPerLevelRec(_, currentLevel + 1, levelToCount))
+      }
+      countWidthPerLevelRec(root, 1, levelToCount)
+      sum
+    }
+
+    def iterateLevels(root: TreeNode[Int]): Int = {
+      val treeHeight: Int = height(root)
+      var maximumWidth = 0
+      for(i <- 1 to treeHeight) {
+        val levelWidth = countWidthPerLevelImmutuble(root, i)
+        if(levelWidth > maximumWidth) {
+          maximumWidth = levelWidth
+        }
+      }
+      maximumWidth
+    }
+
+    maximumWidthOfABinaryTree(root)
+  }
 }
