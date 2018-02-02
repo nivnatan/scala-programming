@@ -1,5 +1,7 @@
 package exercises
 
+import exercises.StackAndQueues.MyStack
+
 import scala.collection.mutable
 import scala.collection.mutable.{ArrayBuffer, ListBuffer}
 import scala.util.Random
@@ -1287,7 +1289,7 @@ object ArraysAndStrings extends App {
     * Example:
     * arr1 = [1, 12, 15, 26, 38]
     * arr2 = [2, 13, 17, 30, 45]
-    * after merging the array [1,2,12,13,15,17,26,30,38,45] middle two elements are 15 and 17. avarage of middle elements is (15+17)/2 = 16
+    * after merging the array [1,2,12,13,15,17,26,30,38,45] middle two elements are 15 and 17. average of middle elements is (15+17)/2 = 16
     *
     * @param arr1
     * @param arr2
@@ -1330,5 +1332,74 @@ object ArraysAndStrings extends App {
       }
     }
     (m1 + m2) / 2
+  }
+
+  /**
+    * Given an unsorted array, print the nearest larger element for each element.
+    * The Next greater Element for an element x is the first greater element on the right side of x in array. Elements for which no greater element exist, consider next greater element as None
+    * Example:
+    * Given array [5, 9, 3, 5, 4]
+    * The solution should print:
+    * 5 --nearest largest element-- > 9
+    * 9 --nearest largest element-- > None
+    * 3 --nearest largest element-- > 5 (NOT 4)
+    * 5 --nearest largest element-- > None
+    * 4 --nearest largest element-- > None
+    *
+    * @param arr
+    */
+  def NearestLargerElementForEachElement(arr: Array[Int]): Unit = {
+    //O(n) solution
+    def usingTwoLoops = {
+      var next: Option[Int] = None
+      for(i <- 0 until arr.size) {
+        next = None
+        for(j <- i+1 until arr.size if(next.isEmpty)) {
+          if(arr(i) < arr(j)) {
+            next = Some(arr(j))
+          }
+        }
+        print(arr(i) -> next)
+      }
+    }
+
+    //O(n) solution - https://www.geeksforgeeks.org/next-greater-element/
+    def usingDecreasingStack = {
+      val myStack = new MyStack[Int]
+      myStack.push(arr(0))
+      for(i <- 1 until arr.size) {
+        val next = arr(i)
+        // print all elements in stack that are smaller then next
+        while(!myStack.isEmpty && myStack.peek < next) {
+          print(myStack.pop -> next)
+        }
+        // current element's next larger element is yet to be seen, so current element always goes into the stack.
+        myStack.push(next)
+      }
+      // The elements left in the stack have no next larger element.
+      // Infact, the leftovers are arranged in sorted order in the stack due to this.
+      while(!myStack.isEmpty) print(myStack.pop -> None)
+    }
+  }
+
+  /**
+    * Search an element in a 2D array (matrix) sorted row-wise and col-wise
+    * Example:
+    *  01   06    09
+    *  03   08    12
+    *  05   10    14
+    *
+    * @param arr
+    * @param element
+    */
+  def SearchElementInSorted2DMatrix(arr: Array[Array[Int]], element: Int): Unit = {
+    var i = 0
+    var j = arr.size - 1
+    while(i < arr.size && j >= 0) {
+      if(arr(i)(j) == element) print(s"found element! - ${element}")
+      else if(arr(i)(j) < element) i+=1
+      else j+=1
+    }
+    //This solution is guaranteed to work because at every step we are eliminating a full row or columns which is less than or greater than the given element.
   }
 }
