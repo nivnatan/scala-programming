@@ -1402,4 +1402,53 @@ object ArraysAndStrings extends App {
     }
     //This solution is guaranteed to work because at every step we are eliminating a full row or columns which is less than or greater than the given element.
   }
+
+  /**
+    * Given an unsorted array, find two elements a[i] and a[j] such that i < j and difference between a[i] and a[j] is maximum in the array.
+    * Example:
+    * in the following array [30, 12, 15, 22, 25, 7, 18], the elements with maximum difference are 12 and 25
+    *
+    * @param arr
+    */
+  def maxDifferenceBetweenTwoElementsInAnArray(arr: Array[Int]): (Int,Int) = {
+    // O(n^2) solution
+    def naiveSolution: (Int,Int) = {
+      var maxDifference = Integer.MIN_VALUE
+      var elem1, elem2 = 0
+      for(i <- 0 until arr.size)
+        for(j <- i+1 until arr.size) {
+          if(arr(j) - arr(i) > maxDifference) {
+            elem1 = arr(i)
+            elem2 = arr(j)
+            maxDifference = arr(j) - arr(i)
+          }
+        }
+      elem1 -> elem2
+    }
+
+    // O(n) solution
+    def keepTrackOfMinimumElementSolution = {
+      // In this method, instead of taking difference of the picked element with every other element,
+      // we take the difference with the minimum element found so far. So we need to keep track of 2 things:
+      // 1) Maximum difference found so far (max_diff).
+      // 2) Minimum number visited so far (min_element).
+      var minimum = arr(0)
+      var elem1 = arr(0)
+      var elem2 = arr(1)
+      var maxDifference = arr(1) - arr(0)
+      for(i <- 1 until arr.size) {
+        if(arr(i) - minimum > maxDifference) {
+          maxDifference = arr(i) - minimum
+          elem1 = minimum
+          elem2 = arr(i)
+        }
+        if(arr(i) < minimum) {
+          minimum = arr(i)
+        }
+      }
+      elem1 -> elem2
+    }
+
+    keepTrackOfMinimumElementSolution
+  }
 }
