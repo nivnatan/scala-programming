@@ -1459,10 +1459,15 @@ object ArraysAndStrings extends App {
     * {1,1,1,1}, {2,1,1}, {3,1}, {2,2}
     *
     * @param coins
-    * @param coinsCount
     * @param sum
     */
-  def allCombinationsToSumCoins(coins: Array[Int], coinsCount: Int, sum: Int): Int = {
-    -1
+  def allCombinationsToSumCoins(coins: Array[Int], sum: Int): Int = {
+    if(sum == 0) 1
+    else if(sum < 0 || coins.isEmpty) 0
+    else {
+      val withCoin = allCombinationsToSumCoins(coins, sum - coins(0))
+      val withoutCoin = allCombinationsToSumCoins(coins.tail, sum)
+      withCoin + withoutCoin
+    }
   }
 }
