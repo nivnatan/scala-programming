@@ -110,6 +110,7 @@ object ArraysAndStrings extends App {
         }
       }
     }
+    // build res (string) as we go to produce final result
     stringCompression(str.substring(1), str.charAt(0), 1, "")
   }
 
@@ -1469,5 +1470,28 @@ object ArraysAndStrings extends App {
       val withoutCoin = allCombinationsToSumCoins(coins.tail, sum)
       withCoin + withoutCoin
     }
+  }
+
+  /**
+    * Given a string - return a set of all of its permutations
+    * So For:
+    * str="abc" => {"abc","acb","bac","bca","cab","cba"}
+    *
+    * @param str
+    * @param set
+    */
+  def allPermutationsToSet(str: String): Set[String] = {
+    val set = new ArrayBuffer[String]()
+    def allPermutationsToSetRec(str: String, prefix: String): Unit = {
+      if(str == "") set += prefix
+      else {
+        for(i <- 0 until str.length) {
+          // a+bc, b+ac, c+ab ...
+          allPermutationsToSetRec(str.take(i) + str.drop(i + 1), prefix + str(i))
+        }
+      }
+    }
+    allPermutationsToSetRec(str, "")
+    set.result().toSet
   }
 }
