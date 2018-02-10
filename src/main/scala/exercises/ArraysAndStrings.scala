@@ -235,13 +235,21 @@ object ArraysAndStrings extends App {
     * @param str, str
     * @return boolean
     */
-  def isMatchingSeq(str: Seq[Char], pattern: Seq[Char]): Boolean = {
+  def isMatchingStr(str: String, pattern: String): Boolean = {
     (str, pattern) match {
-      case (Nil, Nil) => true
-      case (sHead :: sTail, pHead :: pTail) if sHead == pHead || pHead == "?" =>
-        isMatchingSeq(sTail, pTail)
-      case (_ :: sTail, pHead :: pTail) if pHead == "*" =>
-        isMatchingSeq(sTail, pTail) || isMatchingSeq(sTail, pattern) || isMatchingSeq(str, pTail)
+      // If we reach at the end of both strings, we are done
+      case ("","")   => true
+      // special case where the str has ended and the pattern is still valid as it is '*'
+      case ("", p)   => p == "*"
+      // If pattern is empty and str is not, it means that the str does not follow the pattern
+      case (str, "") => false
+      // If the first string contains '?', or current characters of both strings match move forward
+      case (str, p) if(str.charAt(0) == p.charAt(0) || p.charAt(0) == '?') => isMatchingStr(str.tail, p.tail)
+      // If there is *, then there are two possibilities
+      // a) We consider current character of second string
+      // b) We ignore current character of second string.
+      case (str, p) if(p.charAt(0) == '*') => isMatchingStr(str.tail, p) || isMatchingStr(str, p.tail)
+      // otherwise and to catch non matched characters between str and pattern, return false
       case _ => false
     }
   }
@@ -1478,7 +1486,7 @@ object ArraysAndStrings extends App {
     * str="abc" => {"abc","acb","bac","bca","cab","cba"}
     *
     * @param str
-    * @param set
+    * @return Set[String]
     */
   def allPermutationsToSet(str: String): Set[String] = {
     val set = new ArrayBuffer[String]()
