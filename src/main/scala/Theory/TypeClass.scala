@@ -1,4 +1,4 @@
-package Theory
+package theory
 
 /**
   * Created by niv on 06/02/2018.
