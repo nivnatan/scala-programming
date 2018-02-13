@@ -333,6 +333,23 @@ object ArraysAndStrings extends App {
   }
 
   /**
+    * Reverse a string recursively
+    *
+    * examples:
+    * ("abcd") -> "dcba"
+    *
+    * @param str
+    * @return reversed string
+    */
+  def stringReverseRec(str: String): String = {
+    if(str == "") ""
+    else {
+      val previousString = stringReverseRec(str.drop(1))
+      previousString + str.charAt(0)
+    }
+  }
+
+  /**
     * Write an algorithm such that if an element in an MxN matrix is 0, its entire row and column is set to 0.
     *
     * examples:
