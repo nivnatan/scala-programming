@@ -1519,4 +1519,39 @@ object ArraysAndStrings extends App {
     allPermutationsToSetRec(str, "")
     set.result().toSet
   }
+
+  /**
+    * Given a positive integer n, print all combination of numbers from 1 to n having sum n
+    * For example, for n=5:
+    * {5}
+    * {1,4}
+    * {2,3}
+    * {1,1,3}
+    * {1,2,2}
+    * {1,1,1,2}
+    * {1,1,1,1,1}
+    *
+    * @param number
+    */
+  def allCombinationsOfNumbersFromOneToN(number: Int): Set[String] = {
+    val set = new ArrayBuffer[String]()
+
+    def allCombinationsOfNumbersFromOneToNRec(numberStr: String, index: Int, sum: Int): Unit = {
+
+      if(sum == 0) {
+        set += numberStr
+      }
+
+      if(sum > 0) {
+        for(i <- index to sum) {
+          allCombinationsOfNumbersFromOneToNRec(numberStr + i.toString, i, sum - i)
+        }
+      }
+    }
+
+    allCombinationsOfNumbersFromOneToNRec("", 1, number)
+    set.result().toSet
+  }
+
+  allCombinationsOfNumbersFromOneToN(5)
 }
