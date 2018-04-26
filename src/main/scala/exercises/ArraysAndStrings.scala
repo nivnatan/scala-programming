@@ -1548,7 +1548,7 @@ object ArraysAndStrings extends App {
         }
       }
     }
-
+    // consider every integer from 1 to number and add it in the output and recurse for remaining elements [i..number] with reduced sum (n-i)
     allCombinationsOfNumbersFromOneToNRec("", 1, number)
     set.result().toSet
   }
