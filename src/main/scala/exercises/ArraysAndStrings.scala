@@ -1552,6 +1552,4 @@ object ArraysAndStrings extends App {
     allCombinationsOfNumbersFromOneToNRec("", 1, number)
     set.result().toSet
   }
-
-  allCombinationsOfNumbersFromOneToN(5)
 }
