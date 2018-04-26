@@ -1552,4 +1552,27 @@ object ArraysAndStrings extends App {
     allCombinationsOfNumbersFromOneToNRec("", 1, number)
     set.result().toSet
   }
+
+  /**
+    * Given an array of distinct integers, replace each element of the array by its corresponding rank in the array
+    * the minimum element in the array has rank 1, the second minimum element has rank 2 and so on..
+    * For example:
+    * input={10,8,15,12,6,20,1}
+    * output={4,3,6,5,2,7,1}
+    *
+    * @param arr
+    */
+  def replaceArrayElementsByRank(arr: Array[Int]): Unit = {
+
+    // create ranks map
+    val ranks = arr
+      .sorted
+      .zipWithIndex
+      .toMap
+
+    // replace each elemnt by its corresponding rank
+    for(i <- 0 until arr.size) {
+      arr(i) = ranks(arr(i)) + 1
+    }
+  }
 }
