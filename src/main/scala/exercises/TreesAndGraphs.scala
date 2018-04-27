@@ -809,4 +809,45 @@ object TreesAndGraphs extends App {
 
     maximumWidthOfABinaryTree(root)
   }
+
+  /**
+    * Given a BST tree and valid range of keys. remove nodes from BST that have keys outside the valid range
+    *
+    *
+    *              10
+    *            /    \
+    *          /       \
+    *         5         20
+    *       /  \       / \
+    *     /     \    /    \
+    *    2       6  15    25
+    * Example with range (4,8):
+    *
+    *
+    *
+    *
+    *        5
+    *         \
+    *          \
+    *           6
+    *
+    * @param root
+    * @return maximum width of the tree
+    */
+    def removeNodesFromBSTOutsideValidRange(root: TreeNode[Int], range:(Int,Int)): Option[TreeNode[Int]] = {
+      root.left = root.left.map(removeNodesFromBSTOutsideValidRange(_, range)).getOrElse(None)
+      root.right = root.right.map(removeNodesFromBSTOutsideValidRange(_, range)).getOrElse(None)
+
+      //the idea is to traverse the tree bottom-up fashion and truncate left and right subtree first before processing a node.
+      //if its key fall within the valid range, nothing needs to be done.
+      //if root's key is smaller than the minimum allowed, we remove it and set root to root's right child.
+      //if root's key is larger than the maximum allowed, we remove it and set root to root's left child.
+      if (root.data < range._1) {
+        root.right
+      } else if (root.data > range._2) {
+        root.left
+      } else {
+        Some(root)
+      }
+    }
 }
