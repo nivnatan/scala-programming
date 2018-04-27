@@ -1575,4 +1575,32 @@ object ArraysAndStrings extends App {
       arr(i) = ranks(arr(i)) + 1
     }
   }
+
+  /**
+    * print all possible triplet sets from a given array (size >= 3, no repetition and order doesn't count, i.e. - combinatorial)
+    * For example:
+    * arr={1,2,3,4}
+    * results={1, 2, 3},{1, 2, 4},{1, 3, 4},{2, 3, 4}
+    *
+    * @param arr
+    */
+  def printAllPossibleTripletSets(arr: Array[Int]): Unit = {
+    require(arr.size >= 3)
+
+    val triplets = scala.collection.mutable.Set.empty[Set[Int]]
+
+    def printAllPossibleTripletSetsRec(set: Set[Int], index: Int): Unit = {
+      if(set.size == 3) {
+        if(!triplets.contains(set)) {
+          print(set)
+          triplets += set
+        }
+      } else if(index < arr.size) {
+        for(i <- index until arr.size) {
+          printAllPossibleTripletSetsRec(set + arr(i), index + 1)
+        }
+      }
+    }
+    printAllPossibleTripletSetsRec(Set.empty, 0)
+  }
 }
