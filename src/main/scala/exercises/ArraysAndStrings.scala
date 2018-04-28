@@ -1603,4 +1603,43 @@ object ArraysAndStrings extends App {
     }
     printAllPossibleTripletSetsRec(Set.empty, 0)
   }
+
+  /**
+    * Given a c-style string and a pattern, in-place replace all non-overlapping occurences of the pattern in the string by a specified character
+    * For example:
+    * string="ABCABCXABC", pattern="ABC", character='@'
+    * result="@@X@"
+    *
+    * @param arr
+    */
+  def replaceInMemory(arr: Array[Char], pattern: Array[Char], character: Char): Unit = {
+
+    // receive index of the array and check if the characters from index follow the given patter
+    def isPatternMatched(index: Int): Boolean = {
+      if(arr.size - index >= pattern.size) {
+        arr.slice(index,pattern.size + index).deep == pattern.deep
+      } else {
+        false
+      }
+    }
+
+    def replaceInMemoryRec(index: Int, position: Int): Unit = {
+      if(index >= arr.size) {
+        // padding '\n' until the end of the array
+        if(position < arr.size) for (i <- position until arr.size) arr(i) = '\n'
+      } else {
+        // if pattern matched array index forward, fill character in the position index and increase index by pattern.size
+        if(isPatternMatched(index)) {
+          arr(position) = character
+          replaceInMemoryRec(index + pattern.size, position + 1)
+        } else {
+          // else copy character into array in position index and advance index and position
+          arr(position) = arr(index)
+          replaceInMemoryRec(index + 1, position + 1)
+        }
+      }
+    }
+
+    replaceInMemoryRec(0, 0)
+  }
 }
