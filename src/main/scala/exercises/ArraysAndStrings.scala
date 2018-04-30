@@ -1642,4 +1642,32 @@ object ArraysAndStrings extends App {
 
     replaceInMemoryRec(0, 0)
   }
+
+  /**
+    * Given an expression consisting of opening brace '{' and a closing brace '}', find the minimum number of inversions needed to make the expression balanced, -1 if it can't be balances.
+    * For example:
+    * expression="{{}{{}{{"
+    * output=2, {{}{{}{{ -> {{}{{}}{ -> {{}{{}}}
+    *
+    * @param expression
+    */
+  def minimumNumberOfInversionsNeededForBalance(expression: String): Int = {
+    // the idea is to traverse the given expression and maintain a count of open braces in the expression seen so far. if the current character is opening brace '{', then we increment the count of opened braces by 1. if the current character
+    // is closing brace '}', then we check if it has any unclosed brace to its left (look for non zero opened brace count). if any unclosed brace is found, we close it by using current brace and decrement the count of opened braces by one;
+    // else we convert the current closing brace '}' to '{' and increment the total inversions needed any opening brace count by 1.
+    // in the end, if there are still opened braces, if the number of opend braces is even -> return exactly / 2, else the expression can't be balanced.
+    def minimumNumberOfInversionsNeededForBalanceRec(index: Int, countOpen: Int, numberOfInversions: Int): Int = {
+      if(index == expression.size) if(countOpen % 2 == 0) countOpen / 2 else -1
+      else {
+        expression.charAt(index) match {
+          case '{' => minimumNumberOfInversionsNeededForBalanceRec(index + 1, countOpen + 1, numberOfInversions)
+          case '}' => {
+            if(countOpen > 0) minimumNumberOfInversionsNeededForBalanceRec(index + 1, countOpen = countOpen - 1, numberOfInversions) else minimumNumberOfInversionsNeededForBalanceRec(index + 1, countOpen = countOpen + 1, numberOfInversions + 1)
+          }
+        }
+      }
+    }
+
+    minimumNumberOfInversionsNeededForBalanceRec(0,0,0)
+  }
 }
