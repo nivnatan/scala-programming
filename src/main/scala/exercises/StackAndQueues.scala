@@ -269,7 +269,7 @@ object StackAndQueues extends App {
     def dfs = {
       def dfsRec(root: File): Unit = {
         val listOfFiles = Option(root.listFiles)
-        listOfFiles.map(_.foreach { case f =>
+        listOfFiles.foreach(_.foreach { case f =>
           if(f.isDirectory) {
             dfsRec(f)
           } else {
