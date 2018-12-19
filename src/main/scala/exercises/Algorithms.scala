@@ -26,7 +26,7 @@ object Algorithms extends App {
     *
     * @param arr
     */
-  def bubbleSort2(arr: Array[Int]) = {
+  def bubbleSort(arr: Array[Int]) = {
     for(i <- 0 until arr.length)
       for(j <- 0 until arr.length - 1 - i) { // Last i elements are already in place
         if(arr(j) > arr(j+1)) {
