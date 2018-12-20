@@ -1670,4 +1670,19 @@ object ArraysAndStrings extends App {
 
     minimumNumberOfInversionsNeededForBalanceRec(0,0,0)
   }
+
+  /**
+    * Given a 2D array of 1's and 0's, find the size of the largest block of 0's. For example the following 2D array:
+    * int[][] array = {
+    * {1, 0, 1, 0, 0, 0, 1, 0 }
+    * {1, 0, 0, 0, 0, 0, 1, 1 }
+    * {1, 1, 1, 0, 0, 0, 1, 1 }
+    * }
+    * Would return "9", because there is a 3x3 square of 0's, and that is the biggest block of 0's in the 2D space.
+    *
+    * @param mat
+    */
+  def largestBlockOfZeros(mat: Array[Int][Int]): Int = {
+
+  }
 }
