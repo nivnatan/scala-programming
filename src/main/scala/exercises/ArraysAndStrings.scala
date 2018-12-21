@@ -1876,4 +1876,45 @@ object ArraysAndStrings extends App {
       firstPositiveIndex += 1
     }
   }
+
+  /**
+    * Given an unsorted array of integers whoch each element lies in range 0 to n-1 where n is the size of the array,
+    * calculate the frequency of all elements presnet in the array in linear time and using constan space.
+    * Example:
+    * Input: {2,3,3,2,1}
+    * Output: Element 1 appears 1 times, Element 2 appears 2 times, Element 3 appears 2 times
+    *
+    * @param arr
+    */
+  def frequencyOfAllElementsPresentInTheArrayLinearTime(arr: Array[Int]): Unit = {
+
+    def solutionWithConstanSpace = {
+      val arrBuffer = Array.fill(arr.length){0}
+      arr.foreach(arrBuffer(_) += 1)
+      for(i <- 0 until arrBuffer.length) {
+        if(arrBuffer(i) > 0) {
+          println(s"Element ${i} appears ${arrBuffer(i)} times")
+        }
+      }
+    }
+
+    /** We can solve this problem using any extra space by taking advantage of the fact that array elements lies in the range 0 to n-1.
+        For each element A[i] present in the array, we increment value present at index (A[i] % n) by n.
+        Finally, we traverse the modified array and if A[i] is more than or equal to n, then i appears in the array (A[i]/n) times.
+        For example, consider the array {2,3,3,2,1}. After incrementing value present at index (A[i] %n) for each element A[i] by n,
+        the array becomes {2,8,13,12,1}. Now if we take (arr[i]/n) for each index i, we get {0,1,2,2,0}. Here, A[i] denotes the frequency of index i.
+    **/
+    def `solutionWith(O1)Space` = {
+      val arrLength = arr.length
+      for(i <- 0 until arrLength) {
+        arr(arr(i) % arrLength) += arrLength
+      }
+
+      for(i <- 0 until arrLength) {
+        if(arr(i) >= arrLength) {
+          println(s"Element ${i} appears ${arr(i)/arrLength} times")
+        }
+      }
+    }
+  }
 }
