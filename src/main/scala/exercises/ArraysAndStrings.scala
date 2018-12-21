@@ -1832,4 +1832,48 @@ object ArraysAndStrings extends App {
     val arr = Array(job1, job2, job3, job4, job5, job6)
     print(go(arr.sortWith { case (j1,j2) => j1.end < j2.end }, arr.length - 1))
   }
+
+  /**
+    * Given an array of integers, rearrange the array such that it contains positive and negative numbers at alternate position.
+    * If array contains more positive or negative elements, they should be moved to end of the array.
+    * Examples:
+    * Input: {9,-3,5,-2,-8,-6,1,3}
+    * Output: {5,-2,9,-6,1,-8,3,-3}
+    *
+    * Input: {9,-3,5,-2,-8,-6}
+    * Output: {5,-2,9,-6,-3,-8}
+    *
+    * Input: {9,-3,5,-2,8,6,1,3}
+    * Output: {5,-2,9,-3,8,6,1,3}
+    *
+    * @param arr
+    */
+  def rearrangeArrayAlternateOrder(arr: Array[Int]): Unit = {
+
+    /** the idea is to use 0 as pivot element and make one pass of partition process. the resultant array will contain
+    all positive integers at the end of the array and all negative integers in the beginning. then we swap alternat negative
+    element from next available positive element till end of array is reached or all negative or positive integers are exhausted. **/
+
+    def pivot(arr: Array[Int]): Int = {
+      val pivot = 0
+      var j = 0
+      for (i <- 0 until arr.length) {
+        if (arr(i) < pivot) {
+          val temp = arr(j)
+          arr(j) = arr(i)
+          arr(i) = temp
+          j += 1
+        }
+      }
+      j
+    }
+
+    var firstPositiveIndex: Int = pivot(arr)
+    for (i <- 0 until arr.length by 2 if firstPositiveIndex < arr.length && i < firstPositiveIndex) {
+      val temp = arr(i)
+      arr(i) = arr(firstPositiveIndex)
+      arr(firstPositiveIndex) = temp
+      firstPositiveIndex += 1
+    }
+  }
 }
