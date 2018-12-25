@@ -1917,4 +1917,61 @@ object ArraysAndStrings extends App {
       }
     }
   }
+
+  /**
+    * Given a positive integer n, print all combination of numbers from 1 to n having sum n
+    * For Example:
+    * For n=5, below combinations are possible:
+    * 5
+    * 1,4
+    * 2,3
+    * 1,1,3
+    * 1,2,2
+    * 1,1,1,2
+    * 1,1,1,1,1
+    *
+    * @param n
+    */
+  def printAllCombinationOfNumbersFrom1ToNHavingSumN(n: Int): Unit = {
+
+    // utility function to print only sorted arrays (to prevent reoccurring of unsorted combinations)
+    def checkSortedArray(arr: Array[Int], index: Int = 0): Boolean = {
+      if(index == arr.length || arr.length <= 1) {
+        true
+      } else if(index == 0 || arr(index - 1) <= arr(index)) {
+        checkSortedArray(arr, index + 1)
+      } else {
+        false
+      }
+    }
+
+    def printAllCombinationOfNumbersFrom1ToNHavingSumNRecAttempt1(arr: Array[Int]): Unit = {
+      if(arr.sum == n && checkSortedArray(arr)) {
+        println(arr.mkString(","))
+      }
+
+      else if(arr.sum < n) {
+        for(i <- 1 until n) {
+          printAllCombinationOfNumbersFrom1ToNHavingSumNRecAttempt1(arr :+ i)
+        }
+      }
+    }
+
+    println(n)
+    printAllCombinationOfNumbersFrom1ToNHavingSumNRecAttempt1(Array.empty[Int])
+  }
+
+  /**
+    * Given an array of distinct integers, replace each element of the array by its corresponding rank in the array.
+    * The minimum element in the array has rank 1, the second minimum element has rank 2 and so on.
+    * For Example:
+    * Input: {10,8,15,12,6,20,1}
+    * Output: {4,3,6,5,2,7,1}
+    *
+    * @param arr
+    */
+  def ArrayCorrespondingRank(arr: Array[Int]): Unit = {
+    val map = arr.sorted.zipWithIndex.toMap
+    print(arr.map(map(_) + 1).mkString(","))
+  }
 }
