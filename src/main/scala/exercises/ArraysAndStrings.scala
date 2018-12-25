@@ -1805,4 +1805,18 @@ object ArraysAndStrings extends App {
     println(n)
     printAllCombinationOfNumbersFrom1ToNHavingSumNRecAttempt1(Array.empty[Int])
   }
+
+  /**
+    * Given an array of distinct integers, replace each element of the array by its corresponding rank in the array.
+    * The minimum element in the array has rank 1, the second minimum element has rank 2 and so on.
+    * For Example:
+    * Input: {10,8,15,12,6,20,1}
+    * Output: {4,3,6,5,2,7,1}
+    *
+    * @param arr
+    */
+  def ArrayCorrespondingRank(arr: Array[Int]): Unit = {
+    val map = arr.sorted.zipWithIndex.toMap
+    print(arr.map(map(_) + 1).mkString(","))
+  }
 }
