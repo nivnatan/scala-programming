@@ -1762,4 +1762,47 @@ object ArraysAndStrings extends App {
 
     max
   }
+
+  /**
+    * Given a positive integer n, print all combination of numbers from 1 to n having sum n
+    * For Example:
+    * For n=5, below combinations are possible:
+    * 5
+    * 1,4
+    * 2,3
+    * 1,1,3
+    * 1,2,2
+    * 1,1,1,2
+    * 1,1,1,1,1
+    *
+    * @param n
+    */
+  def printAllCombinationOfNumbersFrom1ToNHavingSumN(n: Int): Unit = {
+
+    // utility function to print only sorted arrays (to prevent reoccurring of unsorted combinations)
+    def checkSortedArray(arr: Array[Int], index: Int = 0): Boolean = {
+      if(index == arr.length || arr.length <= 1) {
+        true
+      } else if(index == 0 || arr(index - 1) <= arr(index)) {
+        checkSortedArray(arr, index + 1)
+      } else {
+        false
+      }
+    }
+
+    def printAllCombinationOfNumbersFrom1ToNHavingSumNRecAttempt1(arr: Array[Int]): Unit = {
+      if(arr.sum == n && checkSortedArray(arr)) {
+        println(arr.mkString(","))
+      }
+
+      else if(arr.sum < n) {
+        for(i <- 1 until n) {
+          printAllCombinationOfNumbersFrom1ToNHavingSumNRecAttempt1(arr :+ i)
+        }
+      }
+    }
+
+    println(n)
+    printAllCombinationOfNumbersFrom1ToNHavingSumNRecAttempt1(Array.empty[Int])
+  }
 }
