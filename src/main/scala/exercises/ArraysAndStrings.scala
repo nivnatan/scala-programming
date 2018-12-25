@@ -1762,4 +1762,159 @@ object ArraysAndStrings extends App {
 
     max
   }
+
+  /**
+    * Given a list of jobs where each job has a start and finish time, and also has profit associated with it,
+    * find maximum profit subset of non-overlapping jobs.
+    *
+    * For example, consider jobs with their starting time, finishing time, and associated profit.
+    * Job1: (0,6,60)
+    * Job1: (1,4,30)
+    * Job1: (3,5,10)
+    * Job1: (5,7,30)
+    * Job1: (5,9,50)
+    * Job1: (7,8,10)
+    *
+    * the maximum profit is 80 which is achived by picking job 2 and job 5
+    *
+    */
+  object weightedIntervalSchedulingProblem {
+    /** 1) First sort jobs according to finish time.
+        2) Now apply following recursive process.
+          // Here arr[] is array of n jobs
+          findMaximumProfit(arr[], n)
+        {
+          a) if (n == 1) return arr[0];
+          b) Return the maximum of following two profits.
+          (i) Maximum profit by excluding current job, i.e.,
+          findMaximumProfit(arr, n-1)
+          (ii) Maximum profit by including the current
+
+      The idea is to find the latest job before the current job (in
+      sorted array) that doesn't conflict with current job 'arr[n-1]'.
+      Once we find such a job, we recur for all jobs till that job and
+      add profit of current job to result.
+    } **/
+
+    case class Job(start: Int, end: Int, profit: Int)
+
+    def findLatestJobNonOverlapping(jobsList: Array[Job], index: Int, start: Int): Int = {
+      index match {
+        case num if num < 0                     => -1
+        case num if jobsList(num).end <= start  => index
+        case _                                  => findLatestJobNonOverlapping(jobsList, index - 1, start)
+      }
+    }
+
+    def go(jobsList: Array[Job], index: Int): Int = {
+      index match {
+        case num if num < 0  => 0
+        case num if num == 0 => jobsList(0).profit
+        case _               => {
+          // include current job
+          val include = jobsList(index).profit + go(jobsList, findLatestJobNonOverlapping(jobsList, index - 1, jobsList(index).start))
+
+          // exclude current job
+          val exclude = go(jobsList, index - 1)
+
+          // return max
+          Math.max(include, exclude)
+        }
+      }
+    }
+
+    val job1 = Job(0,6,60)
+    val job2 = Job(1,4,30)
+    val job3 = Job(3,5,10)
+    val job4 = Job(5,7,30)
+    val job5 = Job(5,9,50)
+    val job6 = Job(7,8,10)
+    val arr = Array(job1, job2, job3, job4, job5, job6)
+    print(go(arr.sortWith { case (j1,j2) => j1.end < j2.end }, arr.length - 1))
+  }
+
+  /**
+    * Given an array of integers, rearrange the array such that it contains positive and negative numbers at alternate position.
+    * If array contains more positive or negative elements, they should be moved to end of the array.
+    * Examples:
+    * Input: {9,-3,5,-2,-8,-6,1,3}
+    * Output: {5,-2,9,-6,1,-8,3,-3}
+    *
+    * Input: {9,-3,5,-2,-8,-6}
+    * Output: {5,-2,9,-6,-3,-8}
+    *
+    * Input: {9,-3,5,-2,8,6,1,3}
+    * Output: {5,-2,9,-3,8,6,1,3}
+    *
+    * @param arr
+    */
+  def rearrangeArrayAlternateOrder(arr: Array[Int]): Unit = {
+
+    /** the idea is to use 0 as pivot element and make one pass of partition process. the resultant array will contain
+    all positive integers at the end of the array and all negative integers in the beginning. then we swap alternat negative
+    element from next available positive element till end of array is reached or all negative or positive integers are exhausted. **/
+
+    def pivot(arr: Array[Int]): Int = {
+      val pivot = 0
+      var j = 0
+      for (i <- 0 until arr.length) {
+        if (arr(i) < pivot) {
+          val temp = arr(j)
+          arr(j) = arr(i)
+          arr(i) = temp
+          j += 1
+        }
+      }
+      j
+    }
+
+    var firstPositiveIndex: Int = pivot(arr)
+    for (i <- 0 until arr.length by 2 if firstPositiveIndex < arr.length && i < firstPositiveIndex) {
+      val temp = arr(i)
+      arr(i) = arr(firstPositiveIndex)
+      arr(firstPositiveIndex) = temp
+      firstPositiveIndex += 1
+    }
+  }
+
+  /**
+    * Given an unsorted array of integers whoch each element lies in range 0 to n-1 where n is the size of the array,
+    * calculate the frequency of all elements presnet in the array in linear time and using constan space.
+    * Example:
+    * Input: {2,3,3,2,1}
+    * Output: Element 1 appears 1 times, Element 2 appears 2 times, Element 3 appears 2 times
+    *
+    * @param arr
+    */
+  def frequencyOfAllElementsPresentInTheArrayLinearTime(arr: Array[Int]): Unit = {
+
+    def solutionWithConstanSpace = {
+      val arrBuffer = Array.fill(arr.length){0}
+      arr.foreach(arrBuffer(_) += 1)
+      for(i <- 0 until arrBuffer.length) {
+        if(arrBuffer(i) > 0) {
+          println(s"Element ${i} appears ${arrBuffer(i)} times")
+        }
+      }
+    }
+
+    /** We can solve this problem using any extra space by taking advantage of the fact that array elements lies in the range 0 to n-1.
+        For each element A[i] present in the array, we increment value present at index (A[i] % n) by n.
+        Finally, we traverse the modified array and if A[i] is more than or equal to n, then i appears in the array (A[i]/n) times.
+        For example, consider the array {2,3,3,2,1}. After incrementing value present at index (A[i] %n) for each element A[i] by n,
+        the array becomes {2,8,13,12,1}. Now if we take (arr[i]/n) for each index i, we get {0,1,2,2,0}. Here, A[i] denotes the frequency of index i.
+    **/
+    def `solutionWith(O1)Space` = {
+      val arrLength = arr.length
+      for(i <- 0 until arrLength) {
+        arr(arr(i) % arrLength) += arrLength
+      }
+
+      for(i <- 0 until arrLength) {
+        if(arr(i) >= arrLength) {
+          println(s"Element ${i} appears ${arr(i)/arrLength} times")
+        }
+      }
+    }
+  }
 }
