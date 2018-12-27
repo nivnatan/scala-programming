@@ -2024,4 +2024,22 @@ object ArraysAndStrings extends App {
     //go(Array.empty[Int], 0)
     goEfficient
   }
+ 
+   /**
+    * Given an unsorted array of integers containing many duplicates elements, rearrange the given array such that same element appears
+    * together and relative order of rist occurrence of each element remains unchanged
+    * For Example:
+    * Input={1,2,3,1,2,1}
+    * Output={1,1,1,2,2,3}
+    * Input={5,4,5,5,3,1,2,2,4}
+    * Output={5,5,5,4,4,3,1,2,2}
+    *
+    * @param arr
+    */
+  def groupElementsOfAnArrayBasedOnTheirFirstOccurrence(arr: Array[Int]): Array[Int] = {
+    val map = arr.groupBy(identity).mapValues(_.length)
+    arr.map(num => num -> map(num))
+       .distinct
+       .flatMap { case (e,c) => for(i <- 0 until c) yield e }
+  }
 }
