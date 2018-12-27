@@ -2024,6 +2024,4 @@ object ArraysAndStrings extends App {
     //go(Array.empty[Int], 0)
     goEfficient
   }
-
-  printAllTripletsMatchAGivenSum(Array(2,7,4,9,5,1,3).sorted, 10)
 }
