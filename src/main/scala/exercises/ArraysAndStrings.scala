@@ -1974,4 +1974,56 @@ object ArraysAndStrings extends App {
     val map = arr.sorted.zipWithIndex.toMap
     print(arr.map(map(_) + 1).mkString(","))
   }
+ 
+ /**
+    * Print all triplets in an array with sum equal to given number
+    * For Example:
+    * A=[2,7,4,9,5,1,3]
+    * sum=10
+    *
+    * Possible output: (1,2,3), (1,2,4), (2,3,4), ...
+    *
+    * @param arr
+    */
+  def printAllTripletsMatchAGivenSum(arr: Array[Int], sum: Int): Unit = {
+    // this is one version that goes over all the permutations but its less efficient
+    def go(buff: Array[Int], index: Int): Unit = {
+      if(buff.length == 3 && buff.sum == sum) {
+        println(buff.mkString(","))
+      } else if(index < arr.length && buff.size <= 2) {
+        for(i <- index until arr.length) {
+          go(buff :+ arr(i), i + 1)
+        }
+      }
+    }
+
+    // for each element arr(i), check if triplets can be formed by arr(i) and pairs from sub-array[i+1,..,n]
+    def goEfficient() = {
+      for (i <- 0 until arr.length - 3) {
+        var low = i + 1
+        var high = arr.length - 1
+        // loop till low is less than high
+        while(low < high) {
+          val currentSum = arr(i) + arr(low) + arr(high)
+          if(currentSum == sum) {
+            println(s"${arr(i)},${arr(low)},${arr(high)}")
+            low += 1
+            high -= 1
+          }
+          if(arr(i) + arr(low) + arr(high) > sum) {
+            // decrement high if total is more than the remaining sum
+            high -= 1
+          } else {
+            // increment low if total is less than the remaining sum
+            low += 1
+          }
+        }
+      }
+    }
+
+    //go(Array.empty[Int], 0)
+    goEfficient
+  }
+
+  printAllTripletsMatchAGivenSum(Array(2,7,4,9,5,1,3).sorted, 10)
 }
