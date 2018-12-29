@@ -2042,4 +2042,31 @@ object ArraysAndStrings extends App {
        .distinct
        .flatMap { case (e,c) => for(i <- 0 until c) yield e }
   }
+
+  /**
+    * Given two integers, find minimum difference between their index in a given array in linear time and single traversal of the array.
+    * For Example:
+    * Input: arr=[1,3,5,4,8,2,4,3,6,5], x=3, y=2 => Output: Minimum difference between index is 2
+    * Input: arr=[1,3,5,4,8,2,4,3,6,5], x=2, y=5 => Output: Minimum difference between index is 3
+    *
+    * @param arr
+    */
+  def MinimumDifferenceBetweenIndexOfTwoGivenElementsPresentInTheArray(arr: Array[Int], x: Int, y: Int): Int = {
+    /** the idea is to traverse the array and keep track of last occurrence of x and y.
+        1. if element x is encountered, we find the absolute difference between current index of x and index of last occurrence of y and
+           update the result if required.
+        2. if element y is encountered, we find the absolute difference between current index of y and index of last occurrence of x and
+           update the result if required. **/
+    def go(index: Int, xLatestIndex: Int, yLatestIndex: Int, minDiff: Int): Int = {
+      if(index == arr.length) minDiff
+      else {
+        arr(index) match {
+          case num  if num == x => go(index + 1, index, yLatestIndex, minDiff = if (yLatestIndex != -1) Math.min(minDiff, Math.abs(index - yLatestIndex)) else minDiff)
+          case num if num == y => go(index + 1, xLatestIndex, index, minDiff = if (xLatestIndex != -1) Math.min(minDiff, Math.abs(index - xLatestIndex)) else minDiff)
+          case _ => go(index + 1, xLatestIndex, yLatestIndex, minDiff)
+        }
+      }
+    }
+    go(0, -1, -1, Integer.MAX_VALUE)
+  }
 }
