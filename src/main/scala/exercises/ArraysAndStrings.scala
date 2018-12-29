@@ -2091,4 +2091,27 @@ object ArraysAndStrings extends App {
     }
     go(0,0,0)
   }
+
+  /**
+    * Given an array of integers, partition the array into two sub-arrays having the same sum of elements.
+    * For Example:
+    * input=[6,-4,-3,2,3] => [6,-4] & [-3,2,3] having sum of 2
+    *
+    * @param arr
+    */
+  def partitionAnArrayIntoTwoSubArraysWithTheSameSum(arr: Array[Int]): Unit = {
+    def go(index: Int): Unit = {
+      if(index == arr.length) {
+        println("None")
+      } else {
+        val (arr1,arr2) = arr.splitAt(index)
+        if(arr1.sum == arr2.sum) {
+          println(s"arr1=${arr1.mkString(",")}, arr2=${arr2.mkString(",")}")
+        } else {
+          go(index + 1)
+        }
+      }
+    }
+    go(0)
+  }
 }
