@@ -2069,4 +2069,26 @@ object ArraysAndStrings extends App {
     }
     go(0, -1, -1, Integer.MAX_VALUE)
   }
+
+  /**
+    * Largest sum contiguous subarray
+    * For Example:
+    * Arr=[-2,-3,4,-1,-2,1,5,-3] => Largest subarray sum is [4,-1,-2,1,5]
+    *
+    * @param arr
+    */
+  def largestSumContiguousSubarray(arr: Array[Int]): Int = {
+    /** the idea to check all positive contiguous segments of the array (by updating maxSofarTemp) and keep track of the maximum segment **/
+    def go(index: Int, maxSoFar: Int, maxSoFarTemp: Int): Int = {
+      if(index == arr.length) {
+        maxSoFar
+      } else {
+        maxSoFarTemp + arr(index) match {
+          case num if num >= maxSoFar  => go(index + 1, num, num)
+          case num if num < maxSoFar => go(index + 1, maxSoFar, if(num > 0) num else 0)
+        }
+      }
+    }
+    go(0,0,0)
+  }
 }
