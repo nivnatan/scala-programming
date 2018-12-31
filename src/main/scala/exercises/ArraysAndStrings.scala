@@ -2140,4 +2140,20 @@ object ArraysAndStrings extends App {
     }
     efficient
   }
+
+  /**
+    * Given an array of integers between 0 to 9, find two numbers with maximum sum formed by using all digits of the array.
+    * The difference in number of digits of the two numbers should be +-1
+    * For Example:
+    * input: [4,6,2,7,9,8]
+    * output: the two numbers with maximum sum are 974 and 862
+    * input: [9,2,5,6,0,4]
+    * output: the two numbers with maximum sum are 952 and 640
+    *
+    * @param arr
+    */
+  def twoNumbersWithMaximumSumFormedByArrayDigits(arr: Array[Int]): Unit = {
+    val (one,two) = arr.sorted.reverse.zipWithIndex.partition(_._2 % 2 == 0)
+    println(s"one=${one.map(_._1).mkString("")}, two=${two.map(_._1).mkString("")}")
+  }
 }
