@@ -2114,4 +2114,30 @@ object ArraysAndStrings extends App {
     }
     go(0)
   }
+ 
+   /**
+    * Given an array an integer k, find the count of distinct elements in every sub-array of size k in the array.
+    * For Example:
+    * input:[2,1,2,3,2,1,4,5], k=5
+    * output: {2,1,2,3,2} => 3, {1,2,3,2,1} => 3, {2,3,2,1,4} => 4, {3,2,1,4,5} => 5
+    *
+    * @param arr
+    * @param k
+    */
+  def countOfDistinctElementsInEverySubArrayOfSizeK(arr: Array[Int], k: Int): Unit = {
+    def naive() = Range(0, arr.length - k + 1).foreach(i => println(arr.slice(i, i + k).distinct.length))
+    def efficient = {
+      val map = collection.mutable.Map[Int,Int]()
+      for(i <- 0 until k) {
+        map += arr(i) -> (map.getOrElse(arr(i), 0) + 1)
+      }
+      println(map.size)
+      for(i <- k until arr.length) {
+        map.get(arr(i - k)).map(count => if(count == 1) map.remove(arr(i - k)) else map.updated(arr(i - k), count - 1))
+        map += arr(i) -> (map.getOrElse(arr(i), 0) + 1)
+        println(map.size)
+      }
+    }
+    efficient
+  }
 }
