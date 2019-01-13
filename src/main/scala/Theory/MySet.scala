@@ -17,6 +17,34 @@ trait MySet[A] extends (A => Boolean) {
   def -(elem: A): MySet[A]
   def --(anotherSet: MySet[A]): MySet[A]
   def &(anotherSet: MySet[A]): MySet[A]
+
+  def unary_! : MySet[A]
+}
+
+class PropertyBasedSet[A](property: A => Boolean) extends MySet[A] {
+  override def contains(elem: A): Boolean = property(elem)
+  // { x in A | property(x) } + element = {x in A | property(x) || x == element }
+  override def +(elem: A): MySet[A] = {
+    new PropertyBasedSet[A](x => property(x) || x == elem)
+  }
+
+  override def ++(anotherSet: MySet[A]): MySet[A] = {
+    new PropertyBasedSet[A](x => property(x) || anotherSet(x))
+  }
+
+  // all integers => (_ % 3) => [0,1,2]
+  override def map[B](f: A => B): MySet[B] = politelyFail
+  override def flatMap[B](f: A => MySet[B]): MySet[B] = politelyFail
+  override def foreach(f: A => Unit): Unit = politelyFail
+
+  override def filter(predicate: A => Boolean): MySet[A] = new PropertyBasedSet[A](x => property(x) && predicate(x))
+  override def -(elem: A): MySet[A] = filter(x => x != elem)
+  override def --(anotherSet: MySet[A]): MySet[A] = filter(!anotherSet)
+  override def &(anotherSet: MySet[A]): MySet[A] = filter(anotherSet)
+
+  override def unary_! : MySet[A] = new PropertyBasedSet[A](x => !property(x))
+
+  def politelyFail = throw new IllegalArgumentException("Really deep rabbit hole!")
 }
 
 class EmptySet[A] extends MySet[A] {
@@ -32,6 +60,8 @@ class EmptySet[A] extends MySet[A] {
   def -(elem: A): MySet[A] = this
   def --(anotherSet: MySet[A]): MySet[A] = this
   def &(anotherSet: MySet[A]): MySet[A] = this
+
+  override def unary_! : MySet[A] = new PropertyBasedSet[A](x => true)//new AllInclusiveSet[A]
 }
 
 class NonEmptySet[A](head: A, tail: MySet[A]) extends MySet[A] {
@@ -68,6 +98,8 @@ class NonEmptySet[A](head: A, tail: MySet[A]) extends MySet[A] {
 
   def --(anotherSet: MySet[A]): MySet[A] = filter(x => !anotherSet(x))
   def &(anotherSet: MySet[A]): MySet[A] = filter(x => anotherSet(x))
+
+  override def unary_! : MySet[A] = new PropertyBasedSet[A](x => !this.contains(x))
 }
 
 object MySet {
