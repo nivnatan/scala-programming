@@ -2156,4 +2156,20 @@ object ArraysAndStrings extends App {
     val (one,two) = arr.sorted.reverse.zipWithIndex.partition(_._2 % 2 == 0)
     println(s"one=${one.map(_._1).mkString("")}, two=${two.map(_._1).mkString("")}")
   }
+
+  /**
+    * Shuffle an array according to the given order of elements
+    * For Example:
+    * input: [1,2,3,4,5]
+    * pos: [3,2,4,1,0]
+    * output: [5,4,2,1,3]
+    *
+    * @param arr
+    */
+  def shuffleAnArrayAccordingToTheGivenOrderOfElements(arr: Array[Int], pos: Array[Int]): Unit = {
+    val result = Array.fill(arr.length)(0)
+    for (i <- 0 until arr.length) {
+      result(pos(i)) = arr(i)
+    }
+  }
 }
