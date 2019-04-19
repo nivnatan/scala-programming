@@ -103,9 +103,10 @@ object Numbers extends App {
   def getAListOfPrimesUntilNUsingStreams(n: Int): List[Int] = {
     // Construct a stream consisting of a given first element = 2 followed by elements
     // from a lazily evaluated Stream. this jumps by 2 as no need to check even numbers against prime function
-    val primes = 2 #:: Stream.from(3,2).filter(isPrime)
-    val result = primes.takeWhile(_ <= n).toList
-    result
+//    val primes = 2 #:: Stream.from(3,2).filter(isPrime)
+//    val result = primes.takeWhile(_ <= n).toList
+//    result
+    Nil
   }
 
   def printNPrimeNumbers(n: Int): Unit = {

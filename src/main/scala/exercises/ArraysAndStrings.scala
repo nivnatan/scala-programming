@@ -2172,4 +2172,80 @@ object ArraysAndStrings extends App {
       result(pos(i)) = arr(i)
     }
   }
+
+  /**
+    * k=2, I=[1,2,3,4,5,6]
+    * output: I=[5,6,1,2,3,4]
+    *
+    * @param arr
+    */
+  def shiftArrayByK(k: Int, arr: Array[Int]): Array[Int] = {
+    val from = k % arr.length
+    val a = arr.takeRight(from)
+    val b = arr.take(arr.length - from)
+    a ++ b
+  }
+
+  def shiftArrayByKInPlace(k: Int, arr: Array[Int]): Array[Int] = {
+    if(k == 0) arr
+    else shiftArrayByKInPlace(k - 1, shiftArrayByOneInPlace(arr))
+  }
+
+  def shiftArrayByOneInPlace(arr: Array[Int]) = {
+    for(i <- 0 until arr.length) {
+      val temp = arr(i)
+      arr(i) = arr(arr.length - 1)
+      arr(arr.length - 1) = temp
+    }
+
+    arr
+  }
+
+  /**
+    * Find the length of the non repeated numbers in an array
+    * Input = [1,2,2,3,4,5,2,3]
+    * Output = 4 [2,3,4,5] or [3,4,5,2] or [4,5,2,3]
+    *
+    * @param arr
+    */
+  def lengthOfNonRepeatedNumbersInAnArray(arr: Array[Int]): Int = {
+    val set: collection.mutable.Set[Int] = mutable.Set.empty[Int]
+    var max = 0
+    var maxTemp = 0
+    for(i <- 0 until arr.length) {
+      if(!set.contains(arr(i))) {
+        set += arr(i)
+        maxTemp += 1
+        if(maxTemp > max) {
+          max = maxTemp
+        }
+      } else {
+        set.clear()
+        set += arr(i)
+        maxTemp = 1
+      }
+    }
+    max
+  }
+
+  /**
+    * Given an array of sorted integers and find the closest value to the given number. Array may contain duplicate values and negative numbers.
+    * Example : Array : 2,5,6,7,8,8,9
+    * Target number : 5
+    * Output : 5
+    * Target number : 11
+    * Output : 9
+    * Target Number : 4
+    * Output : 5
+    *
+    * @param arr
+    * @param target
+    */
+  def closestValueToAGivenNumber(arr: Array[Int], target: Int): Int = {
+    arr.foldLeft(arr(0)) { (a, b) =>
+      if (Math.abs(target - b) < Math.abs(target -  a)) b else a
+    }
+  }
+
+  println(closestValueToAGivenNumber(Array(-2,5,6,7,-8,8,-9), 5))
 }
