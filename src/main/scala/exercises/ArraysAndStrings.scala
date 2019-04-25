@@ -2247,5 +2247,20 @@ object ArraysAndStrings extends App {
     }
   }
 
-  println(closestValueToAGivenNumber(Array(-2,5,6,7,-8,8,-9), 5))
+  /**
+    * Given an array A of size N, and an integer X, you need to return the count of all subarrays which sums up to X
+    * arr = [1,4,5,2,3,5,2], X = 5 => [1,4],[5],[2,3],[5]
+    *
+    * @param arr
+    * @param X
+    */
+  def countSubArraysWhichSumsUpToX(arr: Array[Int], X: Int): Int = {
+    def go(index: Int, sum: Int, count: Int): Int = {
+      if(index >= arr.length) count
+      else if(arr(index) == X || arr(index) + sum == X) go(index + 1, 0, count + 1)
+      else if(arr(index) + sum < X) go(index + 1, arr(index) + sum, count)
+      else go(index + 1, 0, count)
+    }
+    go(0, 0, 0)
+  }
 }
