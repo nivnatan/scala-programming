@@ -2263,4 +2263,87 @@ object ArraysAndStrings extends App {
     }
     go(0, 0, 0)
   }
+ 
+   /**
+    * Given an array of integers, find the first missing positive integer in linear time and constant space.
+    * In other words, find the lowest positive integer that does not exist in the array. The array can contain duplicates and negative numbers as well.
+    * Example : Array : 3,4,-1,1
+    * Output : 2
+    * Example : Array : 1,2,0
+    * Output : 3
+    *
+    * @param arr
+    */
+  def firstMissingPositiveIntegerInLinearTimeAndConstantSpace(arr: Array[Int]): Int = {
+
+    // O(n) complexity !
+    def withSet(): Int = {
+      val set = scala.collection.mutable.Set(arr: _*)
+      var min = Integer.MAX_VALUE
+
+      arr foreach { elem =>
+        val next = elem + 1
+        if (!set.contains(next) && next > 0 && next < min) {
+          min = elem + 1
+        }
+      }
+
+      min
+    }
+
+    // O(nlong) time !
+    def sorting(): Int = {
+
+      def go(arr: Array[Int], index: Int): Int = {
+        if(index == arr.length) -1
+        else if(index == arr.length - 1 && arr(index) + 1 > 0) arr(index) + 1
+        else if(arr(index) + 1 > 0 && arr(index + 1) != (arr(index) + 1)) arr(index) + 1
+        else go(arr, index + 1)
+      }
+
+      go(arr.sorted, 0)
+    }
+
+    def inPlace(): Int = {
+      //We use array elements as index.
+      // To mark presence of an element x, we change the value at the index x to negative.
+      // But this approach doesn’t work if there are non-positive (-ve and 0) numbers.
+      // So we segregate positive from negative numbers as first step and then apply the approach.
+
+      //1. Segregate positive numbers from others i.e., move all non-positive numbers to left side
+
+      1
+    }
+
+    inPlace()
+  }
+
+  def seregatePositves(arr: Array[Int]): Array[Int] = {
+    //1,-2,3,5,-5,6,7,3,4,-5,-6,-7,21,1,-3,4
+    var left = 0
+    var right = arr.length - 1
+
+    while(left < right) {
+
+      if(arr(right) <= 0) {
+        right -= 1
+      }
+
+      if(arr(left) > 0) {
+        left += 1
+      }
+
+      if(arr(right) > 0 && arr(left) <= 0) {
+        val temp = arr(right)
+        arr(right) = arr(left)
+        arr(left) = temp
+        right -= 1
+        left += 1
+      }
+    }
+
+    arr
+  }
+
+  println(seregatePositves(Array(1,-2,3,5,-5,6,7,3,4,-5,-6,-7,21,1,-3,4)).mkString(","))
 }
