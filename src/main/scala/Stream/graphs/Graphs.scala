@@ -1,9 +1,9 @@
-package Stream
+package Stream.graphs
 
 import akka.NotUsed
 import akka.actor.ActorSystem
-import akka.stream.{ActorMaterializer, ClosedShape}
 import akka.stream.scaladsl.{Balance, Broadcast, Flow, GraphDSL, Merge, RunnableGraph, Sink, Source, Zip}
+import akka.stream.{ActorMaterializer, ClosedShape}
 
 /**
   * Created by niv on 19/04/2019.
@@ -96,10 +96,6 @@ object Graphs extends App {
       // shape
     } // graph
   ) // runnable graph
-
-
-
-
 
   graph2Sinks.run() // run the graph and materialize it
 }
