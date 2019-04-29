@@ -2264,62 +2264,66 @@ object ArraysAndStrings extends App {
     go(0, 0, 0)
   }
  
-   /**
+  /**
     * Given an array of integers, find the first missing positive integer in linear time and constant space.
     * In other words, find the lowest positive integer that does not exist in the array. The array can contain duplicates and negative numbers as well.
     * Example : Array : 3,4,-1,1
     * Output : 2
+    * Example : Array : 200,-1,67,7,111,-3,4,-5
+    * Output : 1
     * Example : Array : 1,2,0
     * Output : 3
+    * Example : Array : 1,2,3
+    * Output : 4
+    * Example : Array : -1,-2,-3,-4,-5
+    * Output : 1
     *
     * @param arr
     */
   def firstMissingPositiveIntegerInLinearTimeAndConstantSpace(arr: Array[Int]): Int = {
 
-    // O(n) complexity !
+    // O(n) space !
     def withSet(): Int = {
-      val set = scala.collection.mutable.Set(arr: _*)
-      var min = Integer.MAX_VALUE
-
-      arr foreach { elem =>
-        val next = elem + 1
-        if (!set.contains(next) && next > 0 && next < min) {
-          min = elem + 1
-        }
-      }
-
-      min
+      val set = scala.collection.mutable.Set(arr: _*) // put all in set
+      (1 to arr.length).find(num => !set.contains(num)).getOrElse(arr.length + 1) // scan all numbers from 1 to n and check if exists in the set, if all exists, yield n + 1 as the next missing lowest number
     }
 
     // O(nlong) time !
     def sorting(): Int = {
-
-      def go(arr: Array[Int], index: Int): Int = {
-        if(index == arr.length) -1
-        else if(index == arr.length - 1 && arr(index) + 1 > 0) arr(index) + 1
-        else if(arr(index) + 1 > 0 && arr(index + 1) != (arr(index) + 1)) arr(index) + 1
-        else go(arr, index + 1)
+      def go(arr: Array[Int], index: Int, next: Int): Int = {
+        if(index == arr.length) next
+        else if(arr(index) > next) next
+        else if(arr(index) == next) go(arr, index + 1, next + 1)
+        else go(arr, index + 1, next)
       }
 
-      go(arr.sorted, 0)
+      go(arr.sorted, 0, 1)
     }
 
     def inPlace(): Int = {
-      //We use array elements as index.
+      // We use array elements as index.
       // To mark presence of an element x, we change the value at the index x to negative.
       // But this approach doesn’t work if there are non-positive (-ve and 0) numbers.
       // So we segregate positive from negative numbers as first step and then apply the approach.
 
-      //1. Segregate positive numbers from others i.e., move all non-positive numbers to left side
+      // Segregate positive numbers from others i.e., move all non-positive numbers to left side
+      // 1 -1 -5 -3 3 4 2 8 => 1 8 2 4 3 | -3 -5 -1, lastPositiveIndex = 5
+      val seregated = seregatePositves(arr)
+      val lastPositiveIndex = seregated.zipWithIndex.find { case (num, index) => num <= 0}.map(_._2).getOrElse(0)
+      for(i <- 0 until lastPositiveIndex) {
+        if(arr(i) <= lastPositiveIndex && arr(i) - 1 >= 0 && arr(i) - 1 < lastPositiveIndex) {
+          arr(arr(i) - 1) = arr(arr(i) - 1) * -1
+        }
+      }
 
-      1
+      // Finally, we traverse the array once more from index 0 to end. In case we encounter a positive element at some index, we output index + 1
+      arr.zipWithIndex.find { case (num, index) => num > 0}.map(_._2 + 1).getOrElse(1)
     }
 
     inPlace()
   }
 
   def seregatePositves(arr: Array[Int]): Array[Int] = {
-    //1,-2,3,5,-5,6,7,3,4,-5,-6,-7,21,1,-3,4
     var left = 0
     var right = arr.length - 1
 
@@ -2344,6 +2348,4 @@ object ArraysAndStrings extends App {
 
     arr
   }
-
-  println(seregatePositves(Array(1,-2,3,5,-5,6,7,3,4,-5,-6,-7,21,1,-3,4)).mkString(","))
 }
