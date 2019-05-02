@@ -207,4 +207,33 @@ object Algorithms extends App {
       }
     }
   }
+
+  /**
+    * Given the mapping a = 1, b = 2, ... z = 26, and an encoded message, count the number of ways it can be decoded.
+    * For example, the message '111' would give 3, since it could be decoded as 'aaa', 'ka', and 'ak'.
+    * You can assume that the messages are decodable. For example, '001' is not allowed
+    *
+    * @param str
+    */
+  def mapping(str: String): Unit = {
+
+    def go(str: String, prefix: String): Unit = {
+      if(str == "") println(prefix)
+      else if(str.length == 1) println(prefix + decode(str))
+      else {
+        if(str.take(1) == "1" || str.take(2).toInt <=  26) {
+          go(str.substring(1), prefix + decode(str.take(1)))
+          go(str.substring(2), prefix + decode(str.take(2)))
+        }
+        else go(str.substring(1), prefix + decode(str.take(1)))
+      }
+    }
+
+    def decode(str: String): String = {
+      (str.toInt - 1 + 'a').toChar.toString // "1" -> 0 + 'a' = 'a', 1 + 'a' = 'b', 1 + 'b' = 'c', ...
+    }
+
+    // this method prints all the possible decoding
+    go(str, "")
+  }
 }
