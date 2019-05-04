@@ -206,6 +206,25 @@ object Algorithms extends App {
         if(i == word.length - 1) t.isLeaf = true
       }
     }
+
+    def insertRec(word: String): Unit = {
+
+      def go(word: String, node: TrieNode): Unit = {
+        if(word == "") node.isLeaf = true
+        else {
+          node.children.get(word.head) match {
+            case None => { // create new TrieNode
+              val newTreeNode = TrieNode(word.head)
+              node.children += word.head -> newTreeNode
+              go(word.substring(1), newTreeNode)
+            }
+            case Some(child) => go(word.substring(1), child)
+          }
+        }
+      }
+
+      go(word, root)
+    }
   }
 
   /**
