@@ -2355,7 +2355,6 @@ object ArraysAndStrings extends App {
     * Result : [10, 12, 15, 15, 17, 20, 20, 30, 32]
     *
     * @param list
-    * @param target
     */
   def newSortedMergedListFromKSortedListsEachWithSizeN(list: List[List[Int]]): List[Int] = {
     list.flatten.sorted
@@ -2367,5 +2366,31 @@ object ArraysAndStrings extends App {
 //      3. Repeat following steps n*k times.
 //    a) Get minimum element from heap (minimum is always at root) and store it in output array.
 //      b) Replace heap root with next element from the array from which the element is extracted. If the array doesn’t have any more elements, then replace root with infinite. After replacing the root, heapify the tree.
+  }
+
+  /**
+    * Given a list of integers, write a function that returns the largest sum of non-adjacent numbers. Numbers can be 0 or negative.
+    * For example, [2, 4, 6, 2, 5] should return 13, since we pick 2, 6, and 5. [5, 1, 1, 5] should return 10, since we pick 5 and 5.
+    *
+    * @param arr
+    */
+  def largestSumOfNonAdjNumbers(arr: Array[Int]): Int = {
+
+    def printAllPossibleCombinations(index: Int, prefix: String): Unit = {
+      if(index >= arr.length) println(prefix)
+      else {
+        printAllPossibleCombinations(index + 2, prefix + arr(index))
+        printAllPossibleCombinations(index + 1, prefix)
+      }
+    }
+
+    def findLargest(index: Int, sum: Int): Int = {
+      if(index >= arr.length) sum
+      else {
+        Math.max(findLargest(index + 2, sum + arr(index)), findLargest(index + 1, sum))
+      }
+    }
+
+    findLargest(0, 0)
   }
 }
