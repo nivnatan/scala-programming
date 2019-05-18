@@ -255,4 +255,38 @@ object Algorithms extends App {
     // this method prints all the possible decoding
     go(str, "")
   }
+
+  /**
+    * The area of a circle is defined as Pi * (r*r). Estimate Pi to 3 decimal places using a Monte Carlo method
+    * The idea is as follows: Imagine a square of size 1*1 and a circle inside of it with r (radius) = 1.
+    * the area of the circle is calculated as Pi * (r*r), while the area of the square is 2r * 2r = 4 * (r*r)
+    * if we generate a lot of random points within the area of the square (for example (0.5,0.3)),
+    * sometimes we will land within the circle area and sometimes we won't (but still within the square area)
+    * if we divide the number we landed within the circle and the number we didn't, we will get the same rate as dividing the area of the circle by the area of the square,
+    * thus - N(circle) / N(total) = Area(circle) / Area(square)
+    * N(circle) / N(total) = Pi * (r*r) / 4 * (r*r)
+    * N(circle) / N(total) = Pi / 4
+    * All is left is to simulate dozens of points and find the missing Pi (estimation)
+    *
+    */
+  def estimatePi(numberOfIterations: Int = 10000): Double = {
+    var withinCircle, outsideCircle = 0
+
+    for(_ <- 0 to numberOfIterations) {
+      val point1 = Random.nextDouble()
+      val point2 = Random.nextDouble()
+
+      // Distance between (x, y) from the origin
+      val distanceFromOrigin = (point1 * point1) + (point2 * point2)
+
+      // Checking if (x, y) lies inside the define
+      // circle with R=1
+      if (distanceFromOrigin <= 1)
+        withinCircle += 1
+
+      outsideCircle += 1
+    }
+
+    (withinCircle / outsideCircle.toDouble) * 4 // N(circle) / N(total) = Pi / 4
+  }
 }
