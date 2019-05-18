@@ -2393,4 +2393,33 @@ object ArraysAndStrings extends App {
 
     findLargest(0, 0)
   }
+ 
+   /**
+    * There exists a staircase with N steps, and you can climb up either 1 or 2 steps at a time.
+    * Given N, write a function that returns the number of unique ways you can climb the staircase.
+    * The order of the steps matters.
+    * For example, if N is 4, then there are 5 unique ways:
+    * 1, 1, 1, 1
+    * 2, 1, 1
+    * 1, 2, 1
+    * 1, 1, 2
+    * 2, 2
+    *
+    * @param arr
+    * @return new array without the first and second elements
+    */
+
+  def climb(staircases: Seq[Int], N: Int): Unit = {
+    def  go(staircases: Seq[Int], soFar: Seq[Int]): Unit = {
+      if(soFar.nonEmpty && soFar.sum == N) println(soFar.mkString(","))
+      else {
+        val sum = Option(soFar).filter(_.nonEmpty).map(_.sum).getOrElse(0)
+        for(i <- 0 until staircases.length) {
+          if(sum + staircases(i) <= N) go(staircases, soFar :+ staircases(i))
+        }
+      }
+    }
+
+    go(staircases, Seq.empty)
+  }
 }
