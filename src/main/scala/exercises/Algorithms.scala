@@ -289,4 +289,17 @@ object Algorithms extends App {
 
     (withinCircle / outsideCircle.toDouble) * 4 // N(circle) / N(total) = Pi / 4
   }
+
+  /**
+    * Given a stream of elements too large to store in memory, pick a random element from the stream with uniform probability.
+    * Example: Sample size 10
+    * https://en.wikipedia.org/wiki/Reservoir_sampling#Example:_Sample_size_10
+    */
+  def randomElementFromAStreamEqualProb(stream: Stream[Int]): Int = {
+    // in general after seeing the example for k=10, the prob for each element is equal to 10 / n (where 10 is the k number of elements we want to pick)
+    // so in our example, k=1, thus 1 / n
+    // in other words, for our requirement, we need to keep the first element as our pick, and then for each element i until the end of the stream,
+    // replace the picked element with the i element with prob of 1 / i.
+    1
+  }
 }
