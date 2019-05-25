@@ -1,5 +1,7 @@
 package exercises
 
+import java.util
+
 import exercises.StackAndQueues.MyStack
 
 import scala.collection.mutable
@@ -2421,5 +2423,52 @@ object ArraysAndStrings extends App {
     }
 
     go(staircases, Seq.empty)
+  }
+
+  /**
+    * Given an array of integers and a number k, where 1 <= k <= length of the array, compute the maximum values of each subarray of length k.
+    *
+    * For example, given array = [10, 5, 2, 7, 8, 7] and k = 3, we should get: [10, 7, 8, 8], since:
+    *
+    * 10 = max(10, 5, 2)
+    * 7 = max(5, 2, 7)
+    * 8 = max(2, 7, 8)
+    * 8 = max(7, 8, 7)
+    * Do this in O(n) time and O(k) space. You can modify the input array in-place and you do not need to store the results. You can simply print them out as you compute them.
+    * https://algorithms.tutorialhorizon.com/sliding-window-algorithm-track-the-maximum-of-each-subarray-of-size-k/
+    * https://www.youtube.com/watch?v=5VDQxLAlfu0
+    * Couldn't this technically run up to k times each loop, giving somewhere between O(n) and O(kn)? Is the worst-case time complexity actually O(kn) even for the deque solution?
+    * Proof that this is O(N): Each iteration of the inner loops removes an item from Q. Since there are only  len(arr) added to Q in total, there can be at most len(arr) total iterations of the inner loops.
+    */
+  def maximumValuesOfEachSubArrayOfLengthK(arr: Array[Int], k: Int): Unit = {
+    val dequeue: util.Deque[Int] = new util.LinkedList[Int]()
+
+    for(i <- 0 until k) {
+
+      while(!dequeue.isEmpty && arr(i) >= arr(dequeue.peekLast())) {
+        dequeue.removeLast()
+      }
+
+      dequeue.addLast(i)
+    }
+
+    print(s"[${arr(dequeue.peekFirst())}")
+
+    for(i <- k until arr.length) {
+
+      while(!dequeue.isEmpty && (i - k) >= dequeue.peekFirst()) {
+        dequeue.removeFirst()
+      }
+
+      while(!dequeue.isEmpty && arr(i) >= arr(dequeue.peekLast())) {
+        dequeue.removeLast()
+      }
+
+      dequeue.addLast(i)
+
+      print(s", ${arr(dequeue.peekFirst())}")
+    }
+
+    print(s"]")
   }
 }
