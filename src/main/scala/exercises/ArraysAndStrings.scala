@@ -2471,4 +2471,48 @@ object ArraysAndStrings extends App {
 
     print(s"]")
   }
+ 
+   /**
+    * Given an array of time intervals (start, end) for classroom lectures (possibly overlapping), find the minimum number of rooms required.
+    * For example:
+    *
+    * given [(30, 75), (0, 50), (60, 150)], you should return 2.
+    *
+    * given [(0, 50), (30, 75), (60, 150), (10, 87), (100, 120), (40, 80), (150, 200)], you should return 4.
+    * Room_0: [(0, 50), (60, 150)]
+    * Room_1: [(30, 75), (100, 120), (150, 200)]
+    * Room_2: [(10, 87), (40, 80)]
+    * Room_3: [(40, 80)]
+    */
+  object Classroom {
+
+    case class Lecture(start: Int, end: Int)
+    case class Room(lectures: scala.collection.mutable.ListBuffer[Lecture])
+
+    def minimumNumberOfRoomsRequired(arr: Array[Lecture]): Int = {
+
+      val rooms = scala.collection.mutable.ListBuffer[Room]()
+
+      arr.foreach { lecture =>
+        rooms.find(room => !roomCollide(lecture, room)) match {
+          case Some(room) => room.lectures += lecture
+          case None => rooms += roomFactory(lecture)
+        }
+      }
+
+      def roomFactory(lecture: Lecture): Room = {
+        Room(ListBuffer(lecture))
+      }
+
+      def roomCollide(lecture: Lecture, room: Room): Boolean = {
+        room.lectures.exists(lectureCollide(lecture, _))
+      }
+
+      def lectureCollide(lecture1: Lecture, lecture2: Lecture): Boolean = {
+        if(lecture1.end < lecture2.start || lecture1.start > lecture2.end) false else true
+      }
+
+      rooms.size
+    }
+  }
 }
