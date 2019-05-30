@@ -2515,4 +2515,39 @@ object ArraysAndStrings extends App {
       rooms.size
     }
   }
+ 
+   /**
+    * Given a dictionary of words and a string made up of those words (no spaces), return the original sentence in a list.
+    * If there is more than one possible reconstruction, return any of them.
+    * If there is no possible reconstruction, then return null.
+    * For example, given the set of words 'quick', 'brown', 'the', 'fox', and the string "thequickbrownfox", you should return ['the', 'quick', 'brown', 'fox'].
+    * Given the set of words 'bed', 'bath', 'bedbath', 'and', 'beyond', and the string "bedbathandbeyond", return either ['bed', 'bath', 'and', 'beyond] or ['bedbath', 'and', 'beyond'].
+    */
+  def originalSentenceInAList(bagOfWords: Set[String], str: String): Unit = {
+
+    def bruteForce(index: Int): Unit = {
+      if(index != str.length) {
+        findWordFromIndex(index) match {
+          case Some(word) => {
+            println(word)
+            bruteForce(index + word.length)
+          }
+          case _ => {
+            println("reconstruction is not possible")
+          }
+        }
+      }
+    }
+
+    def findWordFromIndex(index: Int): Option[String] = {
+      def rec(index: Int, prefix: String): Option[String] = {
+        if(bagOfWords.contains(prefix)) Some(prefix)
+        else if(index == str.length) None
+        else rec(index + 1, prefix + str.charAt(index))
+      }
+      rec(index, "")
+    }
+
+    bruteForce(0)
+  }
 }
