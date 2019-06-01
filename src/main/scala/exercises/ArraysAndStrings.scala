@@ -2,7 +2,7 @@ package exercises
 
 import java.util
 
-import exercises.StackAndQueues.MyStack
+import exercises.StackAndQueues.{MyQueue, MyStack}
 
 import scala.collection.mutable
 import scala.collection.mutable.{ArrayBuffer, ListBuffer}
@@ -2407,10 +2407,7 @@ object ArraysAndStrings extends App {
     * 1, 1, 2
     * 2, 2
     *
-    * @param arr
-    * @return new array without the first and second elements
     */
-
   def climb(staircases: Seq[Int], N: Int): Unit = {
     def  go(staircases: Seq[Int], soFar: Seq[Int]): Unit = {
       if(soFar.nonEmpty && soFar.sum == N) println(soFar.mkString(","))
@@ -2549,5 +2546,57 @@ object ArraysAndStrings extends App {
     }
 
     bruteForce(0)
+  }
+
+  /**
+    * You are given an M by N matrix consisting of booleans that represents a board. Each True boolean represents a wall. Each False boolean represents a tile you can walk on.
+    * Given this matrix, a start coordinate, and an end coordinate, return the minimum number of steps required to reach the end coordinate from the start.
+    * If there is no possible path, then return null. You can move up, left, down, and right. You cannot move through walls. You cannot wrap around the edges of the board.
+    * For example, given the following board:
+    * [f, f, f, f],
+    * [t, t, f, t],
+    * [f, f, f, f],
+    * [f, f, f, f]
+    * and start = (3, 0) (bottom left) and end = (0, 0) (top left), the minimum number of steps required to reach the end is 7,
+    * since we would need to go through (1, 2) because there is a wall everywhere else on the second row.
+    */
+  def findPathWithinMatrixOfBooleans(mat: Array[Array[Boolean]], m: Int, n: Int, position: (Int,Int), endPoint: (Int,Int)): Option[Int] = {
+
+    val visited = scala.collection.mutable.Set[(Int,Int)]()
+    var distance = 0
+    val queue = new MyQueue[(Int,Int)]
+
+    def run(): Option[Int] = {
+      if(queue.isEmpty) None
+      else run2() orElse run()
+    }
+
+    def run2(): Option[Int] = {
+      if(!queue.isEmpty) {
+        val element = queue.remove
+        if(element == endPoint) Some(distance)
+        else if(visited.contains(element)) run2()
+        else {
+          distance += 1
+          visited += element
+          val row = element._1
+          val col = element._2
+
+          // left
+          if(col > 0 && !mat(row)(col-1) && !visited.contains(row -> (col-1))) queue.add(row -> (col-1))
+          // right
+          if(col < n-1 && !mat(row)(col+1) && !visited.contains(row -> (col+1))) queue.add(row -> (col+1))
+          // up
+          if(row > 0 && !mat(row-1)(col) && !visited.contains(row-1 -> col)) queue.add(row-1 -> col)
+          // down
+          if(row < m-1 && !mat(row+1)(col) && !visited.contains(row+1 -> col)) queue.add(row+1 -> col)
+
+          run2()
+        }
+      } else None
+    }
+
+    queue.add(position)
+    run()
   }
 }
