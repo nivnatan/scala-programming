@@ -7,7 +7,12 @@ import exercises.StackAndQueues.MyQueue
   */
 object TreesAndGraphs extends App {
 
-  case class TreeNode[T](data: T, var left: Option[TreeNode[T]] = None, var right: Option[TreeNode[T]] = None, var successor: Option[TreeNode[T]] = None) {
+  case class TreeNode[T](data: T,
+                         var left: Option[TreeNode[T]] = None,
+                         var right: Option[TreeNode[T]] = None,
+                         var successor: Option[TreeNode[T]] = None,
+                         var parent: Option[TreeNode[T]] = None,
+                         var isLocked: Boolean = false) {
     def isLeaf: Boolean = left.isEmpty && right.isEmpty
   }
 
@@ -850,4 +855,54 @@ object TreesAndGraphs extends App {
         Some(root)
       }
     }
+
+  /**
+    *
+    * Implement locking in a binary tree. A binary tree node can be locked or unlocked only if all of its descendants or ancestors are not locked.
+    * Design a binary tree node class with the following methods:
+    * is_locked, which returns whether the node is locked
+    * lock, which attempts to lock the node. If it cannot be locked, then it should return false. Otherwise, it should lock it and return true.
+    * unlock, which unlocks the node. If it cannot be unlocked, then it should return false. Otherwise, it should unlock it and return true.
+    */
+  object LockingBinaryTree {
+
+    def isLocked(node: TreeNode[Int]): Boolean = node.isLocked
+
+    def lock(node: TreeNode[Int]): Boolean = {
+      if(canNodeBeLocked(node)) {
+        node.isLocked = true
+        true
+      } else {
+        false
+      }
+    }
+
+    def unLock(node: TreeNode[Int]): Boolean = {
+      if(canNodeBeLocked(node)) {
+        node.isLocked = false
+        true
+      } else {
+        false
+      }
+    }
+
+    private def canNodeBeLocked(node: TreeNode[Int]): Boolean = {
+      // check children
+      if(!node.left.forall(checkChildLock)) false
+      else if(!node.right.forall(checkChildLock)) false
+      // check parents
+      else node.parent.forall(checkParentLock)
+    }
+
+    private def checkParentLock(node: TreeNode[Int]): Boolean = {
+      if(node.isLocked) false
+      else node.parent.forall(checkParentLock)
+    }
+
+    private def checkChildLock(node: TreeNode[Int]): Boolean = {
+      if(node.isLocked) false
+      if(!node.left.forall(checkChildLock)) false
+      else node.right.forall(checkChildLock)
+    }
+  }
 }
