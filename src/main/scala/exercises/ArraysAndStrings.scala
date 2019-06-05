@@ -2599,4 +2599,68 @@ object ArraysAndStrings extends App {
     queue.add(position)
     run()
   }
+
+  object JustifyTextApp {
+    /**
+      * Write an algorithm to justify text. Given a sequence of words and an integer line length k, return a list of strings which represents each line, fully justified.
+      * More specifically, you should have as many words as possible in each line. There should be at least one space between each word.
+      * Pad extra spaces when necessary so that each line has exactly length k.
+      * Spaces should be distributed as equally as possible, with the extra spaces, if any, distributed starting from the left.
+      * If you can only fit one word on a line, then you should pad the right-hand side with spaces.
+      * Each word is guaranteed not to be longer than k.
+      *
+      * For example, given the list of words ["the", "quick", "brown", "fox", "jumps", "over", "the", "lazy", "dog"] and k = 16, you should return the following:
+      * ["the  quick brown", # 1 extra space on the left
+      * "fox  jumps  over", # 2 extra spaces distributed evenly
+      * "the   lazy   dog"] # 4 extra spaces distributed evenly
+      */
+    def justifyText(listOfWords: List[String], k: Int): List[String] = {
+      listOfWordsToListOfLines(listOfWords, k).map(padLine(_, k))
+    }
+
+    def listOfWordsToListOfLines(listOfWords: List[String], k: Int): List[List[String]] = {
+      val linesBuffer = ListBuffer.empty[List[String]]
+      var lineBuffer = ListBuffer.empty[String]
+      var lineLength: Int = 0
+      listOfWords.foreach { word =>
+        val wordLength = word.length
+        if(lineLength + wordLength > k) {
+          linesBuffer += lineBuffer.toList
+          lineBuffer.clear()
+          lineLength = 0
+        }
+        lineBuffer += word
+        lineLength += (if(lineLength > 0) 1 + wordLength else wordLength)
+      }
+      if(lineBuffer.nonEmpty) {
+        linesBuffer += lineBuffer.toList
+      }
+
+      linesBuffer.toList
+    }
+
+    def padLine(line: List[String], k: Int): List[String] = {
+      val result = padLineOnce(line, k)
+      if(result.map(_.length).sum >= k) result
+      else padLine(result, k)
+    }
+
+    def padLineOnce(line: List[String], k: Int): List[String] = {
+      def pad(word: List[String], spacesLeft: Int, result: List[String]): List[String] = {
+        if(spacesLeft <= 0) result ::: word
+        else {
+          word match {
+            case Nil => result
+            case head :: Nil => result ::: List(head)
+            case head :: tail => pad(tail, spacesLeft - 1, result ::: List(head) ::: List(" "))
+          }
+        }
+      }
+      pad(line, numberOfSpacesToPad(line, k), Nil)
+    }
+
+    def numberOfSpacesToPad(line: List[String], k: Int): Int = {
+      k - line.map(_.length).sum
+    }
+  }
 }
