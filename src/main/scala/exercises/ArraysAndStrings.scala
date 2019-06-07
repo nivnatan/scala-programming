@@ -2615,7 +2615,7 @@ object ArraysAndStrings extends App {
       * "the   lazy   dog"] # 4 extra spaces distributed evenly
       */
     def justifyText(listOfWords: List[String], k: Int): List[String] = {
-      listOfWordsToListOfLines(listOfWords, k).map(padLine(_, k))
+      listOfWordsToListOfLines(listOfWords, k).flatMap(padLine(_, k))
     }
 
     def listOfWordsToListOfLines(listOfWords: List[String], k: Int): List[List[String]] = {
@@ -2662,5 +2662,33 @@ object ArraysAndStrings extends App {
     def numberOfSpacesToPad(line: List[String], k: Int): Int = {
       k - line.map(_.length).sum
     }
+  }
+
+  /**
+    * Run-length encoding is a fast and simple method of encoding strings.
+    * The basic idea is to represent repeated successive characters as a single count and character.
+    * For example, the string "AAAABBBCCDAA" would be encoded as "4A3B2C1D2A".
+    * Implement run-length encoding and decoding.
+    * You can assume the string to be encoded have no digits and consists solely of alphabetic characters. You can assume the string to be decoded is valid.
+    */
+  def runLengthEncoding(str: String): String = {
+    val builder = new mutable.StringBuilder()
+
+    def findLastIndexOfChar(char: Char, index: Int): Int = {
+      if(index >= str.length) index
+      else if(str.charAt(index) != char) index - 1
+      else findLastIndexOfChar(char, index + 1)
+    }
+
+    def go(index: Int): String = {
+      if(index >= str.length) builder.result()
+      else {
+        val char = str.charAt(index)
+        val endIndex = findLastIndexOfChar(char, index)
+        builder.append(char).append((endIndex - index) + 1)
+        go(index + (endIndex - index) + 1)
+      }
+    }
+    go(0)
   }
 }
