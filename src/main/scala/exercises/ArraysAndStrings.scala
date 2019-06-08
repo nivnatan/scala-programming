@@ -2672,6 +2672,7 @@ object ArraysAndStrings extends App {
     * You can assume the string to be encoded have no digits and consists solely of alphabetic characters. You can assume the string to be decoded is valid.
     */
   def runLengthEncoding(str: String): String = {
+    // it's not fully solved but the idea is clear
     val builder = new mutable.StringBuilder()
 
     def findLastIndexOfChar(char: Char, index: Int): Int = {
@@ -2690,5 +2691,77 @@ object ArraysAndStrings extends App {
       }
     }
     go(0)
+  }
+
+  /**
+    * You are given an array of non-negative integers that represents a two-dimensional elevation map where each element is unit-width wall and the integer is the height.
+    * Suppose it will rain and all spots between two walls get filled up.
+    * Compute how many units of water remain trapped on the map in O(N) time and O(1) space.
+    * For example, given the input [2, 1, 2], we can hold 1 unit of water in the middle.
+    * Given the input [3, 0, 1, 3, 0, 5], we can hold 3 units in the first index, 2 in the second, and 3 in the fourth index (we cannot hold 5 since it would run off to the left), so we can trap 8 units of water.
+    */
+  def trappingRainWater(arr: Array[Int]): Int = {
+    // https://www.geeksforgeeks.org/trapping-rain-water/
+    // An element of array can store water if there are higher bars on left and right.
+    // We can find amount of water to be stored in every element by finding the heights of bars on left and right sides.
+    // The idea is to compute amount of water that can be stored in every element of array.
+    // For example, consider the array {3, 0, 0, 2, 0, 4}, we can store three units of water at indexes 1 and 2, and one unit of water at index 3, and three units of water at index 4.
+    // simple solution - traverse every array element and find the highest bars on left and right sides. Take the smaller of two heights.
+    // The difference between smaller height and height of current element is the amount of water that can be stored in this array element. Time complexity of this solution is O(n2)
+
+    def simpleSolution: Int = {
+
+      var result = 0
+
+      def findMax(startIndex: Int, endIndex: Int, max: Int = Integer.MIN_VALUE): Int = {
+        if(startIndex >= endIndex) max
+        else findMax(startIndex + 1, endIndex, if(arr(startIndex) > max) arr(startIndex) else max)
+      }
+
+      for(i <- 1 until arr.length - 1) {
+        val leftMax = findMax(0, i)
+        val rightMax = findMax(i + 1, arr.length)
+        val smallest = Math.min(leftMax, rightMax)
+        result += (smallest - arr(i))
+      }
+
+      result
+    }
+
+    simpleSolution
+  }
+
+  /**
+    * The edit distance between two strings refers to the minimum number of character insertions, deletions, and substitutions required to change one string to the other.
+    * For example, the edit distance between “kitten” and “sitting” is three: substitute the “k” for “s”, substitute the “e” for “i”, and append a “g”.
+    * Given two strings, compute the edit distance between them.
+    */
+  def distanceBetweenTwoStrings(str1: String, str2: String): Int = {
+
+    def considerAllOptions(indexStr1: Int, indexStr2: Int, countEdit: Int): Int = {
+      // if first string is empty, the only option is to
+      // insert all characters of second string into first
+      if(indexStr1 == 0) indexStr2 + countEdit
+      // if second string is empty, the only option is to
+      // remove all characters of first string
+      else if(indexStr2 == 0) indexStr1 + countEdit
+      // if last characters of two strings are same, nothing
+      // much to do. Ignore last characters and get count for
+      // remaining strings.
+      else if(str1.charAt(indexStr1) == str2.charAt(indexStr2)) considerAllOptions(indexStr1 - 1, indexStr2 - 1, countEdit)
+
+      else Math.min (
+        Math.min (
+          // remove
+          considerAllOptions(indexStr1 -1, indexStr2, countEdit + 1),
+          // insert
+          considerAllOptions(indexStr1, indexStr2 - 1, countEdit + 1)
+        ),
+        // replace
+        considerAllOptions(indexStr1 -1, indexStr2, countEdit + 1)
+      )
+    }
+
+    considerAllOptions(str1.length - 1, str2.length - 1, 0)
   }
 }
