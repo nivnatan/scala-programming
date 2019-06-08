@@ -2764,4 +2764,35 @@ object ArraysAndStrings extends App {
 
     considerAllOptions(str1.length - 1, str2.length - 1, 0)
   }
+
+  /**
+    * Compute the running median of a sequence of numbers. That is, given a stream of numbers, print out the median of the list so far on each new element.
+    * Recall that the median of an even-numbered list is the average of the two middle numbers.
+    * For example, given the sequence [2, 1, 5, 7, 2, 0, 5], your algorithm should print out:
+    * 2
+    * 1.5
+    * 2
+    * 3.5
+    * 2
+    * 2
+    * 2
+    */
+  def medianOfSequenceNumbers(arr: Array[Int]): Unit = {
+
+    def calculateMedian(seqToCalculate: Array[Int]): Double = {
+      val sorted = seqToCalculate.sorted
+      // even
+      if(sorted.length % 2 == 0) {
+        val index1 = sorted.length / 2
+        val index2 = index1 - 1
+        (sorted(index1) + sorted(index2)) / 2.0
+      } else {
+        sorted(sorted.length / 2)
+      }
+    }
+
+    for(i <- 1 to arr.length) {
+      println(calculateMedian(arr.take(i)))
+    }
+  }
 }
