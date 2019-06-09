@@ -2795,4 +2795,40 @@ object ArraysAndStrings extends App {
       println(calculateMedian(arr.take(i)))
     }
   }
+
+  /**
+    * Given a string, find the palindrome that can be made by inserting the fewest number of characters as possible anywhere in the word.
+    * If there is more than one palindrome of minimum length that can be made, return the lexicographically earliest one (the first one alphabetically).
+    * For example, given the string "race", you should return "ecarace", since we can add three letters to it (which is the smallest amount to make a palindrome).
+    * There are seven other palindromes that can be made from "race" by adding three letters, but "ecarace" comes first alphabetically.
+    * As another example, given the string "google", you should return "elgoogle".
+    */
+  def palindromeFewestNumberOfCharacters(str: String): Unit = {
+    // this is not the solution, but only to find the simple palindrome that can be found from the start / end
+
+    def isPalindrome(str: String): Boolean = {
+      str == str.reverse
+    }
+
+    def fromTheEnd(strBuilder: String): Unit = {
+      if(isPalindrome(strBuilder)) {
+        println(strBuilder)
+      } else {
+        val letterToAdd = str.charAt(strBuilder.length - str.length)
+        fromTheEnd(str + letterToAdd + strBuilder.drop(str.length))
+      }
+    }
+
+    def fromTheStart(strBuilder: String): Unit = {
+      if(isPalindrome(strBuilder)) {
+        println(strBuilder)
+      } else {
+        val letterToAdd = str.charAt(str.length - (strBuilder.length - str.length) - 1)
+        fromTheStart(strBuilder.take(strBuilder.length - str.length) + letterToAdd + str)
+      }
+    }
+
+    fromTheEnd(str)
+    fromTheStart(str)
+  }
 }
