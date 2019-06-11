@@ -2831,4 +2831,49 @@ object ArraysAndStrings extends App {
     fromTheEnd(str)
     fromTheStart(str)
   }
+ 
+   /**
+    * Given an array of strictly the characters 'R', 'G', and 'B', segregate the values of the array so that all the Rs come first, the Gs come second, and the Bs come last.
+    * You can only swap elements of the array.
+    * Do this in linear time and in-place.
+    * For example, given the array ['G', 'B', 'R', 'R', 'B', 'R', 'G'], it should become ['R', 'R', 'R', 'G', 'G', 'B', 'B'].
+    */
+  def segregateValuesOfArray(arr: Array[Char]): Array[Char] = {
+
+    def byCount: Array[Char] = {
+      // all counts can be done on one pass
+      var RC = arr.count(_ == 'R')
+      var GC = arr.count(_ == 'G')
+      var BC = arr.count(_ == 'B')
+      for(i <- 0 until arr.length) {
+        if(RC > 0) {
+          arr(i) = 'R'
+          RC -= 1
+        }
+        else if(GC > 0) {
+          arr(i) = 'G'
+          GC -= 1
+        }
+        else if(BC > 0) {
+          arr(i) = 'B'
+          BC -= 1
+        }
+      }
+      arr
+    }
+
+    def sort: Array[Char] = {
+      def weight(char: Char): Int = {
+        char match {
+          case 'R' => 3
+          case 'G' => 2
+          case 'B' => 1
+        }
+      }
+
+      arr.sortWith { case (c1, c2) => weight(c1) > weight(c2) }
+    }
+
+    byCount
+  }
 }
