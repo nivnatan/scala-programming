@@ -901,8 +901,32 @@ object TreesAndGraphs extends App {
 
     private def checkChildLock(node: TreeNode[Int]): Boolean = {
       if(node.isLocked) false
-      if(!node.left.forall(checkChildLock)) false
+      else if(!node.left.forall(checkChildLock)) false
       else node.right.forall(checkChildLock)
     }
+  }
+
+  /**
+    * Given the root to a binary search tree, find the second largest node in the tree.
+    * reference - https://medium.com/@johnathanchen/find-the-2nd-largest-element-in-a-binary-search-tree-interview-question-f566c52188a1
+    */
+  def secondLargestNode(root: TreeNode[Int]): Int = {
+    // because this is binary search tree, the largest is the most right element
+    def findLargest(root: TreeNode[Int]): Int = {
+      root.right.map(findLargest).getOrElse(root.data)
+    }
+
+    def findSecondLargest(root: TreeNode[Int]): Int = {
+      (root.left, root.right) match {
+        // case 1: current node is the parent of the last right node which means it's the second largets node
+        case (_, Some(right)) if right.left.isEmpty && right.right.isEmpty => root.data
+        // case 2: current node is the last right node of the tree which means it's the largest node, so just need to find the largest node on its left subtree
+        case (Some(left), None) => findLargest(left)
+        // otherwise we iterate to the right. if there is no right and no left it's basically an error
+        case _ => findSecondLargest(root.right.get)
+      }
+    }
+
+    findSecondLargest(root)
   }
 }
