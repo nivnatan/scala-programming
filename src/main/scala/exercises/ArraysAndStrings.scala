@@ -2876,4 +2876,70 @@ object ArraysAndStrings extends App {
 
     byCount
   }
+
+  /**
+    * Given an array of integers where every integer occurs three times except for one integer, which only occurs once, find and return the non-duplicated integer.
+    * For example, given [6, 1, 3, 3, 3, 6, 6], return 1. Given [13, 19, 13, 13], return 19.
+    * Do this in O(N) time and O(1) space.
+    */
+//  def nonDuplicatedInteger(arr: Array[Int]): Int = {
+//
+//  }
+
+  /**
+    * Given an array and a number k where k is smaller than size of array, we need to find the k’th smallest element in the given array.
+    * It is given that ll array elements are distinct.
+    * Input: arr[] = {7, 10, 4, 3, 20, 15}
+    * k = 3
+    * Output: 7
+    */
+  def findKSmallestElementInArray(arr: Array[Int], k: Int, l: Int, r: Int): Int = {
+
+    // First, we’ll want to choose a pivot (usually the last element)
+    // Then, we’ll need to create a left reference to the lowest index (the first) element. And we’ll need to create a right reference to the highest index (the last) element — excluding the pivot.
+    // Next, we’ll need to compare left and right in relation to the pivot, independently.
+    // For example, if the left reference is less than the pivot, then we know that it is smaller than the pivot, and will be in the correct partition. So, we can increment the left reference, moving one element over (to the right). The same goes for the right reference: if the element at the reference is greater than the pivot, we know it’ll be in the correct partition, so we can increment it one element over (to the left).
+    // However — if both the left reference is greater than the pivot and the right reference is smaller than the pivot, we know that we’ve stumbled upon two elements that are out of order.
+    // In this situation, we can swap the two elements at the left reference and at the right reference so that they’re in the correct places — and will subsequently end up in the correct partitions!
+    // Once we finish going through all the elements, our left reference will “pass” our right reference; in other words, the index of the left reference will be greater than the index of the right reference, meaning that we’ve finished sorting the two partitions. At this point, we can move the pivot into its correct place by swapping it with the item at the left reference
+    def partition(lowIndex: Int, highIndex: Int): Int = {
+      val pivot = arr(highIndex)
+
+      var left = lowIndex
+      var right = highIndex - 1
+
+      while(left < right) {
+
+        while(left <= right && arr(left) < pivot)
+          left += 1
+
+        while(left <= right && arr(right) > pivot)
+          right += -1
+
+        if(left < right) {
+          swap(left,right)
+          left += 1
+          right += -1
+        }
+      }
+
+      swap(left, highIndex)
+
+      left
+    }
+
+    def swap(i: Int, j: Int): Unit = {
+      val temp = arr(i)
+      arr(i) = arr(j)
+      arr(j) = temp
+    }
+
+    val pivot = partition(l, r)
+    // If position is same as k
+    if(pivot == k) arr(pivot)
+    // If position is more, recur for left subarray
+    else if(pivot < k) findKSmallestElementInArray(arr, k, l, pivot)
+    // Else recur for right subarray
+    else findKSmallestElementInArray(arr, k, pivot, k - pivot)
+  }
 }
