@@ -2,6 +2,7 @@ package exercises
 
 import java.util
 
+import exercises.ArraysAndStrings.FlightsItinerary.Flight
 import exercises.StackAndQueues.{MyQueue, MyStack}
 
 import scala.collection.mutable
@@ -2950,5 +2951,36 @@ object ArraysAndStrings extends App {
 //
 //    Overall complexity is (m + m/2 + ...) which is O(m) where m is the total number of elements.
     1
+  }
+
+  /**
+    * Given an unordered list of flights taken by someone, each represented as (origin, destination) pairs, and a starting airport, compute the person's itinerary.
+    * If no such itinerary exists, return null. If there are multiple possible itineraries, return the lexicographically smallest one.
+    * All flights must be used in the itinerary.
+    * For example, given the list of flights [('SFO', 'HKO'), ('YYZ', 'SFO'), ('YUL', 'YYZ'), ('HKO', 'ORD')] and starting airport 'YUL', you should return the list ['YUL', 'YYZ', 'SFO', 'HKO', 'ORD'].
+    * Given the list of flights [('SFO', 'COM'), ('COM', 'YYZ')] and starting airport 'COM', you should return null.
+    * Given the list of flights [('A', 'B'), ('A', 'C'), ('B', 'C'), ('C', 'A')] and starting airport 'A', you should return the list ['A', 'B', 'C', 'A', 'C'] even though ['A', 'C', 'A', 'B', 'C'] is also a valid itinerary. However, the first one is lexicographically smaller.
+    */
+  object FlightsItinerary {
+
+    case class Flight(origin: String, destination: String)
+
+    def findFlightsItinerary(origin: String, listOfFlights: List[Flight]): Unit = {
+      val flightsMap = listOfFlights.groupBy(_.origin)
+      val numberOfFlights = listOfFlights.length
+
+      def go(orig: String, result: List[Flight], flightsUsed: Set[Flight]): Unit = {
+        if(result.length == numberOfFlights) {
+          println(result)
+        } else {
+          flightsMap.get(orig) match {
+            case Some(flights) => flights.filter(!flightsUsed.contains(_)).foreach(flight => go(flight.destination, result ::: List(flight), flightsUsed + flight))
+            case None          => println("no itinerary found")
+          }
+        }
+      }
+
+      go(origin, List.empty, Set.empty)
+    }
   }
 }
