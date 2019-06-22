@@ -2878,15 +2878,6 @@ object ArraysAndStrings extends App {
   }
 
   /**
-    * Given an array of integers where every integer occurs three times except for one integer, which only occurs once, find and return the non-duplicated integer.
-    * For example, given [6, 1, 3, 3, 3, 6, 6], return 1. Given [13, 19, 13, 13], return 19.
-    * Do this in O(N) time and O(1) space.
-    */
-//  def nonDuplicatedInteger(arr: Array[Int]): Int = {
-//
-//  }
-
-  /**
     * Given an array and a number k where k is smaller than size of array, we need to find the k’th smallest element in the given array.
     * It is given that ll array elements are distinct.
     * Input: arr[] = {7, 10, 4, 3, 20, 15}
@@ -2941,5 +2932,23 @@ object ArraysAndStrings extends App {
     else if(pivot < k) findKSmallestElementInArray(arr, k, l, pivot)
     // Else recur for right subarray
     else findKSmallestElementInArray(arr, k, pivot, k - pivot)
+  }
+
+  /**
+    * Given an array of integers where every integer occurs three times except for one integer, which only occurs once, find and return the non-duplicated integer.
+    * For example, given [6, 1, 3, 3, 3, 6, 6], return 1. Given [13, 19, 13, 13], return 19.
+    * Do this in O(N) time and O(1) space.
+    */
+  def nonDuplicatedInteger(arr: Array[Int]): Int = {
+//    The number of elements must be 3n + 1 for some n.
+//    Pick an element randomly.
+//    Switch it to the first location.
+//
+//    - Divide the rest of the elements into 2 groups in-place. Left group will have smaller or equal ones and right group will have elements greater than the chosen one. You can do this in O(n).
+//      - if the left group size including the chosen element is a multiple of 3, the answer is in the right group. Else it is in the left group.
+//      - rinse and repeat above steps on the remaining half.
+//
+//    Overall complexity is (m + m/2 + ...) which is O(m) where m is the total number of elements.
+    1
   }
 }
