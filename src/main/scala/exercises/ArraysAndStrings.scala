@@ -2983,4 +2983,32 @@ object ArraysAndStrings extends App {
       go(origin, List.empty, Set.empty)
     }
   }
+ 
+   /**
+    * Given a list of integers S and a target number k, write a function that returns a subset of S that adds up to k. If such a subset cannot be made, then return null.
+    * Integers can appear more than once in the list. You may assume all numbers in the list are positive.
+    * For example, given S = [12, 1, 61, 5, 9, 2] and k = 24, return [12, 9, 2, 1] since it sums up to 24.
+    */
+  def subsetOfSThatAddsUpToK(list: List[Int], k: Int): Unit = {
+
+    def go(result: List[Int], rest: List[Int]): Unit = {
+      val resultSum = Option(result).filter(_.nonEmpty).map(_.sum).getOrElse(0)
+      if(resultSum == k) {
+        println(result.mkString(","))
+      } else {
+        rest match {
+          case head :: tail => {
+            // two possibilities
+            // 1. with head
+            // 2. without head
+            if(resultSum + head <= k) go(result ::: List(head), tail)
+            go(result, tail)
+          }
+          case _ =>
+        }
+      }
+    }
+
+    go(List.empty, list)
+  }
 }
