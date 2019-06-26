@@ -100,7 +100,7 @@ object BitManipulations extends App {
     var _y = y
     var _x = x
 
-    while(y != 0) {
+    while(_y != 0) {
       // carry now contains common
       // set bits of x and y
       val carry = _x & _y
