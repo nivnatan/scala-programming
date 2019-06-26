@@ -90,4 +90,31 @@ object BitManipulations extends App {
     val shiftEvenBitsLeft  = oddBitsTurnedOn  << 1 // 1000
     shiftEvenBitsRight | shiftEvenBitsLeft // OR between results
   }
+
+  /**
+    * Add two numbers without using arithmetic operators
+    * https://www.youtube.com/watch?v=qq64FrA2UXQ&t=314s
+    */
+  def addTwoNumbersWithoutUsingArithmeticOperators(x: Int, y: Int): Int = {
+
+    var _y = y
+    var _x = x
+
+    while(y != 0) {
+      // carry now contains common
+      // set bits of x and y
+      val carry = _x & _y
+
+      // Sum of bits of x and
+      // y where at least one
+      // of the bits is not set
+      _x = _x ^ _y
+
+      // Carry is shifted by
+      // one so that adding it
+      // to x gives the required sum
+      _y = carry << 1
+    }
+    _x
+  }
 }
