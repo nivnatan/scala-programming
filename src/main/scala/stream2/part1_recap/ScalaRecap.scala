@@ -112,6 +112,13 @@ object ScalaRecap extends App {
 
   // implicit organizations
   // local scope
-  implicit val numberOrdering: Ordering[Int] =
+  implicit val numberOrdering: Ordering[Int] = Ordering.fromLessThan(_ > _)
+  List(1,2,3).sorted
 
+  // companion objects of the types involved in the call
+  object Person {
+    implicit val personOrdering: Ordering[Person] = Ordering.fromLessThan((a,b) => a.name.compareTo(b.name) < 0)
+  }
+
+  List(Person("Bob"), Person("Alice")).sorted
 }
