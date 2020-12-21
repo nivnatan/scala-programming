@@ -1,4 +1,4 @@
-package Stream.graphs
+package stream.graphs
 
 import akka.NotUsed
 import akka.actor.ActorSystem

@@ -1,4 +1,4 @@
-package Theory
+package theory
 
 import scala.annotation.tailrec
 

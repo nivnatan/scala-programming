@@ -1,4 +1,4 @@
-package Stream.graphs
+package stream.graphs
 
 import akka.actor.ActorSystem
 import akka.stream.javadsl.RunnableGraph
