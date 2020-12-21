@@ -2,7 +2,7 @@ package stream2.part1_recap
 
 import akka.actor.SupervisorStrategy.{Restart, Stop}
 import akka.actor.{Actor, ActorLogging, ActorSystem, OneForOneStrategy, PoisonPill, Props, Stash, SupervisorStrategy}
-import org.scalatest.concurrent.PatienceConfiguration.Timeout
+import akka.util.Timeout
 
 /**
   * Created by niv on 12/21/2020
@@ -72,7 +72,7 @@ object AkkaRecap extends App {
 
   // Akka patterns including FSM + ask pattern
   import akka.pattern.ask
-  implicit val timeout = Timeout(3 seconds)
+  implicit val timeout = Timeout(3.seconds)
 
   val future = actor ? "question"
 
