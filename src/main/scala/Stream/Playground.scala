@@ -12,6 +12,8 @@ import scala.concurrent.Future
   */
 object Playground extends App {
 
+  ""
+
   implicit val actorSystem = ActorSystem()
   implicit val materializer = ActorMaterializer()
 
