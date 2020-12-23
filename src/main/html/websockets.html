@@ -1,0 +1,29 @@
+<html>
+    <head>
+        <script>
+
+            var exampleSocket = new WebSocket("ws://localhost:8080/greeter");
+            console.log("starting web socket...");
+
+            exampleSocket.onmessage = function(event) {                 // member of exampleSocket
+                var newChild = document.createElement("div");           // going to manipulate the div below
+                newChild.innerText = event.data;                        // fill the child with what ever the server sent
+                document.getElementById("1").appendChild(newChild);     // append new child
+            };
+
+            exampleSocket.onopen = function(event) {                    // when this socket is opened, will send message to the server
+                exampleSocket.send("socket seems to be opened");
+            };
+
+            exampleSocket.send("socket says: hello, server!")           // client send message to server
+
+        </script>
+    </head>
+
+    <body>
+        starting websocket...                                           // this will be seen in the browser
+        <div id="1">                                                    // will be manipulated later ...
+        </div>
+    </body>
+
+</html>
