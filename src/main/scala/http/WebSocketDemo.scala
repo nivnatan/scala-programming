@@ -1,14 +1,16 @@
 package http
 
 import akka.NotUsed
-import akka.actor.ActorSystem
+import akka.actor.{Actor, ActorRef, ActorSystem, Props}
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.{ContentTypes, HttpEntity}
 import akka.http.scaladsl.model.ws.{BinaryMessage, Message, TextMessage}
-import akka.stream.ActorMaterializer
-import akka.stream.scaladsl.{Flow, Sink, Source}
+import akka.stream.{ActorMaterializer, OverflowStrategy}
+import akka.stream.scaladsl.{Flow, Keep, Sink, Source}
 import akka.util.CompactByteString
 import akka.http.scaladsl.server.Directives._
+import http.WebSocketDemo.ActorWebSocketHandler.{ActorWebSocketConnect, ActorWebSocketHandler}
+
 import scala.concurrent.duration._
 
 /**
@@ -101,4 +103,46 @@ object WebSocketDemo extends App {
     Sink.foreach[Message](println), // for every message from the client, println
     socialMessages // outgoing messages from the server to the client
   )
+
+//  // interact with actors
+//
+//  // source - will be used as a gateway messages from server to client
+//  val (actorRef, publisher) = Source.actorRef[String](16, OverflowStrategy.fail)
+//    .map(msg => TextMessage.Strict(msg))
+//    .toMat(Sink.asPublisher(false))(Keep.both).run()
+//
+//  // sink - will be used as a gateway from client to server
+//  val sink = Sink.foreach[Message] {
+//    case tm: TextMessage =>
+//      TextMessage(Source.single("Server says back:") ++ tm.textStream ++ Source.single("!")) // tm.textStream is the content of the originated of what the client sent)
+//  }
+
+  def getActorFlow = {
+
+    val handler = system.actorOf(Props[ActorWebSocketHandler])
+
+    val source: Source[Message, NotUsed] =
+      Source.actorRef[String](16, OverflowStrategy.fail)
+        .mapMaterializedValue { userActor =>
+          handler ! ActorWebSocketConnect(userActor)
+          NotUsed
+        }
+        .map(msg => TextMessage.Strict(msg))
+
+    val sink: Sink[Message, Any] = Sink.foreach[Message](println)
+
+    Flow.fromSinkAndSource(sink, source)
+  }
+
+  object ActorWebSocketHandler {
+    case class ActorWebSocketConnect(actorRef: ActorRef)
+
+    class ActorWebSocketHandler extends Actor {
+      private var connectorRef: ActorRef = _
+
+      override def receive: Receive = {
+        case ActorWebSocketConnect(ref) => connectorRef = ref
+      }
+    }
+  }
 }
