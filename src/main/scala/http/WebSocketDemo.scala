@@ -9,6 +9,7 @@ import akka.stream.ActorMaterializer
 import akka.stream.scaladsl.{Flow, Sink, Source}
 import akka.util.CompactByteString
 import akka.http.scaladsl.server.Directives._
+import scala.concurrent.duration._
 
 /**
   * Created by niv on 12/23/2020
@@ -73,7 +74,8 @@ object WebSocketDemo extends App {
         ))
       } ~
       path("greeter") {
-        handleWebSocketMessages(webSocketFlow)
+        //handleWebSocketMessages(webSocketFlow)
+        handleWebSocketMessages(socialFlow)
       }
 
   Http().bindAndHandle(webSocketRoute, "localhost", 8080)
@@ -88,9 +90,15 @@ object WebSocketDemo extends App {
     )
   )
 
+  val socialMessages = socialFeed
+    .throttle(1, 2.seconds)
+    .map(socialPost => TextMessage(s"${socialPost.owner} said: ${socialPost.content}"))
+
+  // construct a flow of messages to the web client
   // create a flow that the input is a stream and the output is a source
   val socialFlow: Flow[Message, Message, Any] = Flow.fromSinkAndSource(
-    Sink.foreach[Message](println),
 
+    Sink.foreach[Message](println), // for every message from the client, println
+    socialMessages // outgoing messages from the server to the client
   )
 }
