@@ -1,0 +1,18 @@
+<html>
+<form>
+    <label>Enter Room Name:</label>
+    <input name="room" id="room" type="text">
+    <label>Enter NickName Name:</label>
+    <input name="nickname" id="nickname" type="text">
+    <input type="button" value="Submit" onclick="myFunction()">
+</form>
+
+
+<script>
+function myFunction(){
+  var room = document.getElementById("room").value;
+  var nickname = document.getElementById("nickname").value;
+  window.location.href='/room/index.html?' + 'room=' + room + '&name=' + nickname
+}
+</script>
+</html>
