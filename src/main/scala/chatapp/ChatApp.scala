@@ -26,7 +26,7 @@ object ChatApp extends App {
         getFromResource(s"chatapp/room/$f")
       } ~ path("chat") {
         parameters("room", "name") { (roomName, nickName) =>
-          handleWebSocketMessages(ChatManager.chatFlow)
+          handleWebSocketMessages(ChatManager2.chatFlow)
         }
       }
     }
