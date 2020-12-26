@@ -3,7 +3,6 @@ package stream2.part2_primer
 import akka.actor.{Actor, ActorSystem, Props}
 import akka.stream.ActorMaterializer
 import akka.stream.scaladsl.{Flow, Sink, Source}
-import stream.OperatorFusion.actorSystem
 
 /**
   * Created by niv on 26/12/2020
