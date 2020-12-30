@@ -3,8 +3,7 @@ package stream2.part3_graphs
 import akka.NotUsed
 import akka.actor.ActorSystem
 import akka.stream.{ActorMaterializer, ClosedShape}
-import akka.stream.scaladsl.RunnableGraph
-import akka.stream.scaladsl.{Broadcast, Flow, GraphDSL, Sink, Source, Zip}
+import akka.stream.scaladsl.{Balance, Broadcast, Flow, GraphDSL, Merge, RunnableGraph, Sink, Source, Zip}
 
 /**
   * Created by niv on 12/28/2020
@@ -68,15 +67,47 @@ object GraphBasics extends App {
 
       // this could also be written shortly as:
 
-      source ~> broadcast ~> sink1
-                broadcast ~> sink2
+//      source ~> broadcast ~> sink1
+//                broadcast ~> sink2
 
       ClosedShape
     }
   )
 
+  //graph2.run()
+
+  // Ex: 2 sources (fast source, slow source) feed to fan in shape called merge which will feed fan out shape called balance which will feed 2 sinks
+
+  val graph3 = RunnableGraph.fromGraph(
+    GraphDSL.create() { implicit builder: GraphDSL.Builder[NotUsed] =>
+
+      import GraphDSL.Implicits._
+
+      val fastSource = Source(1 to 1000)
+      val slowSource = Source(1 to 1000).map { e => Thread.sleep(100); e }
+      val sink1 = Sink.foreach[Int](x => println(s"Sink1: $x"))
+      val sink2 = Sink.foreach[Int](x => println(s"Sink2: $x"))
+
+      val merge = builder.add(Merge[Int](2))
+      val balancer = builder.add(Balance[Int](2))
+
+//      fastSource ~> merge.in(0)
+//      slowSource ~> merge.in(1)
+//
+//      merge.out ~> balancer.in
+//
+//      balancer.out(0) ~> sink1
+//      balancer.out(1) ~> sink2
 
 
+      fastSource ~> merge
+      slowSource ~> merge ~> balancer ~> sink1
+                             balancer   ~> sink2
 
-  graph2.run()
+      ClosedShape
+    }
+  )
+
+  graph3.run()
+
 }
