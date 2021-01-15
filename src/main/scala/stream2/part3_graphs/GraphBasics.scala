@@ -109,5 +109,4 @@ object GraphBasics extends App {
   )
 
   graph3.run()
-
 }

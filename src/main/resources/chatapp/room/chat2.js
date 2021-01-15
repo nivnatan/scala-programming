@@ -9,7 +9,7 @@ button.addEventListener("click", function () {
   ws.send(message.value);
 });
 
-ws.onmessage = function(data) {
+ws.onmessage = function(event) {
     output.innerHTML +=
-        "<p><strong>" + data.username + ": </strong>" + data.message + "</p>";
+        "<p><strong>" + username.value + ":: </strong>" + event.data + "</p>";
 }
