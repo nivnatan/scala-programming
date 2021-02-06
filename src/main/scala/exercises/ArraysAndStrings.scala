@@ -1,10 +1,7 @@
 package exercises
 
 import java.util
-
-import exercises.ArraysAndStrings.FlightsItinerary.Flight
 import exercises.StackAndQueues.{MyQueue, MyStack}
-
 import scala.collection.mutable
 import scala.collection.mutable.{ArrayBuffer, ListBuffer}
 import scala.util.Random
@@ -3010,5 +3007,33 @@ object ArraysAndStrings extends App {
     }
 
     go(List.empty, list)
+  }
+
+  /**
+    * Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.
+    * You may assume that each input would have exactly one solution, and you may not use the same element twice.
+    *
+    * Input: nums = [2,7,11,15], target = 9
+    * Output: [0,1]
+    * Output: Because nums[0] + nums[1] == 9, we return [0, 1].
+    */
+  def twoSum(nums: Array[Int], target: Int): Array[Int] = {
+    case class Element(element: Int, indices: List[Int])
+
+    val elements = nums.zipWithIndex.groupBy(_._1).map { case (k,v) => k -> v.map(_._2) }
+
+    def run(index: Int): Option[(Int, Int)] = {
+      if(index >= nums.length) None
+      else {
+        val element1 = nums(index)
+        val element2 = elements.get(target - element1) match {
+          case Some(eFound) => eFound.find(_ != index)
+          case _ => None
+        }
+        element2.map(index -> _) orElse run(index + 1)
+      }
+    }
+
+    run(0).map { case (a,b) => Array(a,b) }.getOrElse(Array.empty)
   }
 }
