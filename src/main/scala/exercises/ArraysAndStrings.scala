@@ -3084,4 +3084,35 @@ object ArraysAndStrings extends App {
     right + 1
   }
 }
+
+  /**
+    * Given a sorted array of distinct integers and a target value, return the index if the target is found.
+    * If not, return the index where it would be if it were inserted in order.
+    *
+    * Input: nums = [1,3,5,6], target = 5
+    * Output: 2
+    *
+    * Input: nums = [1,3,5,6], target = 2
+    * Output: 1
+    */
+  def searchInsert(nums: Array[Int], target: Int): Int = {
+
+    def run(left: Int, right: Int): Int = {
+      if (left >= right) {
+        if(nums(left) < target) left + 1 else left
+      }
+      else {
+        val mid = left + ((right - left) / 2)
+        val elem = nums(mid)
+        if (elem == target) mid
+        else if (elem > target) {
+          run(left, mid)
+        } else {
+          run(mid + 1, right)
+        }
+      }
+    }
+
+    run(0, nums.length - 1)
+  }
 }
