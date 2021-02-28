@@ -3115,4 +3115,47 @@ object ArraysAndStrings extends App {
 
     run(0, nums.length - 1)
   }
+
+  /**
+    * Given an integer array nums, find the contiguous subarray (containing at least one number) which has the largest sum and return its sum.
+    *
+    * Input: nums = [-2,1,-3,4,-1,2,1,-5,4]
+    * Output: 6
+    * Explanation: [4,-1,2,1] has the largest sum = 6.
+    */
+  def maxSubArray(nums: Array[Int]): Int = {
+
+    def bruteForce(): Int = {
+
+      def sumFromIndexToIndex(i: Int, j: Int) = {
+        var sum = 0
+        for(x <- i to j) sum += nums(x)
+        sum
+      }
+
+      def largestSubArrayFromIndex(index: Int): Int = {
+        var largestSum      = nums(index)
+        for(j <- index + 1 until nums.length) {
+          val sum = sumFromIndexToIndex(index, j)
+          if(sum > largestSum) {
+            largestSum = sum
+          }
+        }
+
+        largestSum
+      }
+
+      var largestSubArraySum = nums(0)
+      for(j <- 0 until nums.length) {
+        val sum = largestSubArrayFromIndex(j)
+        if(sum > largestSubArraySum) {
+          largestSubArraySum = sum
+        }
+      }
+
+      largestSubArraySum
+    }
+
+    bruteForce()
+  }
 }
