@@ -3158,4 +3158,69 @@ object ArraysAndStrings extends App {
 
     bruteForce()
   }
+
+  /**
+    * Given a non-empty array of decimal digits representing a non-negative integer, increment one to the integer.
+    * The digits are stored such that the most significant digit is at the head of the list, and each element in the array contains a single digit.
+    * You may assume the integer does not contain any leading zero, except the number 0 itself.
+    *
+    * Input: digits = [1,2,3]
+    * Output: [1,2,4]
+    * Explanation: The array represents the integer 123.
+    */
+  def plusOne(digits: Array[Int]): Array[Int] = {
+
+    def toNumber: Int = {
+      var num = 0
+      for(i <- digits.length -1 to 0 by - 1) {
+        num += (digits(i) * Math.pow(10, digits.length - 1 - i)).toInt
+      }
+      num
+    }
+
+    def toArray(number: Int): Array[Int] = {
+      val arrayBuffer = new ArrayBuffer[Int]()
+      var index = digits.length - 1
+      var numLeft = number
+      while(numLeft > 0 ) {
+        val elem = numLeft % 10
+        arrayBuffer += elem
+        numLeft = numLeft / 10
+        index -= 1
+      }
+      arrayBuffer.reverse.toArray
+    }
+
+    if(digits(digits.length - 1) < 9) {
+      digits(digits.length - 1) = digits(digits.length - 1) + 1
+      digits
+    } else {
+      val number = toNumber + 1
+      toArray(number)
+    }
+    
+    // this is the true solution
+    def run(index: Int): Array[Int] = {
+      if(index == 0) {
+        if(digits(index) == 9) {
+          val arrayResult = Array.fill(digits.length + 1)(0)//(digits.length + 1)
+          arrayResult(0) = 1
+          arrayResult
+        } else {
+          digits(0) = digits(0) + 1
+          digits
+        }
+      } else {
+        if(digits(index) == 9) {
+          digits(index) = 0
+          run(index - 1)
+        } else {
+          digits(index) = digits(index) + 1
+          digits
+        }
+      }
+    }
+
+    run(digits.length - 1)
+  }
 }
