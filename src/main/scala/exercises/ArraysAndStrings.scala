@@ -3303,6 +3303,13 @@ object ArraysAndStrings extends App {
         }
       }
     }
+   
+    object simple {
+      def run(): Unit = {
+        val b = (nums1.take(m) ++ nums2.take(n)).sorted
+        for(i <- 0 until (m+n)) nums1(i) = b(i)
+      }
+    }
 
     inPlace.run()
   }
