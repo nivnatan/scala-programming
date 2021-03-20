@@ -3353,4 +3353,84 @@ object ArraysAndStrings extends App {
       case _ => run(2, List(1), List(List(1)))
     }
   }
+
+  /**
+    * You are given an array prices where prices[i] is the price of a given stock on the ith day.
+    * You want to maximize your profit by choosing a single day to buy one stock and choosing a different day in the future to sell that stock.
+    * Return the maximum profit you can achieve from this transaction. If you cannot achieve any profit, return 0.
+    *
+    * Input: prices = [7,1,5,3,6,4]
+    * Output: 5
+    * Explanation: Buy on day 2 (price = 1) and sell on day 5 (price = 6), profit = 6-1 = 5.
+    * Note that buying on day 2 and selling on day 1 is not allowed because you must buy before you sell.
+    *
+    * Input: prices = [7,6,4,3,1]
+    * Output: 0
+    * Explanation: In this case, no transactions are done and the max profit = 0.
+    */
+  def maxProfitNaive(prices: Array[Int]): Int = {
+    var max = 0
+    for(i <- 0 until prices.length - 1) {
+      var maxTemp = 0
+      for(j <- i + 1 until prices.length) {
+        if(prices(j) > maxTemp && prices(j) > prices(i)) {
+          maxTemp = prices(j)
+        }
+      }
+      if(maxTemp - prices(i) > max)
+        max = maxTemp - prices(i)
+    }
+    max
+  }
+
+  def maxProfit(prices: Array[Int]): Int = {
+    var maxProfit = 0
+    // Store the first element of array
+    // in a variable
+    var minimum = prices(0)
+    for(i <- 1 until prices.length) {
+      // Since min_price is smallest element of the
+      // array so subtract with every element of the
+      // array and return the maxCost
+      if(prices(i) - minimum > maxProfit)
+        maxProfit = prices(i) - minimum
+      // Now compare first element with all
+      // the element of array and find the
+      // minimum element
+      if(prices(i) < minimum)
+        minimum = prices(i)
+    }
+    maxProfit
+  }
+
+  /**
+    * Given an array arr[] of integers, find out the maximum difference between any two elements such that larger element appears after the smaller number.
+    *
+    * Input : arr = {2, 3, 10, 6, 4, 8, 1}
+    * Output : 8
+    * Explanation : The maximum difference is between 10 and 2.
+    *
+    * Input : arr = {7, 9, 5, 6, 3, 2}
+    * Output : 2
+    * Explanation : The maximum difference is between 9 and 7.
+    */
+  def maximumDifference(arr: Array[Int]): Int = {
+    var maxProfit = 0
+    // Store the first element of array
+    // in a variable
+    var minimum = arr(0)
+    for(i <- 1 until arr.length) {
+      // Since min_price is smallest element of the
+      // array so subtract with every element of the
+      // array and return the maxCost
+      if(arr(i) - minimum > maxProfit)
+        maxProfit = arr(i) - minimum
+      // Now compare first element with all
+      // the element of array and find the
+      // minimum element
+      if(arr(i) < minimum)
+        minimum = arr(i)
+    }
+    maxProfit
+  }
 }
