@@ -1616,11 +1616,12 @@ object ArraysAndStrings extends App {
 
     // receive index of the array and check if the characters from index follow the given patter
     def isPatternMatched(index: Int): Boolean = {
-      if(arr.size - index >= pattern.size) {
-        arr.slice(index,pattern.size + index).deep == pattern.deep
-      } else {
-        false
-      }
+//      if(arr.size - index >= pattern.size) {
+//        arr.slice(index,pattern.size + index).deep == pattern.deep
+//      } else {
+//        false
+//      }
+      false
     }
 
     def replaceInMemoryRec(index: Int, position: Int): Unit = {

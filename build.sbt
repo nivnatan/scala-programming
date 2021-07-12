@@ -2,10 +2,10 @@ name := "scala-programming"
 
 version := "1.0"
 
-scalaVersion := "2.12.8"
+scalaVersion := "2.13.6"
 
 lazy val akkaVersion = "2.5.26"
-lazy val scalaTestVersion = "3.0.5"
+lazy val scalaTestVersion = "3.2.9"
 lazy val akkaHttpV = "10.1.11"
 
 libraryDependencies ++= Seq(

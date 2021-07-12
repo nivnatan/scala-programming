@@ -105,7 +105,7 @@ object Linkedlists extends App {
     var mainPointer = Option(head)
     var slowPointer = Option(head)
     for(i <- 0 until k) mainPointer = mainPointer.flatMap(_.next)
-    while(mainPointer.flatMap(_.next) isDefined) {
+    while(mainPointer.flatMap(_.next).isDefined) {
       mainPointer = mainPointer.flatMap(_.next)
       slowPointer = slowPointer.flatMap(_.next)
     }

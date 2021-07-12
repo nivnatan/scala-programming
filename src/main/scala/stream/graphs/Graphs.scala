@@ -73,8 +73,8 @@ object Graphs extends App {
   // exercise 2: balance
 
   import scala.concurrent.duration._
-  val fastSource = input.throttle(5, 1 seconds)
-  val slowSource = input.throttle(2, 1 seconds)
+  val fastSource = input.throttle(5, 1.seconds)
+  val slowSource = input.throttle(2, 1.seconds)
   val sink1 = Sink.foreach[Int](println)
   val sink2 = Sink.foreach[Int](println)
 
