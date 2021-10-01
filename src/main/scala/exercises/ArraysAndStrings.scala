@@ -3510,4 +3510,50 @@ object ArraysAndStrings extends App {
 
     UsingTwoPointers.run()
   }
+ 
+   /**
+    * Given an array nums of size n, return the majority element.
+    * The majority element is the element that appears more than ⌊n / 2⌋ times. You may assume that the majority element always exists in the array.
+    *
+    * Input: nums = [3,2,3]
+    * Output: 3
+    *
+    * Input: nums = [2,2,1,1,1,2,2]
+    * Output: 2
+    */
+  def majorityElement(nums: Array[Int]): Int = {
+    nums.groupBy(identity).view.mapValues(_.length).toList.maxBy(_._2)._1
+  }
+
+  /**
+    * Given an integer array nums, return true if any value appears at least twice in the array, and return false if every element is distinct.
+    *
+    * Input: nums = [1,2,3,1]
+    * Output: true
+    *
+    * Input: nums = [1,2,3,4]
+    * Output: false
+    *
+    * Input: nums = [1,1,1,3,3,4,3,2,4,2]
+    * Output: true
+    */
+  def containsDuplicate(nums: Array[Int]): Boolean = {
+    val set = scala.collection.mutable.Set[Int]()
+
+    def run(index: Int): Boolean = {
+      if(index >= nums.length) false
+      else {
+        val e = nums(index)
+        if(set.contains(e)) true
+        else {
+          set += e
+          run(index + 1)
+        }
+      }
+    }
+
+
+    //nums.groupBy(identity).view.mapValues(_.length).exists(_._2 > 1)
+    run(0)
+  }
 }
